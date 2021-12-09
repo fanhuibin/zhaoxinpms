@@ -1,5 +1,5 @@
 <p align="center">
-<img src="http://zhaoxinms.com:81/images/logo-red.png" width="100px">
+<img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/logo-red.jpg" width="100px">
 </p>
 <h1 align="center">肇新智慧物业</h1>
 <p align="center">
@@ -16,7 +16,7 @@
 
 ## 产品蓝图
 <p align="center">
-<img src="http://zhaoxinms.com:81/images/blueprint.jpg" width="600px">
+<img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/blueprint.jpg" width="600px">
 </p>
 
 ## 功能介绍（v0.8） 
@@ -38,26 +38,27 @@
 ## 功能截图
 <table>
     <tr>
-        <td><img src="http://zhaoxinms.com:81/images/webUI/1.png"/></td>
-        <td><img src="http://zhaoxinms.com:81/images/webUI/2.png"/></td>
+        <td><img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/webUI/1.png"/></td>
+        <td><img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/webUI/2.png"/></td>
     </tr>
     <tr>
-        <td><img src="http://zhaoxinms.com:81/images/webUI/3.png"/></td>
-        <td><img src="http://zhaoxinms.com:81/images/webUI/4.png"/></td>
+        <td><img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/webUI/3.png"/></td>
+        <td><img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/webUI/4.png"/></td>
     </tr>
     <tr>
-        <td><img src="http://zhaoxinms.com:81/images/webUI/5.png"/></td>
-        <td><img src="http://zhaoxinms.com:81/images/webUI/6.png"/></td>
+        <td><img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/webUI/5.png"/></td>
+        <td><img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/webUI/6.png"/></td>
     </tr>
     <tr>
-        <td><img src="http://zhaoxinms.com:81/images/webUI/7.png"/></td>
-        <td><img src="http://zhaoxinms.com:81/images/webUI/8.png"/></td>
+        <td><img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/webUI/7.png"/></td>
+        <td><img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/webUI/8.png"/></td>
     </tr>
     <tr>
-        <td><img src="http://zhaoxinms.com:81/images/webUI/9.png"/></td>
-        <td><img src="http://zhaoxinms.com:81/images/webUI/10.png"/></td>
+        <td><img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/webUI/9.png"/></td>
+        <td><img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/webUI/10.png"/></td>
     </tr>
 </table>
+
 ## 演示与文档
 
 
