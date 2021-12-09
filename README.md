@@ -68,9 +68,8 @@
 ## 联系作者
 :fa-wechat: 优化建议、问题反馈、协作开发、技术支持、咨询合作，请扫码联系作者
 <p >
-<img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/weixin_code.png" width="100px">
+<img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/weixin_code.png" width="250px">
 </p>
-<h2 align="center"></h1>
 
 
 
