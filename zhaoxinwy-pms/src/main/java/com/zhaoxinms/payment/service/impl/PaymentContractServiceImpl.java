@@ -53,8 +53,6 @@ public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMappe
     @Autowired
     private PaymentContractFeeService paymentContractFeeService;
     @Autowired
-    private PaymentBillService paymentBillService;
-    @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
@@ -249,9 +247,6 @@ public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMappe
             // 广播删除事件
             applicationEventPublisher.publishEvent(new ContractEvent(this, a, ContractEvent.STATE_CANCEL));
         }
-
-        // 商铺下的所有缴费单也禁用掉
-        paymentBillService.disableByResourceId(house.getId());
     }
 
     @Override

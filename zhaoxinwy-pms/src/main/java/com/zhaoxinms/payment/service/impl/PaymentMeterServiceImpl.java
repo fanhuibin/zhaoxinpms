@@ -55,8 +55,6 @@ public class PaymentMeterServiceImpl extends ServiceImpl<PaymentMeterMapper, Pay
     @Autowired
     private ConfigFeeItemService configFeeItemService;
     @Autowired
-    private PaymentMeterService paymentMeterService;
-    @Autowired
     private PaymentMeterIndexService paymentMeterIndexService;
 
     @Override
@@ -267,14 +265,14 @@ public class PaymentMeterServiceImpl extends ServiceImpl<PaymentMeterMapper, Pay
             }
         }
 
-        paymentMeterService.saveBatch(insertList);
-        paymentMeterService.updateBatchById(updateList);
+        this.saveBatch(insertList);
+        this.updateBatchById(updateList);
         return meterList.size();
     }
 
     @Override
     public void updateById(String id, @Valid PaymentMeterUpForm paymentMeterUpForm) {
-        PaymentMeterEntity entity = paymentMeterService.getInfo(id);
+        PaymentMeterEntity entity = this.getInfo(id);
         if (entity != null) {
             if (!ValidateUtil.Posttive_float(paymentMeterUpForm.getCurrentIndex())
                 && !ValidateUtil.PositiveNumber(paymentMeterUpForm.getCurrentIndex())) {

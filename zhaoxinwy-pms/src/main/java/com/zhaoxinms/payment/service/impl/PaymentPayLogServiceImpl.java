@@ -45,8 +45,6 @@ public class PaymentPayLogServiceImpl extends ServiceImpl<PaymentPayLogMapper, P
     private UserProvider userProvider;
     @Autowired
     private BillRuleService billRuleService;
-    @Autowired
-    private PaymentContractService paymentContractService;
 
     @Override
     public List<PaymentPayLogEntity> getList(PaymentPayLogPagination paymentPayLogPagination) {
@@ -230,10 +228,8 @@ public class PaymentPayLogServiceImpl extends ServiceImpl<PaymentPayLogMapper, P
     }
 
     @Override
-    public PaymentPayLogEntity payBill(PaymentBillPayForm payForm) {
-        PaymentContractEntity contract =
-            paymentContractService.getByResourceName(payForm.getPaymentBills().get(0).getResourceName());
-
+    public PaymentPayLogEntity payBill(PaymentBillPayForm payForm, PaymentContractEntity contract) {
+          
         PaymentPayLogEntity log = new PaymentPayLogEntity();
         String name = "";
         int nameCount = 0;

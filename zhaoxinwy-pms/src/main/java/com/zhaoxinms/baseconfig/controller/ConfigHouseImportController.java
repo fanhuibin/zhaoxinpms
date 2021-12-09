@@ -32,7 +32,6 @@ import com.zhaoxinms.base.util.UpUtil;
 import com.zhaoxinms.base.vo.DownloadVO;
 import com.zhaoxinms.baseconfig.model.house.HouseCrForm;
 import com.zhaoxinms.baseconfig.service.ConfigHouseService;
-import com.zhaoxinms.baseconfig.service.HouseFeeImportService;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
@@ -51,8 +50,6 @@ public class ConfigHouseImportController {
     private ConfigValueUtil configValueUtil;
     @Autowired
     private FileService fileService;
-    @Autowired
-    private HouseFeeImportService houseFeeImportService;
 
      @GetMapping("/Template")
      public void info(){

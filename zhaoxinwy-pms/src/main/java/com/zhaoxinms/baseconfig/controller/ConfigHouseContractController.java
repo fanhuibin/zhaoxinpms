@@ -40,7 +40,6 @@ import com.zhaoxinms.baseconfig.model.house.HouseContractListVO;
 import com.zhaoxinms.baseconfig.model.house.HouseContractPagination;
 import com.zhaoxinms.baseconfig.model.house.HouseCrForm;
 import com.zhaoxinms.baseconfig.service.ConfigHouseService;
-import com.zhaoxinms.baseconfig.service.HouseFeeImportService;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
@@ -59,8 +58,6 @@ public class ConfigHouseContractController {
     private ConfigValueUtil configValueUtil;
     @Autowired
     private FileService fileService;
-    @Autowired
-    private HouseFeeImportService houseFeeImportService;
     @Autowired
     private DynDicUtil dynDicUtil;
 

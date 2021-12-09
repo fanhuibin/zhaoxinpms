@@ -30,7 +30,7 @@ public interface PaymentPayLogService extends IService<PaymentPayLogEntity> {
     PaymentPayLogEntity createDepositRefundLog(PaymentDepositEntity deposit, String method);
 
     // 支付bill
-    PaymentPayLogEntity payBill(PaymentBillPayForm payForm);
+    PaymentPayLogEntity payBill(PaymentBillPayForm payForm, PaymentContractEntity contract);
 
     // 创建临时收费支付记录
     PaymentPayLogEntity createTempPayLog(PaymentTempEntity entity, String payType);

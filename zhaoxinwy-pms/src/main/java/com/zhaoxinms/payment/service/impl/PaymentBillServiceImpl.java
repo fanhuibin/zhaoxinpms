@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -17,6 +18,7 @@ import com.zhaoxinms.base.util.UserProvider;
 import com.zhaoxinms.baseconfig.entity.ConfigFeeItemEntity;
 import com.zhaoxinms.baseconfig.service.ConfigFeeItemService;
 import com.zhaoxinms.baseconfig.service.ConfigHouseService;
+import com.zhaoxinms.event.ContractEvent;
 import com.zhaoxinms.payment.entity.PaymentBillEntity;
 import com.zhaoxinms.payment.entity.PaymentContractEntity;
 import com.zhaoxinms.payment.entity.PaymentPayLogEntity;
@@ -55,8 +57,6 @@ public class PaymentBillServiceImpl extends ServiceImpl<PaymentBillMapper, Payme
     private PaymentPreAccountService paymentPreAccountService;
     @Autowired
     private PaymentPreService paymentPreService;
-    @Autowired
-    private ConfigHouseService configHouseService;
     @Autowired
     private PaymentContractService paymentContractService;
     @Autowired
@@ -393,7 +393,7 @@ public class PaymentBillServiceImpl extends ServiceImpl<PaymentBillMapper, Payme
         PaymentContractEntity contract =
             paymentContractService.getByResourceName(payForm.getPaymentBills().get(0).getResourceName());
         // 添加缴费记录表
-        PaymentPayLogEntity payLog = paymentPayLogService.payBill(payForm);
+        PaymentPayLogEntity payLog = paymentPayLogService.payBill(payForm, contract);
 
         // 更新每个收费项的优惠和滞纳金
         for (PaymentBillListVO vo : payForm.getPaymentBills()) {
@@ -447,5 +447,15 @@ public class PaymentBillServiceImpl extends ServiceImpl<PaymentBillMapper, Payme
         }
 
         return payLog;
+    }
+    
+    // 商铺下的所有缴费单也禁用掉
+    @EventListener
+    public void deleteAccount(ContractEvent event) {
+        if (event.getState().equals(event.STATE_CANCEL)) {
+            PaymentContractEntity contract = event.getContract();
+            String resourceId = contract.getResourceId();
+            this.disableByResourceId(resourceId);
+        }
     }
 }
