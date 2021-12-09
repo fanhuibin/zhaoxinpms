@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/logo-red.jpg" width="100px">
+<img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/logo-red.png" width="100px">
 </p>
 <h1 align="center">肇新智慧物业</h1>
 <p align="center">
@@ -58,6 +58,7 @@
         <td><img src="https://gitee.com/fanhuibin1/zhaoxinpms/raw/master/Resources/readme/webUI/10.png"/></td>
     </tr>
 </table>
+
 
 ## 演示与文档
 
