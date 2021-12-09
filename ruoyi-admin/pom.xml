@@ -7,7 +7,7 @@
         <groupId>com.zhaoxinms</groupId>
         <version>0.8.0</version>
     </parent>
-    <modelVersion>0.8</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
     <groupId>com.ruoyi</groupId>
     <artifactId>zhaoxinwy-admin</artifactId>
