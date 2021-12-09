@@ -80,7 +80,7 @@ public class DailyReportController {
         for (PayLogStatisticsModel log : logs) {
             String payMoney = log.getPayMoney();
             String changeMoney = log.getChangeMoney();
-            String realPay = CalculationUtil.subtract(payMoney, changeMoney);
+            String realPay = CalculationUtil.subtract(payMoney, changeMoney, 2);
             if (keyList.containsKey(log.getResourceName())) {
                 DailyReportModel model = keyList.get(log.getResourceName());
                 Map<String, String> map = model.getTypeReturnMoney();
@@ -139,7 +139,7 @@ public class DailyReportController {
         for (PayLogStatisticsModel log : logs) {
             String payMoney = log.getPayMoney();
             String changeMoney = log.getChangeMoney();
-            String realPay = CalculationUtil.subtract(payMoney, changeMoney);
+            String realPay = CalculationUtil.subtract(payMoney, changeMoney, 2);
             if (keyList.containsKey(log.getResourceName())) {
                 DailyReportModel model = keyList.get(log.getResourceName());
                 Map<String, String> map = model.getTypeMoney();

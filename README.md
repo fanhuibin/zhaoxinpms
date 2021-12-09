@@ -1,37 +1,71 @@
-# 肇新智慧物业
+<p align="center">
+<img src="http://zhaoxinms.com:81/images/logo-red.png" width="100px">
+</p>
+<h1 align="center">肇新智慧物业</h1>
+<p align="center">
+<img  src="https://img.shields.io/badge/release-v0.8-brightgreen.svg">
+<img src="https://shields.io/badge/license-AGPL-blue">
+</p>
+<p align="center">
+  🔥 <a href="http://zhaoxinms.com:81/">文档网站</a>
+  &nbsp; <a >在线演示(建设中)</a>
+</p>
+## 简介
 
-#### 介绍
-《肇新智慧物业》是一个免费开源的小型物业管理系统，涵盖停车、安保、客服、工单、收费、财务、办公自动化等模块，目标是构建一个软硬件一体的智慧物业解决方案。
+​        《肇新智慧物业》是一个免费开源的基于java的物业管理系统。未来将涵盖停车、安保、客服、工单、收费、财务、办公自动化等模块，构建一个软硬件一体的智慧物业解决方案。目前该项目还处于早期解决，已开发的功能模块请参考**功能介绍**
 
-#### 软件架构
-软件架构说明
+## 产品蓝图
+<p align="center">
+<img src="http://zhaoxinms.com:81/images/blueprint.jpg" width="600px">
+</p>
+
+## 功能介绍（v0.8） 
+
+- 商圈管理
+  商圈管理、商铺管理、商铺租售、业主管理
+- 缴费数据管理
+  商铺绑定费用、自动生成费用、手动生成费用
+- 缴费服务
+  缴费数据管理、日常缴费、与收费、临时收费、收款凭证打印
+- 缴费提醒
+  费用到期提醒、欠费提醒
+- 抄表功能
+  抄表数据导入、抄表数据生成费用
+- 打印功能
+  内置动态积木报表，支持自定义打印模板
+- 统计报表
+  日收费报表、商铺租售比例统计、费用汇总表等
+## 功能截图
+<table>
+    <tr>
+        <td><img src="http://zhaoxinms.com:81/images/webUI/1.png"/></td>
+        <td><img src="http://zhaoxinms.com:81/images/webUI/2.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="http://zhaoxinms.com:81/images/webUI/3.png"/></td>
+        <td><img src="http://zhaoxinms.com:81/images/webUI/4.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="http://zhaoxinms.com:81/images/webUI/5.png"/></td>
+        <td><img src="http://zhaoxinms.com:81/images/webUI/6.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="http://zhaoxinms.com:81/images/webUI/7.png"/></td>
+        <td><img src="http://zhaoxinms.com:81/images/webUI/8.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="http://zhaoxinms.com:81/images/webUI/9.png"/></td>
+        <td><img src="http://zhaoxinms.com:81/images/webUI/10.png"/></td>
+    </tr>
+</table>
+## 演示与文档
 
 
-#### 安装教程
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+文档地址：http://zhaoxinms.com:81/
 
 
-#### 特技
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+
+
+
+
