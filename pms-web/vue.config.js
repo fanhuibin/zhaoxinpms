@@ -38,6 +38,10 @@ module.exports = {
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
+      },
+      '/jmreport': {
+        target: `http://localhost:9000`,
+        changeOrigin: true,
       }
     },
     disableHostCheck: true

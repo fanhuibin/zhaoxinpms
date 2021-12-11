@@ -22,5 +22,5 @@ public class JimuReportApplication {
                 "Local: \t\thttp://localhost:" + port + path + "/jmreport/list\n\t" +
                 "----------------------------------------------------------");
     }
-
+    
 }

@@ -936,8 +936,8 @@ let xs = null;
      // 字典数据处理
      //dictDataHandler(strObj);
      //console.log('----------------------------')
-     console.log('数据对象',strObj)
-     console.log('解析后内容',JSON.stringify(strObj.rows));
+     //console.log('数据对象',strObj)
+     //console.log('解析后内容',JSON.stringify(strObj.rows));
      //console.log('----------------------------')
      return strObj;
  }
