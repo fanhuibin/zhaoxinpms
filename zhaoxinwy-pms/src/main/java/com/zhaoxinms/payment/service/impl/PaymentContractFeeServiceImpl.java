@@ -5,12 +5,15 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zhaoxinms.base.exception.DataException;
 import com.zhaoxinms.base.util.UserProvider;
 import com.zhaoxinms.baseconfig.service.ConfigFeeItemService;
+import com.zhaoxinms.event.FeeEvent;
 import com.zhaoxinms.payment.entity.PaymentContractFeeEntity;
 import com.zhaoxinms.payment.mapper.PaymentContractFeeMapper;
 import com.zhaoxinms.payment.model.paymentcontract.PaymentContractFeeListVO;
@@ -97,5 +100,15 @@ public class PaymentContractFeeServiceImpl extends ServiceImpl<PaymentContractFe
     @Override
     public List<PaymentContractFeeListVO> getByFeeId(String feeItemId) {
         return this.baseMapper.getByFee(feeItemId);
+    }
+    
+    @EventListener
+    public void delete(FeeEvent event) {
+        if (event.getState().equals(FeeEvent.STATE_DELETE)) {
+            List<PaymentContractFeeListVO> contract = this.getByFeeId(event.getItem().getId());
+            if(contract.size() > 0) {
+                throw new DataException("该收费项已经绑定了商铺，不能删除！");
+            }
+        }
     }
 }

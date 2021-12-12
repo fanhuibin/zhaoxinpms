@@ -137,11 +137,11 @@ public class ConfigHouseServiceImpl extends ServiceImpl<ConfigHouseMapper, Confi
             throw new DataException("请求的数据不完整");
         }
 
-        if (!ValidateUtil.Posttive_float(entity.getBuildingSquare())) {
+        if (!ValidateUtil.PositiveFloatOrNum(entity.getBuildingSquare())) {
             throw new DataException("占地面积的格式不正确");
         }
 
-        if (!ValidateUtil.Posttive_float(entity.getUseSquare())) {
+        if (!ValidateUtil.PositiveFloatOrNum(entity.getUseSquare())) {
             throw new DataException("使用面积的格式不正确");
         }
 

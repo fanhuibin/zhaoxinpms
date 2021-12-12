@@ -121,7 +121,7 @@ export default {
                 usesquare: undefined,
                 state: 'empty',
                 floor: '',
-                rentFee: '',
+                rentFee: '0',
                 remark: undefined,
             },
             rules: {

@@ -102,7 +102,7 @@ public class ConfigFeeAlertServiceImpl extends ServiceImpl<ConfigFeeAlertMapper,
     }
 
     @EventListener
-    public void deleteAccount(FeeEvent event) {
+    public void deleteFee(FeeEvent event) {
         if (event.getState().equals(FeeEvent.STATE_DELETE)) {
             // 同步删除alert
             String feeItemId = event.getItem().getId();

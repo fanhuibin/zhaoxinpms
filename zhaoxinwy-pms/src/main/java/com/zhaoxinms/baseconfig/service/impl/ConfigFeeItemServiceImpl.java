@@ -200,7 +200,14 @@ public class ConfigFeeItemServiceImpl extends ServiceImpl<ConfigFeeItemMapper, C
     @Override
     public boolean update(String id, ConfigFeeItemEntity entity) {
         entity.setId(id);
+        
+        //收费项不能修改类型
+        ConfigFeeItemEntity oldEntity = this.getById(id);
+        if(!oldEntity.getType().equals(entity.getType())) {
+            throw new DataException("收费项不能更改类型");
+        }
         dataCheck(entity);
+        
         // 收费项名不能重复
         QueryWrapper<ConfigFeeItemEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().and(t -> t.eq(ConfigFeeItemEntity::getName, entity.getName()));
