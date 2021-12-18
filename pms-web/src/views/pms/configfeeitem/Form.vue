@@ -40,7 +40,7 @@
 
                 <el-col :span="24" v-if="dataForm.type === 'house'">
                     <el-form-item label="单价" prop="price">
-                        <el-input v-model="dataForm.price" placeholder="没有固定单价的填写0" :maxlength="7" clearable :style="{ width: '100%' }"></el-input>
+                        <el-input v-model="dataForm.price" placeholder="没有固定单价的填写1" :maxlength="7" clearable :style="{ width: '100%' }"></el-input>
                     </el-form-item>
                 </el-col>
 
