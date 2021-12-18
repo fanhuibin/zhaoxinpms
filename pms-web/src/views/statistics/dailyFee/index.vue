@@ -79,7 +79,7 @@ export default {
                 name: '临时收费项', 
             },
             preFeeHead: { 
-                name: '押金类收费项', 
+                name: '预存款', 
                 list: [
                     { name: '收款', id: 'add' },
                     { name: '支付', id: 'pay' },
