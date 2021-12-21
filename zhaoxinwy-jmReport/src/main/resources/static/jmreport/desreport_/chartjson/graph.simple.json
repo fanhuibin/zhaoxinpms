@@ -1,0 +1,169 @@
+{
+  "title": {
+    "show": true,
+    "text": "某站点用户访问来源",
+    "left": "left",
+    "padding": [5,20,5,20],
+    "textStyle": {
+      "fontSize": 18,
+      "fontWeight": "bolder",
+      "color": "#c23531"
+    }
+  },
+  "tooltip": {
+    "show":true,
+    "textStyle":{
+      "color":"#fff",
+      "fontSize": 18
+    }
+  },
+  "legend": {
+    "show": true,
+    "data": ["类目1","类目2","类目3","类目4","类目5","类目6"],
+    "top": "top",
+    "left": "center",
+    "orient": "horizontal",
+    "padding":[25,20,25,10],
+    "textStyle": {
+      "color":  "#333",
+      "fontSize": 12
+    }
+  },
+ // "animationDurationUpdate": 1500,
+ // "animationEasingUpdate":"quinticInOut",
+  "series": [{
+    "name": "关系图",
+    "type": "graph",
+    "layout": "circular",
+    "center": [320, 150],
+    "categories": [{
+      "name":"类目1",
+      "itemStyle":{
+        "color": ""
+      }
+    },{
+      "name":"类目2",
+      "itemStyle":{
+        "color": ""
+      }
+    },{
+      "name":"类目3",
+      "itemStyle":{
+        "color": ""
+      }
+    },{
+      "name":"类目4",
+      "itemStyle":{
+        "color": ""
+      }
+    },{
+      "name":"类目5",
+      "itemStyle":{
+        "color": ""
+      }
+    },{
+      "name":"类目6",
+      "itemStyle":{
+        "color": ""
+      }
+    }],
+    "label": {
+      "show":true,
+      "position": "right",
+      "textStyle": {
+        "color":  "#333",
+        "fontSize": 12
+      }
+    },
+    "lineStyle": {
+      "color": "source",
+      "curveness": 0.3
+    },
+    "data": [{
+      "name":"测试0",
+      "value":28,
+      "category":0
+    },{
+      "name":"测试1",
+      "value":9,
+      "category":1
+    },{
+      "name":"测试2",
+      "value":23,
+      "category": 2
+    },{
+      "name":"测试3",
+      "value":8,
+      "category": 3
+    },{
+      "name":"测试4",
+      "value":8,
+      "category": 4
+    },{
+      "name":"测试5",
+      "value":20,
+      "category": 5
+    }],
+    "links": [{
+      "source":"测试1",
+      "target":"测试0"
+    },{
+      "source":"测试2",
+      "target":"测试0"
+    },{
+      "source":"测试3",
+      "target":"测试1"
+    },{
+      "source":"测试4",
+      "target":"测试1"
+    },{
+      "source":"测试5",
+      "target":"测试2"
+    },{
+      "source":"测试5",
+      "target":"测试3"
+    },{
+      "source":"测试3",
+      "target":"测试2"
+    },{
+      "source":"测试3",
+      "target":"测试1"
+    },{
+      "source":"测试2",
+      "target":"测试1"
+    },{
+      "source":"测试2",
+      "target":"测试5"
+    },{
+      "source":"测试4",
+      "target":"测试5"
+    },{
+      "source":"测试4",
+      "target":"测试0"
+    },{
+      "source":"测试4",
+      "target":"测试1"
+    },{
+      "source":"测试4",
+      "target":"测试2"
+    },{
+      "source":"测试5",
+      "target":"测试0"
+    },{
+      "source":"测试5",
+      "target":"测试4"
+    },{
+      "source":"测试4",
+      "target":"测试3"
+    },{
+      "source":"测试3",
+      "target":"测试0"
+    },{
+      "source":"测试3",
+      "target":"测试1"
+    },{
+      "source":"测试0",
+      "target":"测试4"
+    }]
+  }]
+}

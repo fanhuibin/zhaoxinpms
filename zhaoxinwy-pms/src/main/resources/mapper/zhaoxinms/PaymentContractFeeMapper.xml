@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhaoxinms.payment.mapper.PaymentContractFeeMapper">
+    <sql id="contractFeeColumns">
+       f.id as id,
+       f.fee_item_id as feeItemId,
+       f.begin_date as beginDate,
+       f.end_date as endDate,
+       f.next_bill_date as nextBillDate,
+       f.contract_id as contractId,
+       p.resource_name as resourceName,
+       p.resource_id as resourceId,
+       p.user_name as userName,
+       p.block_code as blockCode,
+       h.code as resourceCode
+    </sql>
+    
+    <select id="getByFeeAndBillDate" resultType="com.zhaoxinms.payment.model.paymentcontract.PaymentContractFeeListVO">
+        SELECT 
+        <include refid="contractFeeColumns"/>
+        FROM payment_contract_fee f 
+        left join payment_contract p on f.contract_id = p.id
+        left join config_house h on p.resource_id = h.id
+        WHERE 1 = 1 
+        <if test="feeItemId != null and feeItemId != ''">
+			AND f.fee_item_id = #{feeItemId}
+		</if>
+		<if test="resourceName != null and resourceName != ''">
+			AND p.resource_name = #{resourceName}
+		</if>
+		AND f.next_bill_date between #{beginDate} and #{endDate}
+		ORDER BY next_bill_date asc
+    </select>
+    
+    <select id="getByFee" resultType="com.zhaoxinms.payment.model.paymentcontract.PaymentContractFeeListVO">
+        SELECT 
+        <include refid="contractFeeColumns"/>
+        FROM payment_contract_fee f 
+        left join payment_contract p on f.contract_id = p.id
+        left join config_house h on p.resource_id = h.id
+        WHERE 1 = 1 
+        <if test="feeItemId != null and feeItemId != ''">
+			AND f.fee_item_id = #{feeItemId}
+		</if>
+    </select>
+</mapper>

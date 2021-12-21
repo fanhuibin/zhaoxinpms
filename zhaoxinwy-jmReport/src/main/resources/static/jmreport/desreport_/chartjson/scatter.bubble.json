@@ -1,0 +1,158 @@
+{
+  "title": {
+    "show": true,
+    "text": "散点图",
+    "left": "left",
+    "padding": [5,20,5,20],
+    "textStyle": {
+      "fontSize": 18,
+      "fontWeight": "bolder",
+      "color": "#c23531"
+    }
+  },
+  "grid": {
+    "left": 60,
+    "top": 60,
+    "right": 60,
+    "bottom": 60
+  },
+  "legend": {
+    "show": true,
+    "top": "top",
+    "left": "center",
+    "orient": "horizontal",
+    "padding":[25,20,25,10],
+    "textStyle": {
+      "color":  "#333",
+      "fontSize": 12
+    },
+    "data": ["1990", "2015"]
+  },
+  "tooltip": {
+    "show":true,
+    "textStyle":{
+      "color":"#fff",
+      "fontSize": 18
+    }
+  },
+  "xAxis": {
+    "show":true,
+    "name":"",
+    "splitLine":{
+      "show":false,
+      "lineStyle":{
+        "color":"red",
+        "width":1,
+        "type":"solid"
+      }
+    },
+    "axisLabel":{
+      "interval":"auto",
+      "rotate":0,
+      "textStyle":{
+        "fontSize":12,
+        "color": "#333"
+      }
+    },
+    "axisLine": {
+      "lineStyle": {
+        "color": "#333"
+      }
+    }
+  },
+  "yAxis": {
+    "show":true,
+    "name":"",
+    "splitLine":{
+      "show":false,
+      "lineStyle":{
+        "color":"red",
+        "width":1,
+        "type":"solid"
+      }
+    },
+    "axisLabel":{
+      "textStyle":{
+        "fontSize":12,
+        "color": "#333"
+      }
+    },
+    "axisLine": {
+      "lineStyle": {
+        "color": "#333"
+      }
+    }
+  },
+  "series": [{
+    "name":"1990",
+    "type": "scatter",
+    "symbolSize": 20,
+    "itemStyle": {
+      "shadowBlur": 10,
+      "shadowColor": "rgba(25, 100, 150, 0.5)",
+      "shadowOffsetY": 5,
+      "color": {
+        "type": "radial",
+        "r": 0.8,
+        "colorStops": [{
+          "offset": 0, "color": "#E7727C" // 0% 处的颜色
+        },{
+          "offset":1, "color": "#D7291F" // 100% 处的颜色
+        }]
+      }
+    },
+    "data": [
+      [28604,77],
+      [31163,77.4],
+      [1516,68],
+      [13670,74.7],
+      [28599,75],
+      [29476,77.1],
+      [31476,75.4],
+      [28666,78.1],
+      [1777,57.7],
+      [29550,79.1],
+      [2076,67.9],
+      [12087,72],
+      [24021,75.4],
+      [43296,76.8],
+      [10088,70.8],
+      [19349,69.6]
+    ]
+  },{
+    "name":"2015",
+    "type": "scatter",
+    "symbolSize": 20,
+    "itemStyle": {
+      "shadowBlur": 10,
+      "shadowColor": "rgba(25, 100, 150, 0.5)",
+      "shadowOffsetY": 5,
+      "color": {
+        "type": "radial",
+        "r": 0.8,
+        "colorStops": [{
+          "offset": 0, "color": "#70D1E1" // 0% 处的颜色
+         },{
+          "offset":1, "color": "#0188FB" // 100% 处的颜色
+        }]
+      }
+    },
+    "data": [
+      [44056,81.8],
+      [43294,81.7],
+      [13334,76.9],
+      [21291,78.5],
+      [38923,80.8],
+      [37599,81.9],
+      [44053,81.1],
+      [42182,82.8],
+      [5903,66.8],
+      [36162,83.5],
+      [1390,71.4],
+      [34644,80.7],
+      [34186,80.6],
+      [64304,81.6],
+      [24787,77.3]
+    ]
+  }]
+}

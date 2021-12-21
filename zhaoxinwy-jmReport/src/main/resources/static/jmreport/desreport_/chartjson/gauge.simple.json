@@ -1,0 +1,76 @@
+{
+  "title": {
+    "show": true,
+    "text": "某站点用户访问来源",
+    "left": "left",
+    "padding": [5,20,5,20],
+    "textStyle": {
+      "fontSize": 18,
+      "fontWeight": "bolder",
+      "color": "#c23531"
+    }
+  },
+  "tooltip": {
+    "show":true,
+    "formatter": "{b} : {c}",
+    "textStyle":{
+      "color":"#fff",
+      "fontSize": 18
+    }
+  },
+  "series": [{
+    "name": "业务指标",
+    "type": "gauge",
+    "radius":"75%",
+    "center": [330, 200],
+    "itemStyle":{
+      "color":"#63869E"
+    },
+    "pointer": {
+      "show": true
+    },
+    "detail": {
+      "formatter": "{value}%",
+      "textStyle": {
+        "color": "rgba(0,0,0,1)",
+        "fontSize":25
+      }
+    },
+    "axisLabel": {
+      "show":true,
+      "color":"auto",
+      "textStyle": {
+        "fontSize": 10
+      }
+    },
+    "axisLine": {
+      "lineStyle": {
+        "color": [[0.2, "#91c7ae"], [0.8, "#63869E"], [1, "#C23531"]],
+        "width": 25
+      }
+    },
+    "axisTick": {
+      "length": 10,
+      "lineStyle": {
+        "color": "#fff"
+      }
+    },
+    "splitLine": {
+      "length": 30,
+      "lineStyle": {
+        "width": 3,
+        "color": "#ffffff"
+      }
+    },
+    "title": {
+      "show":true,
+      "textStyle": {
+        "fontSize": 20,
+        "color": "#000000",
+        "shadowColor": "#000",
+        "shadowBlur": 10
+      }
+    },
+    "data": [{"value": 50, "name": "完成率"}]
+  }]
+}

@@ -1,0 +1,78 @@
+{
+  "title": {
+    "show": true,
+    "text": "某站点用户访问来源",
+    "left": "left",
+    "padding": [5,20,5,20],
+    "textStyle": {
+      "fontSize": 18,
+      "fontWeight": "bolder",
+      "color": "#c23531"
+    }
+  },
+  "legend": {
+    "show": true,
+    "data": ["展现","点击","访问","咨询","订单"],
+    "top": "top",
+    "left": "center",
+    "orient": "horizontal",
+    "padding":[25,20,25,10],
+    "textStyle": {
+      "color":  "#333",
+      "fontSize": 12
+    }
+  },
+  "tooltip": {
+    "show":true,
+    "trigger": "item",
+    "formatter": "{b} : {c}",
+    "textStyle":{
+      "color":"#fff",
+      "fontSize": 18
+    }
+  },
+  "series": [
+    {
+      "name": "金字塔漏斗图",
+      "type": "funnel",
+      "left": "10%",
+      "top": 60,
+      "bottom": 60,
+      "width": "80%",
+      "sort": "ascending",
+      "gap": 2,
+      "orient": "vertical",
+      "label": {
+        "show": true,
+        "position": "inside",
+        "textStyle": {
+          "fontSize": 16,
+          "fontWeight": "normal"
+        }
+      },
+      "labelLine": {
+        "length": 10,
+        "lineStyle": {
+          "width": 1,
+          "type": "solid"
+        }
+      },
+      "itemStyle": {
+        "borderColor": "#fff",
+        "borderWidth": 1
+      },
+      "emphasis": {
+        "label": {
+          "fontSize": 20
+        }
+      },
+      "data": [
+        {"value": 60, "name": "访问"},
+        {"value": 40, "name": "咨询"},
+        {"value": 20, "name": "订单"},
+        {"value": 80, "name": "点击"},
+        {"value": 100, "name": "展现"}
+      ]
+    }
+  ]
+}

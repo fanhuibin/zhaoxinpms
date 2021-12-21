@@ -1,0 +1,479 @@
+<template>
+    <el-dialog title="客户资料" :close-on-click-modal="false" :visible.sync="visible" class="Jdialog Jdialog_center" lock-scroll width="800px">
+        <el-row :gutter="15" class="">
+            <el-form
+                ref="elForm"
+                :model="dataForm"
+                :rules="rules"
+                size="medium"
+                label-width="100px"
+                label-position="right"
+                :disabled="!!isDetail"
+                v-loading="loading"
+            >
+                <el-col :span="12">
+                    <el-form-item label="商业区" prop="area">
+                        <el-select
+                            v-model="dataForm.blockCode"
+                            placeholder="请选择商铺的商业区"
+                            clearable
+                            :style="{ width: '100%' }"
+                            :multiple="false"
+                            :disabled="true"
+                        >
+                            <el-option v-for="(item, index) in areaOptions" :key="index" :label="item.name" :value="item.code" :disabled="true"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="编号" prop="name">
+                        <el-input
+                            v-model="dataForm.name"
+                            placeholder="请输入编号"
+                            :maxlength="49"
+                            clearable
+                            :style="{ width: '100%' }"
+                            :disabled="true"
+                        ></el-input>
+                    </el-form-item>
+                </el-col>
+
+
+                <el-col :span="24">
+                    <el-form-item label="类别" prop="contractType">
+                        <el-select
+                            v-model="dataForm.contractType"
+                            placeholder="请选择"
+                            clearable
+                            :style="{ width: '100%' }"
+                            :multiple="false"
+                            :disabled="this.dataForm.contractId"
+                            @input="getConfigFeeSetting"
+                        >
+                            <el-option v-for="(item, index) in contractTypeOptions" :key="index" :label="item.fullName" :value="item.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12" style="height: 59px">
+                    <el-form-item label="客户姓名" prop="userName">
+                        <el-input v-model="dataForm.userName" placeholder="请输入" :maxlength="20" clearable :style="{ width: '100%' }"></el-input>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="12" style="height: 59px">
+                    <el-form-item label="身份证" prop="userIdcard">
+                        <el-input v-model="dataForm.userIdcard" placeholder="请输入" :maxlength="18" clearable :style="{ width: '100%' }"></el-input>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="12" style="height: 59px">
+                    <el-form-item label="性别" prop="userGender">
+                        <el-select v-model="dataForm.userGender" placeholder="请选择" clearable :style="{ width: '100%' }" :multiple="false">
+                            <el-option
+                                v-for="(item, index) in usersexOptions"
+                                :key="index"
+                                :label="item.fullName"
+                                :value="item.id"
+                                :disabled="item.disabled"
+                            ></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="12" style="height: 59px">
+                    <el-form-item label="联系方式" prop="userPhone">
+                        <el-input v-model="dataForm.userPhone" placeholder="请输入" :maxlength="13" clearable :style="{ width: '100%' }"></el-input>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="12" style="height: 59px">
+                    <el-form-item label="开始时间" prop="beginDate" :style="{ height: '33px' }">
+                        <el-date-picker
+                            v-model="dataForm.beginDate"
+                            placeholder="请选择"
+                            clearable
+                            :style="{ width: '100%' }"
+                            type="date"
+                            format="yyyy-MM-dd"
+                            value-format="timestamp"
+                        ></el-date-picker>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="12" v-if="this.dataForm.contractType == 'rented'" style="height: 59px">
+                    <el-form-item label="出租时间" prop="period" :style="{ height: '33px' }">
+                        <el-input v-model="dataForm.period" placeholder="出租时间" clearable :style="{ width: '100%' }">
+                            <template slot="append">月</template>
+                        </el-input>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="12" v-if="this.dataForm.contractType == 'rented'" style="height: 59px">
+                    <el-form-item label="租金" prop="rentFee" :style="{ height: '33px' }">
+                        <el-input v-model="dataForm.rentFee" placeholder="租金" clearable :style="{ width: '100%' }">
+                            <template slot="append">元</template>
+                        </el-input>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="12" style="height: 59px">
+                    <el-form-item label="从事的行业" prop="userTrade">
+                        <el-select v-model="dataForm.userTrade" placeholder="请选择" clearable :style="{ width: '100%' }" :multiple="false">
+                            <el-option
+                                v-for="(item, index) in usertradeOptions"
+                                :key="index"
+                                :label="item.fullName"
+                                :value="item.id"
+                                :disabled="item.disabled"
+                            ></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="12" style="height: 59px">
+                    <el-form-item label="详细说明" prop="userTradeDetail">
+                        <el-input v-model="dataForm.userTradeDetail" :maxlength="150" placeholder="请输入" clearable :style="{ width: '100%' }"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-form>
+        </el-row>
+        <div class="box">
+            <el-tabs v-model="activeName">
+                <el-tab-pane label="设置收费项目" name="contractFees">
+                    <el-table :data="dataForm.contractFees" size="mini">
+                        <el-table-column type="index" width="50" label="序号" align="center" />
+                        <el-table-column prop="name" label="收费项名" />
+                        <el-table-column prop="price" label="单价" />
+                        <!-- 功能未开放 
+                        <el-table-column prop="beginDate" label="计费开始时间" width="220px">
+                            <template slot-scope="scope">
+                                <el-date-picker
+                                    v-model="scope.row.beginDate"
+                                    placeholder="不选择随合约时间生效"
+                                    clearable
+                                    :style="{ width: '100%' }"
+                                    type="date"
+                                    format="yyyy-MM-dd"
+                                    value-format="timestamp"
+                                ></el-date-picker>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="endDate" label="计费结束时间" width="220px">
+                            <template slot-scope="scope">
+                                <el-date-picker
+                                    v-model="scope.row.endDate"
+                                    placeholder="不选择随合约生效"
+                                    clearable
+                                    :style="{ width: '100%' }"
+                                    type="date"
+                                    format="yyyy-MM-dd"
+                                    value-format="timestamp"
+                                ></el-date-picker>
+                            </template>
+                        </el-table-column>-->
+                        <el-table-column label="操作" width="50" v-if="!setting.readonly">
+                            <template slot-scope="scope">
+                                <el-button size="mini" type="text" class="JTable-delBtn" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <div class="table-actions" @click="choice" v-if="!setting.readonly">
+                        <el-button type="text" icon="el-icon-plus">新增收费项</el-button>
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
+        </div>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="visible = false">取 消</el-button>
+            <el-button type="primary" @click="dataFormSubmit()" v-if="!isDetail">确 定</el-button>
+        </span>
+        <Box v-if="boxVisible" ref="form" @refreshDataList="initData" />
+    </el-dialog>
+</template>
+<script>
+import request from '@/utils/request';
+import { getDictionaryType, getDictionaryDataSelector } from '@/api/systemData/dictionary';
+
+import Box from '../configfeeitem/SelectBox';
+export default {
+    components: { Box },
+    props: [],
+    data() {
+        return {
+            setting: {
+                readonly: false,
+            },
+            activeName: 'contractFees',
+            loading: false,
+            visible: false,
+            isDetail: false,
+            boxVisible: false,
+            dataForm: {
+                resourceId: '',
+                contractFees: [],
+                resourceType: 'house',
+                blockCode: undefined,
+                period: undefined,
+                name: undefined,
+                contractId: undefined,
+                contractType: undefined,
+                userName: undefined,
+                userIdcard: undefined,
+                userGender: '',
+                userPhone: undefined,
+                beginDate: undefined,
+                endDate: undefined,
+                userTrade: '',
+                userTradeDetail: undefined,
+                description: undefined,
+                rentFee: undefined,
+            },
+            areaOptions: [],
+            rules: {
+                contractType: [
+                    {
+                        required: true,
+                        message: '请选择',
+                        trigger: 'blur',
+                    },
+                ],
+                userName: [
+                    {
+                        required: true,
+                        message: '请输入',
+                        trigger: 'blur',
+                    },
+                ],
+                userIdcard: [
+                    {
+                        required: true,
+                        message: '请输入',
+                        trigger: 'blur',
+                    },
+                    {
+                        pattern: /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/,
+                        message: '请输入正确的身份证号码',
+                        trigger: 'blur',
+                    },
+                ],
+                userGender: [
+                    {
+                        required: true,
+                        message: '请选择',
+                        trigger: 'blur',
+                    },
+                ],
+                userPhone: [
+                    {
+                        required: true,
+                        message: '请输入',
+                        trigger: 'blur',
+                    },
+                    {
+                        pattern: /^1[3456789]\d{9}$|^0\d{2,3}-?\d{7,8}$/,
+                        message: '请输入正确的联系方式',
+                        trigger: 'blur',
+                    },
+                ],
+                beginDate: [
+                    {
+                        required: true,
+                        message: '请选择',
+                        trigger: 'blur',
+                    },
+                ],
+                period: [
+                    {
+                        required: true,
+                        message: '请选择',
+                        trigger: 'blur',
+                    },
+                    {
+                        pattern: /^\d+$/,
+                        message: '请输入正确的数字',
+                        trigger: 'blur',
+                    },
+                ],
+                rentFee: [
+                    {
+                        required: true,
+                        message: '请输入',
+                        trigger: 'blur',
+                    },
+                    {
+                        pattern: /^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/,
+                        message: '请输入正确的数字，最多两位小数',
+                        trigger: 'blur',
+                    },
+                    {
+                        pattern: /^(([1-9]{1}\d{0,7})|(0{1}))(\.\d{0,2})?$/,
+                        message: '小数点前最多8位数字',
+                        trigger: 'blur'
+                    },
+                ],
+                userTrade: [
+                    {
+                        required: true,
+                        message: '请选择',
+                        trigger: 'blur',
+                    },
+                ],
+            },
+            usersexOptions: [],
+            usertradeOptions: [],
+            contractTypeOptions: [
+                { id: 'rented', fullName: '出租' },
+                { id: 'selled', fullName: '出售' },
+            ],
+        };
+    },
+    computed: {},
+    watch: {},
+    created() {
+        this.getareaOptions();
+        this.getusersexOptions();
+        this.getusertradeOptions();
+    },
+    mounted() {},
+    methods: {
+        choice() {
+            this.boxVisible = true;
+            this.$nextTick(() => {
+                this.$refs.form.init();
+            });
+        },
+        handleDel(index, row) {
+            this.dataForm.contractFees.splice(index, 1);
+        },
+        initData(list) {
+            for (let i = 0; i < list.length; i++) {
+                const e = list[i];
+                let item = {
+                    feeItemId: e.id,
+                    name: e.name,
+                    period: e.period,
+                    beginDate: this.dataForm.beginDate,
+                    endDate: null,
+                    price: e.price,
+                    formula: e.formula,
+                };
+                this.dataForm.contractFees.push(item);
+            }
+        },
+        getareaOptions() {
+            request({
+                url: `/baseconfig/ConfigHouseBlock/selectList`,
+                method: 'GET',
+            }).then(res => {
+                this.areaOptions = res.data;
+            });
+        },
+        getusersexOptions() {
+            getDictionaryDataSelector('963255a34ea64a2584c5d1ba269c1fe6').then(res => {
+                this.usersexOptions = res.data.list;
+            });
+        },
+        getusertradeOptions() {
+            getDictionaryDataSelector('d59a3cf65f9847dbb08be449e3feae16').then(res => {
+                this.usertradeOptions = res.data.list;
+            });
+        },
+        getConfigFeeSetting() {
+            request({
+                url: `/baseconfig/ConfigFeeSetting`,
+                method: 'get',
+                data: { type: this.dataForm.contractType },
+            }).then(res => {
+                this.dataForm.contractFees = [];
+                for (let i = 0; i < res.data.length; i++) {
+                    const e = res.data[i];
+                    let item = {
+                        id: '',
+                        feeItemId: e.feeItemId,
+                        name: e.feeItemName,
+                        beginDate: this.dataForm.beginDate,
+                        endDate: null,
+                        price: e.price,
+                    };
+                    this.dataForm.contractFees.push(item);
+                }
+            });
+        },
+        init(resourceId, block, name, contractId, rentFee, state, isDetail) {
+            this.visible = true;
+            this.isDetail = isDetail || false;
+            this.$nextTick(() => {
+                this.$refs['elForm'].resetFields();
+                this.dataForm.resourceId = resourceId || 0;
+                this.dataForm.blockCode = block;
+                this.dataForm.name = name;
+                this.dataForm.contractId = contractId;
+                this.dataForm.contractType = state;
+                this.dataForm.rentFee = rentFee;
+                this.dataForm.contractFees = [];
+                if (this.dataForm.contractId) {
+                    this.loading = true;
+                    request({
+                        url: '/payment/PaymentContract/' + this.dataForm.contractId,
+                        method: 'get',
+                    }).then(res => {
+                        
+                        this.dataForm.userTrade = res.data.userTrade;
+                        this.dataForm.userPhone = res.data.userPhone;
+                        this.dataForm.userGender = res.data.userGender;
+                        this.dataForm.userName = res.data.userName;
+                        this.dataForm.userIdcard = res.data.userIdcard;
+                        this.dataForm.contractType = res.data.contractType;
+                        this.dataForm.beginDate = res.data.beginDate;
+                        this.dataForm.period = res.data.period;
+                        this.dataForm.userTradeDetail = res.data.userTradeDetail;
+                        this.dataForm.contractFees = res.data.contractFees;
+                        this.loading = false;
+                    });
+                } else {
+                    this.getConfigFeeSetting();
+                }
+            });
+        },
+        // 表单提交
+        dataFormSubmit() {
+            this.$refs['elForm'].validate(valid => {
+                if (valid) {
+                    if (!this.dataForm.contractId) {
+                        request({
+                            url: `/payment/PaymentContract`,
+                            method: 'post',
+                            data: this.dataForm,
+                        }).then(res => {
+                            this.$message({
+                                message: res.msg,
+                                type: 'success',
+                                duration: 1000,
+                                onClose: () => {
+                                    (this.visible = false), this.$emit('refresh', true);
+                                },
+                            });
+                        });
+                    } else {
+                        request({
+                            url: '/payment/PaymentContract/' + this.dataForm.contractId,
+                            method: 'PUT',
+                            data: this.dataForm,
+                        }).then(res => {
+                            this.$message({
+                                message: res.msg,
+                                type: 'success',
+                                duration: 1000,
+                                onClose: () => {
+                                    this.visible = false;
+                                    this.$emit('refresh', true);
+                                },
+                            });
+                        });
+                    }
+                }
+            });
+        },
+    },
+};
+</script>

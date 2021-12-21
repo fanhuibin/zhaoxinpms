@@ -1,0 +1,1459 @@
+{
+  "bar": {
+      "title": {
+          "show": true,
+          "text": "某站点用户访问来源",
+          "left": "left",
+          "padding": [5,20,5,20],
+          "textStyle": {
+              "fontSize": 18,
+              "fontWeight": "bolder",
+              "color": "#c23531"
+          }
+      },
+      "legend": {
+          "show": true,
+          "data": ["销量"],
+          "top": "top",
+          "left": "center",
+          "orient": "horizontal",
+          "padding":[25,20,25,10],
+          "textStyle": {
+              "color":  "#333",
+              "fontSize": 12
+          }
+      },
+      "grid": {
+          "left": 60,
+          "top": 60,
+          "right": 60,
+          "bottom": 60
+      },
+      "tooltip": {
+          "show":true,
+          "textStyle":{
+              "color":"#fff",
+              "fontSize": 18
+          }
+      },
+      "xAxis": {
+          "show":true,
+          "name":"服饰",
+          "splitLine":{
+              "show":false,
+              "lineStyle":{
+                  "color":"red",
+                  "width":1,
+                  "type":"solid"
+              }
+          },
+          "axisLabel":{
+              "interval":"auto",
+              "rotate":0,
+              "textStyle":{
+                  "fontSize":12,
+                  "color": "#333"
+              }
+          },
+          "axisLine": {
+              "lineStyle": {
+                  "color": "#333"
+              }
+          },
+          "data": ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+      },
+      "yAxis": {
+          "show":true,
+          "name":"销量",
+          "splitLine":{
+              "show":false,
+              "lineStyle":{
+                  "color":"red",
+                  "width":1,
+                  "type":"solid"
+              }
+          },
+          "axisLabel":{
+              "textStyle":{
+                  "fontSize":12,
+                  "color": "#333"
+              }
+          },
+          "axisLine": {
+              "lineStyle": {
+                  "color": "#333"
+              }
+          }
+      },
+      "series": [{
+          "name": "销量",
+          "type": "bar",
+          "data": [5, 20, 36, 10, 10, 20],
+          "barWidth": 50,
+          "barMinHeight": 2,
+          "itemStyle": {
+              "normal": {
+                  "barBorderRadius":0,
+                  "color":"#c43632",
+                  "label": {
+                      "show": true,
+                      "position": "top",
+                      "textStyle": {
+                          "color": "black",
+                          "fontSize": 16,
+                          "fontWeight": "bolder"
+                      }
+                  }
+              }
+          }
+      }]
+  },
+  "bar3": {
+    "title": {
+      "show": true,
+      "text": "某站点用户访问来源",
+      "left": "left",
+      "padding": [5,20,5,20],
+      "textStyle": {
+        "fontSize": 18,
+        "fontWeight": "bolder",
+        "color": "#c23531"
+      }
+    },
+    "legend": {
+      "show": true,
+      "data": ["直接访问","邮件营销", "联盟广告"],
+      "top": "top",
+      "left": "center",
+      "orient": "horizontal",
+      "padding":[25,20,25,10],
+      "textStyle": {
+        "color":  "#333",
+        "fontSize": 12
+      }
+    },
+    "grid": {
+      "left": 60,
+      "top": 60,
+      "right": 60,
+      "bottom": 60
+    },
+    "tooltip": {
+      "show":true,
+      "trigger":"axis",
+      "axisPointer": {
+        "type": "shadow"
+      },
+      "textStyle":{
+        "color":"#fff",
+        "fontSize": 18
+      }
+    },
+    "xAxis": {
+      "show":true,
+      "type": "category",
+      "splitLine":{
+        "show":false,
+        "lineStyle":{
+          "color":"red",
+          "width":1,
+          "type":"solid"
+        }
+      },
+      "axisLabel":{
+        "interval":"auto",
+        "rotate":0,
+        "textStyle":{
+          "fontSize":12,
+          "color": "#333"
+        }
+      },
+      "axisLine": {
+        "lineStyle": {
+          "color": "#333"
+        }
+      },
+      "data": ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
+    },
+    "yAxis": {
+      "show":true,
+      "type ": "value",
+      "splitLine":{
+        "show":false,
+        "lineStyle":{
+          "color":"red",
+          "width":1,
+          "type":"solid"
+        }
+      },
+      "axisLabel":{
+        "textStyle":{
+          "fontSize":12,
+          "color": "#333"
+        }
+      },
+      "axisLine": {
+        "lineStyle": {
+          "color": "#333"
+        }
+      }
+    },
+    "series": [{
+      "name": "直接访问",
+      "type": "bar",
+      "data": [320, 332, 301, 334, 390, 330, 320],
+      "barWidth": 0,
+      "barMinHeight": 2,
+      "itemStyle": {
+        "normal": {
+          "barBorderRadius":0,
+          "color":"",
+          "label": {
+            "show": true,
+            "position": "top",
+            "textStyle": {
+              "color": "black",
+              "fontSize": 16,
+              "fontWeight": "bolder"
+            }
+          }
+        }
+      }
+    },{
+      "name": "邮件营销",
+      "type": "bar",
+      "data": [120, 132, 101, 134, 90, 230, 210],
+      "barWidth": 0,
+      "barMinHeight": 2,
+      "itemStyle": {
+        "normal": {
+          "barBorderRadius":0,
+          "color":"",
+          "label": {
+            "show": true,
+            "position": "top",
+            "textStyle": {
+              "color": "black",
+              "fontSize": 16,
+              "fontWeight": "bolder"
+            }
+          }
+        }
+      }
+    },{
+      "name": "联盟广告",
+      "type": "bar",
+      "data": [220, 182, 191, 234, 290, 330, 310],
+      "barWidth": 0,
+      "barMinHeight": 2,
+      "itemStyle": {
+        "normal": {
+          "barBorderRadius":0,
+          "color":"",
+          "label": {
+            "show": true,
+            "position": "top",
+            "textStyle": {
+              "color": "black",
+              "fontSize": 16,
+              "fontWeight": "bolder"
+            }
+          }
+        }
+      }
+    }]
+  },
+  "bar2": {
+      "title": {
+          "show": true,
+          "text": "某站点用户访问来源",
+          "left": "left",
+          "padding": [5,20,5,20],
+          "textStyle": {
+              "fontSize": 18,
+              "fontWeight": "bolder",
+              "color": "#c23531"
+          }
+      },
+      "legend": {
+          "show": true,
+          "top": "top",
+          "left": "center",
+          "orient": "horizontal",
+          "padding":[25,20,25,10],
+          "textStyle": {
+              "fontSize": 12
+          }
+      },
+      "grid": {
+          "left": 60,
+          "top": 60,
+          "right": 60,
+          "bottom": 60
+      },
+      "tooltip": {
+          "show":true,
+          "textStyle":{
+              "color":"#fff",
+              "fontSize": 18
+          }
+      },
+      "dataset": {
+          "source": [
+              ["product", "2015", "2016", "2017"],
+              ["Matcha Latte", 43.3, 85.8, 93.7],
+              ["Milk Tea", 83.1, 73.4, 55.1],
+              ["Cheese Cocoa", 86.4, 65.2, 82.5],
+              ["Walnut Brownie", 72.4, 53.9, 39.1]
+          ]
+      },
+      "xAxis": {
+          "show":true,
+          "type":"category",
+          "splitLine":{
+              "show":false,
+              "lineStyle":{
+                  "color":"red",
+                  "width":1,
+                  "type":"solid"
+              }
+          },
+          "axisLabel":{
+              "interval":"auto",
+              "rotate":0,
+              "textStyle":{
+                  "fontSize":12,
+                  "color": "#333"
+              }
+          },
+          "axisLine": {
+              "lineStyle": {
+                  "color": "#333"
+              }
+          }
+      },
+      "yAxis": {
+          "show":true,
+          "splitLine":{
+              "show":false,
+              "lineStyle":{
+                  "color":"red",
+                  "width":1,
+                  "type":"solid"
+              }
+          },
+          "axisLabel":{
+              "textStyle":{
+                  "fontSize":12,
+                  "color": "#333"
+              }
+          },
+          "axisLine": {
+              "lineStyle": {
+                  "color": "#333"
+              }
+          }
+      },
+      "series": [{
+          "type": "bar",
+          "barWidth": 30,
+          "barMinHeight": 2,
+          "itemStyle": {
+              "normal": {
+                  "barBorderRadius":0,
+                  "label": {
+                      "show": true,
+                      "position": "top",
+                      "textStyle": {
+                          "color": "black",
+                          "fontSize": 16,
+                          "fontWeight": "bolder"
+                      }
+                  }
+              }
+          }
+      },{
+          "type": "bar",
+          "barWidth": 30,
+          "barMinHeight": 2,
+          "itemStyle": {
+              "normal": {
+                  "barBorderRadius":0,
+                  "label": {
+                      "show": true,
+                      "position": "top",
+                      "textStyle": {
+                          "color": "black",
+                          "fontSize": 16,
+                          "fontWeight": "bolder"
+                      }
+                  }
+              }
+          }
+      },{
+          "type": "bar",
+          "barWidth": 30,
+          "barMinHeight": 2,
+          "itemStyle": {
+              "normal": {
+                  "barBorderRadius":0,
+                  "label": {
+                      "show": true,
+                      "position": "top",
+                      "textStyle": {
+                          "color": "black",
+                          "fontSize": 16,
+                          "fontWeight": "bolder"
+                      }
+                  }
+              }
+          }
+      }]
+  },
+  "line": {
+      "title": {
+          "show": true,
+          "text": "某站点用户访问来源",
+          "left": "left",
+          "padding": [5,20,5,10],
+          "textStyle": {
+              "fontSize": 18,
+              "fontWeight": "bolder",
+              "color": "#c23531"
+          }
+      },
+      "legend": {
+          "show": true,
+          "data": ["销量"],
+          "top": "top",
+          "left": "center",
+          "orient": "horizontal",
+          "padding":[25,20,25,10],
+          "textStyle": {
+              "color":  "#333",
+              "fontSize": 12
+          }
+      },
+      "grid": {
+          "left": 60,
+          "top": 60,
+          "right": 60,
+          "bottom": 60
+      },
+      "tooltip": {
+          "show":true,
+          "textStyle":{
+              "color":"#fff",
+              "fontSize": 18
+          }
+      },
+      "xAxis": {
+          "show":true,
+          "name":"服饰",
+          "splitLine":{
+              "show":false,
+              "lineStyle":{
+                  "color":"red",
+                  "width":1,
+                  "type":"solid"
+              }
+          },
+          "axisLabel":{
+              "interval":"auto",
+              "rotate":0,
+              "textStyle":{
+                  "fontSize":12,
+                  "color": "#333"
+              }
+          },
+          "axisLine": {
+              "lineStyle": {
+                  "color": "#333"
+              }
+          },
+          "data": ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+      },
+      "yAxis": {
+          "show":true,
+          "name":"销量",
+          "splitLine":{
+              "show":false,
+              "lineStyle":{
+                  "color":"red",
+                  "width":1,
+                  "type":"solid"
+              }
+          },
+          "axisLabel":{
+              "textStyle":{
+                  "fontSize":12,
+                  "color": "#333"
+              }
+          },
+          "axisLine": {
+              "lineStyle": {
+                  "color": "#333"
+              }
+          }
+      },
+      "series": [{
+          "name": "销量",
+          "type": "line",
+          "data": [5, 20, 36, 10, 10, 20],
+          "step": false,
+          "showSymbol": true,
+          "smooth": false,
+          "symbolSize":5,
+          "lineStyle":{
+              "width":2,
+              "color": "#c43632"
+          },
+          "itemStyle": {
+              "normal": {
+                  "label": {
+                      "show": true,
+                      "position": "top",
+                      "textStyle": {
+                          "color": "black",
+                          "fontSize": 16,
+                          "fontWeight": "bolder"
+                      }
+                  }
+              }
+          }
+      }]
+  },
+  "line3": {
+      "title": {
+          "show": true,
+          "text": "某站点用户访问来源",
+          "left": "left",
+          "padding": [5,20,5,10],
+          "textStyle": {
+              "fontSize": 18,
+              "fontWeight": "bolder",
+              "color": "#c23531"
+          }
+      },
+      "legend": {
+          "show": true,
+          "data": ["销量"],
+          "top": "top",
+          "left": "center",
+          "orient": "horizontal",
+          "padding":[25,20,25,10],
+          "textStyle": {
+              "color":  "#333",
+              "fontSize": 12
+          }
+      },
+      "grid": {
+          "left": 60,
+          "top": 60,
+          "right": 60,
+          "bottom": 60
+      },
+      "tooltip": {
+          "show":true,
+          "textStyle":{
+              "color":"#fff",
+              "fontSize": 18
+          }
+      },
+      "xAxis": {
+          "show":true,
+          "name":"服饰",
+          "splitLine":{
+              "show":false,
+              "lineStyle":{
+                  "color":"red",
+                  "width":1,
+                  "type":"solid"
+              }
+          },
+          "axisLabel":{
+              "interval":"auto",
+              "rotate":0,
+              "textStyle":{
+                  "fontSize":12,
+                  "color": "#333"
+              }
+          },
+          "axisLine": {
+              "lineStyle": {
+                  "color": "#333"
+              }
+          },
+          "data": ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+      },
+      "yAxis": {
+          "show":true,
+          "name":"销量",
+          "splitLine":{
+              "show":false,
+              "lineStyle":{
+                  "color":"red",
+                  "width":1,
+                  "type":"solid"
+              }
+          },
+          "axisLabel":{
+              "textStyle":{
+                  "fontSize":12,
+                  "color": "#333"
+              }
+          },
+          "axisLine": {
+              "lineStyle": {
+                  "color": "#333"
+              }
+          }
+      },
+      "series": [{
+          "name": "销量",
+          "type": "line",
+          "data": [5, 20, 36, 10, 10, 20],
+          "step": false,
+          "showSymbol": true,
+          "smooth": true,
+          "symbolSize":5,
+          "lineStyle":{
+              "width":2,
+              "color": "#c43632"
+          },
+          "itemStyle": {
+              "normal": {
+                  "label": {
+                      "show": true,
+                      "position": "top",
+                      "textStyle": {
+                          "color": "black",
+                          "fontSize": 16,
+                          "fontWeight": "bolder"
+                      }
+                  }
+              }
+          }
+      }]
+  },
+  "line4": {
+    "title": {
+      "show": true,
+      "text": "某楼盘销售情况",
+      "left": "left",
+      "textStyle": {
+        "fontSize": 18,
+        "fontWeight": "bolder",
+        "color": "#c23531"
+      }
+    },
+    "legend": {
+      "show": true,
+      "data": [ "意向","预购","成交"],
+      "top": "top",
+      "left": "center",
+      "orient": "horizontal",
+      "padding":[5,20,25,10],
+      "textStyle": {
+        "color":  "#333",
+        "fontSize": 12
+      }
+    },
+    "grid": {
+      "left": 60,
+      "top": 60,
+      "right": 60,
+      "bottom": 60
+    },
+    "tooltip": {
+      "show":true,
+      "trigger": "axis",
+      "textStyle":{
+        "color":"#fff",
+        "fontSize": 18
+      }
+    },
+    "xAxis": {
+      "show":true,
+      "type": "category",
+      "boundaryGap": false,
+      "splitLine":{
+        "show":false,
+        "lineStyle":{
+          "color":"red",
+          "width":1,
+          "type":"solid"
+        }
+      },
+      "axisLabel":{
+        "interval":"auto",
+        "rotate":0,
+        "textStyle":{
+          "fontSize":12,
+          "color": "#333"
+        }
+      },
+      "axisLine": {
+        "lineStyle": {
+          "color": "#333"
+        }
+      },
+      "data": ["周一","周二","周三","周四","周五"]
+    },
+    "yAxis": {
+      "show":true,
+      "type": "value",
+      "splitLine":{
+        "show":false,
+        "lineStyle":{
+          "color":"red",
+          "width":1,
+          "type":"solid"
+        }
+      },
+      "axisLabel":{
+        "textStyle":{
+          "fontSize":12,
+          "color": "#333"
+        }
+      },
+      "axisLine": {
+        "lineStyle": {
+          "color": "#333"
+        }
+      }
+    },
+    "series": [{
+      "name": "预购",
+      "type": "line",
+      "data":  [30, 182, 434, 791, 390],
+      "step": false,
+      "showSymbol": true,
+      "smooth": false,
+      "symbolSize":5,
+      "lineStyle":{
+        "width":2,
+        "color": null
+      },
+      "itemStyle": {
+        "normal": {
+          "label": {
+            "show": true,
+            "position": "top",
+            "textStyle": {
+              "color": "black",
+              "fontSize": 16,
+              "fontWeight": "bolder"
+            }
+          }
+        }
+      }
+    },
+      {
+        "name": "成交",
+        "type": "line",
+        "data":[10, 12, 21, 54, 260],
+        "step": false,
+        "showSymbol": true,
+        "smooth": false,
+        "symbolSize":5,
+        "lineStyle":{
+          "width":2,
+          "color": null
+        },
+        "itemStyle": {
+          "normal": {
+            "label": {
+              "show": true,
+              "position": "top",
+              "textStyle": {
+                "color": "black",
+                "fontSize": 16,
+                "fontWeight": "bolder"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "意向",
+        "type": "line",
+        "data":[1320, 1132, 601, 234, 120],
+        "step": false,
+        "showSymbol": true,
+        "smooth": false,
+        "symbolSize":5,
+        "lineStyle":{
+          "width":2,
+          "color": null
+        },
+        "itemStyle": {
+          "normal": {
+            "label": {
+              "show": true,
+              "position": "top",
+              "textStyle": {
+                "color": "black",
+                "fontSize": 16,
+                "fontWeight": "bolder"
+              }
+            }
+          }
+        }
+      }]
+  },
+  "line5": {
+      "title": {
+          "show": true,
+          "text": "某站点用户访问来源",
+          "left": "left",
+          "padding": [5,20,5,10],
+          "textStyle": {
+              "fontSize": 18,
+              "fontWeight": "bolder",
+              "color": "#c23531"
+          }
+      },
+      "legend": {
+          "show": true,
+          "data": ["销量"],
+          "top": "top",
+          "left": "center",
+          "orient": "horizontal",
+          "padding":[25,20,25,10],
+          "textStyle": {
+              "color":  "#333",
+              "fontSize": 12
+          }
+      },
+      "grid": {
+          "left": 60,
+          "top": 60,
+          "right": 60,
+          "bottom": 60
+      },
+      "tooltip": {
+          "show":true,
+          "textStyle":{
+              "color":"#fff",
+              "fontSize": 18
+          }
+      },
+      "xAxis": {
+          "show":true,
+          "name":"服饰",
+          "splitLine":{
+              "show":false,
+              "lineStyle":{
+                  "color":"red",
+                  "width":1,
+                  "type":"solid"
+              }
+          },
+          "axisLabel":{
+              "interval":"auto",
+              "rotate":0,
+              "textStyle":{
+                  "fontSize":12,
+                  "color": "#333"
+              }
+          },
+          "axisLine": {
+              "lineStyle": {
+                  "color": "#333"
+              }
+          },
+          "data": ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+      },
+      "yAxis": {
+          "show":true,
+          "name":"销量",
+          "splitLine":{
+              "show":false,
+              "lineStyle":{
+                  "color":"red",
+                  "width":1,
+                  "type":"solid"
+              }
+          },
+          "axisLabel":{
+              "textStyle":{
+                  "fontSize":12,
+                  "color": "#333"
+              }
+          },
+          "axisLine": {
+              "lineStyle": {
+                  "color": "#333"
+              }
+          }
+      },
+      "series": [{
+          "name": "销量",
+          "type": "line",
+          "data": [5, 20, 36, 10, 10, 20],
+          "step": true,
+          "showSymbol": true,
+          "smooth": false,
+          "symbolSize":5,
+          "lineStyle":{
+              "width":2,
+              "color": "#c43632"
+          },
+          "itemStyle": {
+              "normal": {
+                  "label": {
+                      "show": true,
+                      "position": "top",
+                      "textStyle": {
+                          "color": "black",
+                          "fontSize": 16,
+                          "fontWeight": "bolder"
+                      }
+                  }
+              }
+          }
+      }]
+  },
+  "pie": {
+        "title": {
+            "show": true,
+            "text": "某站点用户访问来源",
+            "left": "left",
+            "padding": [5,20,5,10],
+            "textStyle": {
+                "fontSize": 18,
+                "fontWeight": "bolder",
+                "color": "#c23531"
+            }
+        },
+        "tooltip": {
+            "show":true,
+            "textStyle":{
+                "color":"#fff",
+                "fontSize": 18
+            }
+        },
+        "legend": {
+            "show": true,
+            "data": ["视频广告","联盟广告","邮件营销","直接访问","搜索引擎","间接访问"],
+            "top": "top",
+            "left": "center",
+            "orient": "horizontal",
+            "padding":[25,20,25,10],
+            "textStyle": {
+                "color":  "#333",
+                "fontSize": 12
+            }
+        },
+        "series": [
+            {
+                "name": "访问来源",
+                "type": "pie",
+                "isRadius":false,
+                "radius": "55%",
+                "minAngle":  0,
+                "roseType": "",
+                "autoSort": false,
+                "notCount": false,
+                "left": 60,
+                "top": 60,
+                "right": 60,
+                "bottom": 60,
+                "label": {
+                    "show": true,
+                    "position": "outside",
+                    "textStyle": {
+                        "color": "black",
+                        "fontSize": 16,
+                        "fontWeight": "bolder"
+                    }
+                },
+                "data":[
+                    {"value":1170, "name":"视频广告","itemStyle":{"color":null }},
+                    {"value":417, "name":"联盟广告","itemStyle":{"color":null }},
+                    {"value":335, "name":"邮件营销","itemStyle":{"color":null }},
+                    {"value":410, "name":"直接访问","itemStyle":{"color":null } },
+                    {"value":800, "name":"搜索引擎","itemStyle":{"color":null }}
+                ]
+            }
+        ]
+  },
+  "pie1": {
+        "title": {
+            "show": true,
+            "text": "某站点用户访问来源",
+            "left": "left",
+            "padding": [5,20,5,10],
+            "textStyle": {
+                "fontSize": 18,
+                "fontWeight": "bolder",
+                "color": "#c23531"
+            }
+        },
+        "tooltip": {
+            "show":true,
+            "textStyle":{
+                "color":"#fff",
+                "fontSize": 18
+            }
+        },
+        "legend": {
+            "show": true,
+            "data": ["视频广告","联盟广告","邮件营销","直接访问","搜索引擎","间接访问"],
+            "top": "top",
+            "left": "center",
+            "orient": "horizontal",
+            "padding":[25,20,25,10],
+            "textStyle": {
+                "color":  "#333",
+                "fontSize": 12
+            }
+        },
+        "series": [
+            {
+                "name": "访问来源",
+                "type": "pie",
+                "isRadius":true,
+                "radius": ["45%","55%"],
+                "minAngle":  0,
+                "roseType": "",
+                "autoSort": false,
+                "notCount": false,
+                "label": {
+                    "show": true,
+                    "position": "outside",
+                    "textStyle": {
+                        "color": "black",
+                        "fontSize": 16,
+                        "fontWeight": "bolder"
+                    }
+                },
+                "data":[
+                    {"value":1170, "name":"视频广告","itemStyle":{"color":null }},
+                    {"value":417, "name":"联盟广告","itemStyle":{"color":null }},
+                    {"value":335, "name":"邮件营销","itemStyle":{"color":null }},
+                    {"value":410, "name":"直接访问","itemStyle":{"color":null } },
+                    {"value":800, "name":"搜索引擎","itemStyle":{"color":null }}
+                ]
+            }
+        ]
+  },
+  "pie2": {
+        "title": {
+            "show": true,
+            "text": "某站点用户访问来源",
+            "left": "left",
+            "padding": [5,20,5,10],
+            "textStyle": {
+                "fontSize": 18,
+                "fontWeight": "bolder",
+                "color": "#c23531"
+            }
+        },
+        "tooltip": {
+            "show":true,
+            "textStyle":{
+                "color":"#fff",
+                "fontSize": 18
+            }
+        },
+        "legend": {
+            "show": true,
+            "data": ["视频广告","联盟广告","邮件营销","直接访问","搜索引擎","间接访问"],
+            "top": "top",
+            "left": "center",
+            "orient": "horizontal",
+            "padding":[25,20,25,10],
+            "textStyle": {
+                "color":  "#333",
+                "fontSize": 12
+            }
+        },
+        "series": [
+            {
+                "name": "访问来源",
+                "type": "pie",
+                "isRadius":false,
+                "radius": "55%",
+                "minAngle":  0,
+                "roseType": "radius",
+                "autoSort": false,
+                "notCount": false,
+                "label": {
+                    "show": true,
+                    "position": "outside",
+                    "textStyle": {
+                        "color": "black",
+                        "fontSize": 16,
+                        "fontWeight": "bolder"
+                    }
+                },
+                "data":[
+                    {"value":1170, "name":"视频广告","itemStyle":{"color":null }},
+                    {"value":417, "name":"联盟广告","itemStyle":{"color":null }},
+                    {"value":335, "name":"邮件营销","itemStyle":{"color":null }},
+                    {"value":410, "name":"直接访问","itemStyle":{"color":null } },
+                    {"value":800, "name":"搜索引擎","itemStyle":{"color":null }}
+                ]
+            }
+        ]
+  },
+  "linebar":{
+      "chartType":"linebar",
+      "title": {
+        "show": true,
+        "text": "某站点用户访问来源",
+        "left": "left",
+        "padding": [5,20,5,20],
+        "textStyle": {
+          "fontSize": 18,
+          "fontWeight": "bolder",
+          "color": "#c23531"
+        }
+      },
+      "legend": {
+        "show": true,
+        "data": ["蒸发量", "降水量", "平均温度"],
+        "top": "top",
+        "left": "center",
+        "orient": "horizontal",
+        "padding":[25,20,25,10],
+        "textStyle": {
+          "color":  "#333",
+          "fontSize": 12
+        }
+      },
+      "grid": {
+        "left": 60,
+        "top": 60,
+        "right": 60,
+        "bottom": 60
+      },
+      "tooltip": {
+        "show":true,
+        "trigger": "axis",
+        "axisPointer": {
+          "type": "cross",
+          "crossStyle": {
+            "color":"#999"
+          }
+        },
+        "textStyle":{
+          "color":"#fff",
+          "fontSize": 18
+        }
+      },
+      "xAxis": {
+        "show":true,
+        "type":  "category",
+        "data": [ "1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+        "axisPointer": {
+          "type":  "shadow"
+        },
+        "splitLine":{
+          "show":false,
+          "lineStyle":{
+            "color":"red",
+            "width":1,
+            "type":"solid"
+          }
+        },
+        "axisLabel":{
+          "interval":"auto",
+          "rotate":0,
+          "textStyle":{
+            "fontSize":12,
+            "color": "#333"
+          }
+        },
+        "axisLine": {
+          "lineStyle": {
+            "color": "#333"
+          }
+        }
+      },
+      "yAxis": [{
+        "show":true,
+        "type": "value",
+        "name": "水量",
+        "splitLine":{
+          "show":false,
+          "lineStyle":{
+            "color":"red",
+            "width":1,
+            "type":"solid"
+          }
+        },
+        "axisLabel":{
+          "textStyle":{
+            "fontSize":12,
+            "color": "#333"
+          }
+        },
+        "axisLine": {
+          "lineStyle": {
+            "color": "#333"
+          }
+        }
+      },
+      {
+          "show":true,
+          "type": "value",
+          "name": "温度",
+          "splitLine":{
+            "show":false,
+            "lineStyle":{
+              "color":"red",
+              "width":1,
+              "type":"solid"
+            }
+          },
+          "axisLabel":{
+            "textStyle":{
+              "fontSize":12,
+              "color": "#333"
+            }
+          },
+          "axisLine": {
+            "lineStyle": {
+              "color": "#333"
+            }
+          }
+        }],
+      "series": [{
+        "name": "蒸发量",
+        "type": "bar",
+        "data": [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
+        "barWidth": 15,
+        "barMinHeight": 2,
+        "itemStyle": {
+          "normal": {
+            "barBorderRadius":0,
+            "color":null,
+            "label": {
+              "show": true,
+              "position": "top",
+              "textStyle": {
+                "color": "black",
+                "fontSize": 16,
+                "fontWeight": "bolder"
+              }
+            }
+          }
+        }
+      },{
+        "name": "降水量",
+        "type": "bar",
+        "data": [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
+        "barWidth":15,
+        "barMinHeight": 2,
+        "itemStyle": {
+          "normal": {
+            "barBorderRadius":0,
+            "color":null,
+            "label": {
+              "show": true,
+              "position": "top",
+              "textStyle": {
+                "color": "black",
+                "fontSize": 16,
+                "fontWeight": "bolder"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "平均温度",
+        "type": "line",
+        "data": [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2],
+        "yAxisIndex": 1,
+        "step": false,
+        "showSymbol": true,
+        "smooth": false,
+        "symbolSize":5,
+        "lineStyle":{
+          "width":2,
+          "color": null
+        },
+        "itemStyle": {
+          "normal": {
+            "label": {
+              "show": true,
+              "position": "top",
+              "textStyle": {
+                "color": "black",
+                "fontSize": 16,
+                "fontWeight": "bolder"
+              }
+            }
+          }
+        }
+        }
+      ]
+    },
+  "map":{
+      "chartType":"map",
+      "title": {
+          "show": true,
+          "text": "地图",
+          "left": "left",
+          "padding": [5,20,5,10],
+          "textStyle": {
+              "fontSize": 18,
+              "fontWeight": "bolder",
+              "color": "#c23531"
+          }
+      },
+      "geo":{
+          "map": "china",
+          "layoutCenter": ["50%", "50%"],
+          "layoutSize": 600,
+          "zoom":0.5,
+          "roam": "move",
+          "label": {
+              "show": true,
+              "color":"#000",
+              "fontSize":12
+            },
+          "regions": [],
+          "emphasis": {
+              "label": {
+                  "color": "#fff"
+                },
+              "itemStyle": {
+                  "areaColor":"red"
+                }
+            },
+          "itemStyle": {
+              "borderWidth": 0.5,
+              "borderColor": "#000",
+              "areaColor": "#fff"
+            }
+      },
+      "series": [
+          {
+              "type": "map",
+              "coordinateSystem": "geo"
+          }
+      ]
+  },
+  "scatter": {
+    "title": {
+      "show": true,
+      "text": "散点图",
+      "left": "left",
+      "padding": [5,20,5,20],
+      "textStyle": {
+        "fontSize": 18,
+        "fontWeight": "bolder",
+        "color": "#c23531"
+      }
+    },
+    "legend": {
+      "show": true,
+      "data": [],
+      "top": "top",
+      "left": "center",
+      "orient": "horizontal",
+      "padding":[25,20,25,10],
+      "textStyle": {
+        "color":  "#333",
+        "fontSize": 12
+      }
+    },
+    "grid": {
+      "left": 60,
+      "top": 60,
+      "right": 60,
+      "bottom": 60
+    },
+    "tooltip": {
+      "show":true,
+      "textStyle":{
+        "color":"#fff",
+        "fontSize": 18
+      }
+    },
+    "xAxis": {
+      "show":true,
+      "name":"",
+      "splitLine":{
+        "show":false,
+        "lineStyle":{
+          "color":"red",
+          "width":1,
+          "type":"solid"
+        }
+      },
+      "axisLabel":{
+        "interval":"auto",
+        "rotate":0,
+        "textStyle":{
+          "fontSize":12,
+          "color": "#333"
+        }
+      },
+      "axisLine": {
+        "lineStyle": {
+          "color": "#333"
+        }
+      }
+    },
+    "yAxis": {
+      "show":true,
+      "name":"",
+      "splitLine":{
+        "show":false,
+        "lineStyle":{
+          "color":"red",
+          "width":1,
+          "type":"solid"
+        }
+      },
+      "axisLabel":{
+        "textStyle":{
+          "fontSize":12,
+          "color": "#333"
+        }
+      },
+      "axisLine": {
+        "lineStyle": {
+          "color": "#333"
+        }
+      }
+    },
+    "series": [{
+      "type": "scatter",
+      "symbolSize": 20,
+      "data": [
+        [10.0, 8.04],
+        [8.0, 6.95],
+        [13.0, 7.58],
+        [9.0, 8.81],
+        [11.0, 8.33],
+        [14.0, 9.96],
+        [6.0, 7.24],
+        [4.0, 4.26],
+        [12.0, 10.84],
+        [7.0, 4.82],
+        [5.0, 5.68]
+      ],
+      "itemStyle": {
+        "normal": {
+          "color":null,
+          "label": {
+            "show": true,
+            "position": "top",
+            "textStyle": {
+              "color": "black",
+              "fontSize": 16,
+              "fontWeight": "bolder"
+            }
+          }
+        }
+      }
+    }]
+  }
+}

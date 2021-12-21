@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhaoxinms.baseconfig.mapper.ConfigHouseMapper">
+    <sql id="houseContractColumns">
+        h.id as resourceId,
+        h.rent_fee as rentFee, 
+    	p.id as contractId,
+    	h.code as code,
+    	h.block as block,
+    	h.name as name,
+    	h.state as state,
+    	h.floor as floor,
+    	h.building_square as buildingsquare,
+    	h.use_square as usesquare,
+		p.user_name as userName,
+		p.user_idcard as userIdcard,
+		p.user_phone as userPhone,
+		p.user_gender as userGender,
+		p.user_trade as userTrade,
+		p.begin_date as beginDate,
+		p.end_date as endDate
+    </sql>
+
+    <select id="getHouseContractList" resultType="com.zhaoxinms.baseconfig.model.house.HouseContractListVO">
+        SELECT 
+        <include refid="houseContractColumns"/>
+        FROM config_house h left join payment_contract p on h.id = p.resource_id AND p.enabled_mark = 1
+        WHERE h.enabled_mark = 1 
+			<if test="name != null and name != ''">
+				AND h.name = #{name}
+			</if>
+			<if test="state != null and state != ''">
+				AND h.state = #{state}
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				AND p.user_phone= #{userPhone}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND p.user_name = #{userName}
+			</if>
+		LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+    
+    <select id="getHouseContractCount" resultType="java.lang.Integer">
+        SELECT 
+        count(1)
+         FROM config_house h left join payment_contract p on h.id = p.resource_id AND p.enabled_mark = 1
+        WHERE h.enabled_mark = 1 
+			<if test="name != null and name != ''">
+				AND h.name = #{name}
+			</if>
+			<if test="state != null and state != ''">
+				AND h.state = #{state}
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				AND p.user_phone= #{userPhone}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND p.user_name = #{userName}
+			</if>
+    </select>
+
+</mapper>

@@ -1,0 +1,47 @@
+{
+  "chartType":"map",
+  "title": {
+    "show": true,
+    "text": "中国地图",
+    "left": "left",
+    "padding": [5,20,5,10],
+    "textStyle": {
+      "fontSize": 18,
+      "fontWeight": "bolder",
+      "color": "#c23531"
+    }
+  },
+  "geo":{
+    "map": "china",
+    "layoutCenter": ["50%", "50%"],
+    "layoutSize": 600,
+    "zoom":0.7,
+    "roam": true,
+    "label": {
+      "show": true,
+      "color":"#000",
+      "fontSize":12
+    },
+    "regions": [],
+    "emphasis": {
+      "label": {
+        "color": "#fff"
+      },
+      "itemStyle": {
+        "areaColor":"red"
+      }
+    },
+    "itemStyle": {
+      "borderWidth": 0.5,
+      "borderColor": "#000",
+      "areaColor": "#61A0A8"
+    }
+  },
+  "series": [
+    {
+      "name": "地图",
+      "type": "map",
+      "coordinateSystem": "geo"
+    }
+  ]
+}

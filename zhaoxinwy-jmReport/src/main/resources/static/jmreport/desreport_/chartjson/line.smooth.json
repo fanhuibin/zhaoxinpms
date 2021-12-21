@@ -1,0 +1,117 @@
+{
+  "title": {
+    "show": true,
+    "text": "某站点用户访问来源",
+    "left": "left",
+    "padding": [5,20,5,10],
+    "textStyle": {
+      "fontSize": 18,
+      "fontWeight": "bolder",
+      "color": "#c23531"
+    }
+  },
+ /* "legend": {
+    "show": false,
+    "data": ["销量"],
+    "top": "top",
+    "left": "center",
+    "orient": "horizontal",
+    "padding":[25,20,25,10],
+    "textStyle": {
+      "color":  "#333",
+      "fontSize": 12
+    }
+  },*/
+  "grid": {
+    "left": 60,
+    "top": 60,
+    "right": 60,
+    "bottom": 60
+  },
+  "tooltip": {
+    "show":true,
+    "formatter": "{b} : {c}",
+    "textStyle":{
+      "color":"#fff",
+      "fontSize": 18
+    }
+  },
+  "xAxis": {
+    "show":true,
+    "name":"服饰",
+    "splitLine":{
+      "show":false,
+      "lineStyle":{
+        "color":"red",
+        "width":1,
+        "type":"solid"
+      }
+    },
+    "axisLabel":{
+      "interval":"auto",
+      "rotate":0,
+      "textStyle":{
+        "fontSize":12,
+        "color": "#333"
+      }
+    },
+    "axisLine": {
+      "lineStyle": {
+        "color": "#333"
+      }
+    },
+    "data": ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+  },
+  "yAxis": {
+    "show":true,
+    "name":"销量",
+    "splitLine":{
+      "show":false,
+      "lineStyle":{
+        "color":"red",
+        "width":1,
+        "type":"solid"
+      }
+    },
+    "axisLabel":{
+      "textStyle":{
+        "fontSize":12,
+        "color": "#333"
+      }
+    },
+    "axisLine": {
+      "lineStyle": {
+        "color": "#333"
+      }
+    }
+  },
+  "series": [{
+    "name": "销量",
+    "type": "line",
+    "data": [5, 20, 36, 10, 10, 20],
+    "step": false,
+    "showSymbol": true,
+    "smooth": true,
+    "symbolSize":5,
+    "isArea": false,
+    "lineStyle":{
+      "width":2
+    },
+    "areaStyle":{
+      "color": "rgba(220,38,38,0)",
+      "opacity":1
+    },
+    "label": {
+      "show": true,
+      "position": "top",
+      "textStyle": {
+        "color": "black",
+        "fontSize": 16,
+        "fontWeight": "bolder"
+      }
+    },
+    "itemStyle": {
+      "color": "#c43632"
+    }
+  }]
+}

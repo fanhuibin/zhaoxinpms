@@ -1,0 +1,148 @@
+/** list页面样式 */
+.ivu-tabs-nav .ivu-tabs-tab{color: #000000}
+.ivu-tabs-nav .ivu-tabs-tab-active {color: #2d8cf0;}
+.ivu-tabs-bar {border-bottom-color:  rgba(131, 125, 125, 0.5);}
+
+.excel-list-add{
+    height: 184px;
+    width: 258px;
+    border: 1px solid #00baff;
+    font-size: 14px;
+    color: #8eeeff;
+    background-image: linear-gradient(-90deg, rgba(169,222,225, .39) 0, rgba(0, 174, 255, .19) 100%);
+    box-shadow: 0 0 10px 0 rgba(55, 224, 255, .3);
+    cursor: pointer;
+}
+.excel-list-add a{
+    height: 100%;
+    color: #00BFFF;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.excel-list-add a:hover{
+    color:#2d8cf0;
+}
+.excel-view-item{
+    position: relative;
+    margin: 16px;
+    display: flex;
+    flex-direction: column;
+    width: 229px;
+    height: 162px;
+    -webkit-box-shadow:0 0 6px #000000;
+    box-shadow: 0 0 6px #000000;    
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.excel-view-item:hover{
+    box-shadow: 0 0 10px #000000;
+    -webkit-box-shadow:0 0 10px #000000;
+    animation: mymove .2s ;
+    -webkit-animation: move .2s;
+}
+.excel-view-item .thumb {
+    position: relative;
+    height: calc(100% - 36px);
+}
+.excel-view-item .thumb img{
+    width: 100%;height: 100%
+}
+.excel-view-item .item-footer{
+    font-size: 12px;
+    width: 100%;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    justify-content: space-between;
+    background: #1d262e;
+    box-sizing: border-box;
+    padding: 0 10px;
+    color: #bcc9d4;
+}
+.excel-view-item .item-name{
+    width: 100px;
+    padding: 0 5px;
+    line-height: 28px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    border: 1px solid transparent;
+}
+.opt-show{
+    color: #bcc9d4;
+}
+.opt-list-show{
+    color: #696969;    
+}
+
+.excel-edit-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    /*background-color: rgba(29,38,46,0.5);*/
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.excel-edit-container a{
+    display: inline-block;
+    vertical-align: middle;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 30px;
+    box-sizing: border-box;
+    outline: 0;
+    text-align: center;
+    font-size: 14px;
+    background-image: linear-gradient(-225deg, #00d3f1 0, #12b3ff 100%);
+    color: #293f52;
+    border: none;
+    transition: .3s ease;
+    cursor: pointer;
+}
+.aui-logo {
+    display: block;
+    height: 32px;
+    width: 130px;
+    background: url("../logoimage/jim_logo_20200814094127.png") center no-repeat;
+    background-size: contain;
+    margin: 10px 35px;
+    position: relative;
+    top: 7px;
+}
+.ivu-layout-sider-children{
+    padding-top:0;
+ }
+.jimu-header{
+    color: white;
+    font-size: 14px;
+    position: relative;
+    top: -29px;
+    left: 206px;
+}
+.ivu-modal-confirm-head-icon {
+    font-size: 28px;
+}
+.ivu-modal-confirm-head-title {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 12px;
+    font-size: 16px;
+    color: #17233d;
+    font-weight: 500;
+}
+.ivu-modal-confirm-body {
+    padding: 15px 0 0 15px;
+    font-size: 13px;
+    color: #515a6e;
+    position: relative;
+    border-top: 1px solid #e8e8e8;
+}

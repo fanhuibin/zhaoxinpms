@@ -1,0 +1,101 @@
+{
+  "title": {
+    "show": true,
+    "text": "某站点用户访问来源",
+    "left": "left",
+    "top": "5",
+    "padding": [5,20,5,20],
+    "textStyle": {
+      "fontSize": 18,
+      "fontWeight": "bolder",
+      "color": "#c23531"
+    }
+  },
+  "xAxis": {
+    "show":true,
+    "max": 2000,
+    "name":"",
+    "splitLine":{
+      "show":false,
+      "lineStyle":{
+        "color":"red",
+        "width":1,
+        "type":"solid"
+      }
+    },
+    "axisLabel":{
+      "interval":"auto",
+      "rotate":0,
+      "margin": 10,
+      "textStyle":{
+        "fontSize":12,
+        "color": "green"
+      }
+    },
+    "axisLine": {
+      "lineStyle": {
+        "color": "#999"
+      }
+    }
+  },
+  "grid": {
+    "top": 60,
+    "bottom": 60,
+    "left": 60,
+    "right": 60
+  },
+  "yAxis": {
+    "show":true,
+    "name":"",
+    "inverse": false,
+    "axisTick": {
+      "show": false
+    },
+    "axisLine": {
+      "show": false
+    },
+    "splitLine":{
+      "show":false,
+      "lineStyle":{
+        "color":"red",
+        "width":1,
+        "type":"solid"
+      }
+    },
+    "axisLabel":{
+      "textStyle":{
+        "fontSize":16,
+        "color": "#999"
+      }
+    },
+    "axisLine": {
+      "lineStyle": {
+        "color": "#333"
+      }
+    },
+    "data": ["2017", "2018", "2019", "2020"]
+  },
+  "series": [{
+    "type": "pictorialBar",
+    "symbol": "",
+    "symbolRepeat": "fixed",
+    "symbolMargin": "5%!",
+    "symbolClip": true,
+    "symbolSize": 30,
+    "symbolBoundingData": 2000,
+    "double": false,
+    "secondOpacity": 0.2,
+    "data": [891, 1220, 660, 1670],
+    "label": {
+      "show": true,
+      "position": "right",
+      "textStyle": {
+        "color": "black",
+        "fontSize": 16,
+        "fontWeight": "bolder"
+      }
+    }
+  }]
+}
+
+

@@ -1,0 +1,161 @@
+{
+  "title": {
+    "show": true,
+    "text": "某楼盘销售情况",
+    "left": "left",
+    "padding": [5,20,5,20],
+    "textStyle": {
+      "fontSize": 18,
+      "fontWeight": "bolder",
+      "color": "#c23531"
+    }
+  },
+  "legend": {
+    "show": true,
+    "data": [ "意向","预购","成交"],
+    "top": "top",
+    "left": "center",
+    "orient": "horizontal",
+    "padding":[25,20,25,10],
+    "textStyle": {
+      "color":  "#333",
+      "fontSize": 12
+    }
+  },
+  "grid": {
+    "left": 60,
+    "top": 60,
+    "right": 60,
+    "bottom": 60
+  },
+  "tooltip": {
+    "show":true,
+    "trigger": "axis",
+    "textStyle":{
+      "color":"#fff",
+      "fontSize": 18
+    }
+  },
+  "xAxis": {
+    "show":true,
+    "type": "category",
+    "boundaryGap": true,
+    "splitLine":{
+      "show":false,
+      "lineStyle":{
+        "color":"red",
+        "width":1,
+        "type":"solid"
+      }
+    },
+    "axisLabel":{
+      "interval":"auto",
+      "rotate":0,
+      "textStyle":{
+        "fontSize":12,
+        "color": "#333"
+      }
+    },
+    "axisLine": {
+      "lineStyle": {
+        "color": "#333"
+      }
+    },
+    "data": ["周一","周二","周三","周四","周五"]
+  },
+  "yAxis": {
+    "show":true,
+    "type": "value",
+    "splitLine":{
+      "show":false,
+      "lineStyle":{
+        "color":"red",
+        "width":1,
+        "type":"solid"
+      }
+    },
+    "axisLabel":{
+      "textStyle":{
+        "fontSize":12,
+        "color": "#333"
+      }
+    },
+    "axisLine": {
+      "lineStyle": {
+        "color": "#333"
+      }
+    }
+  },
+  "series": [{
+    "name": "预购",
+    "type": "line",
+    "data":  [30, 182, 434, 791, 390],
+    "step": false,
+    "showSymbol": true,
+    "smooth": false,
+    "symbolSize":5,
+    "lineStyle":{
+      "width":2
+    },
+    "itemStyle": {
+      "color":""
+    },
+    "label": {
+      "show": true,
+      "position": "top",
+      "textStyle": {
+        "color": "black",
+        "fontSize": 16,
+        "fontWeight": "bolder"
+      }
+    }
+  },
+    {
+      "name": "成交",
+      "type": "line",
+      "data":[10, 12, 21, 54, 260],
+      "step": false,
+      "showSymbol": true,
+      "smooth": false,
+      "symbolSize":5,
+      "lineStyle":{
+        "width":2
+      },
+      "itemStyle": {
+        "color":""
+      },
+      "label": {
+        "show": true,
+        "position": "top",
+        "textStyle": {
+          "color": "black",
+          "fontSize": 16,
+          "fontWeight": "bolder"
+        }
+      }
+    },
+    {
+      "name": "意向",
+      "type": "line",
+      "data":[1320, 1132, 601, 234, 120],
+      "step": false,
+      "showSymbol": true,
+      "smooth": false,
+      "symbolSize":5,
+      "lineStyle":{
+        "width":2
+      },
+      "itemStyle": {
+        "color":""
+      },
+      "label": {
+        "show": true,
+        "position": "top",
+        "textStyle": {
+          "color": "black",
+          "fontSize": 16,
+          "fontWeight": "bolder"
+        }
+      }
+    }]
+}

@@ -1,0 +1,37 @@
+.layout{
+    border: 1px solid #d7dde4;
+    position: relative;
+}
+.layout-breadcrumb{
+    padding: 10px 15px 0;
+}
+.layout-content{
+    min-height: 200px;
+    margin: 10px;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 4px;
+}
+.layout-content-main{
+    padding: 10px;
+}
+.layout-copy{
+    text-align: center;
+    padding: 10px 0 20px;
+    color: #9ea7b4;
+}
+.layout-menu-left{
+    
+}
+.layout-header{
+    height: 60px;
+    background: #fff;
+    box-shadow: 0 1px 1px rgba(0,0,0,.1);
+}
+.layout-logo-left{
+    width: 90%;
+    height: 30px;
+    background: #5b6270;
+    border-radius: 3px;
+    margin: 15px auto;
+}
