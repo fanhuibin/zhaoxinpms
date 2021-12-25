@@ -58,7 +58,13 @@
     "vue-meta": "^2.4.0",
     "vue-router": "3.4.9",
     "vuedraggable": "2.24.3",
-    "vuex": "3.6.0"
+    "vuex": "3.6.0",
+    "stompjs": "^2.3.3",
+    "vue-video-player": "^5.0.2",
+    "moment": "^2.24.0",
+    "vue-quill-editor": "3.0.6",
+    "benz-amr-recorder": "^1.0.14",
+    "@smallwei/avue": "2.4.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "4.4.6",
@@ -75,7 +81,11 @@
     "sass-loader": "10.1.1",
     "script-ext-html-webpack-plugin": "2.1.5",
     "svg-sprite-loader": "5.1.1",
-    "vue-template-compiler": "2.6.12"
+    "vue-template-compiler": "2.6.12",
+    "less-loader": "^4.1.0",
+    "less": "^3.9.0",
+    "stylus": "^0.54.7",
+    "stylus-loader": "^3.0.2"
   },
   "engines": {
     "node": ">=8.9",

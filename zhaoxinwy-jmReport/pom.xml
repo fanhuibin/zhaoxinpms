@@ -9,6 +9,7 @@
 	</parent>
 	<groupId>com.zhaoxinwy</groupId>
 	<artifactId>zhaoxinwy-jmReport</artifactId>
+	<url>http://www.zhaoxinms.com</url>
 	<properties>
 		<!-- jdk版本号 -->
 		<java.version>1.8</java.version>

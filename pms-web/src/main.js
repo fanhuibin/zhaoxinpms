@@ -22,6 +22,11 @@ import { getConfigKey } from "@/api/system/config";
 import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, handleTree, dynamicText } from "@/utils/ruoyi";
 // 分页组件
 import Pagination from "@/components/Pagination";
+import Avue from '@smallwei/avue'
+import '@smallwei/avue/lib/index.css'
+//时间插件
+import moment from 'moment'//导入文件
+Vue.prototype.$moment = moment//赋值使用
 // 自定义表格工具组件
 import RightToolbar from "@/components/RightToolbar"
 // 富文本组件
@@ -38,6 +43,8 @@ import VueMeta from 'vue-meta'
 import DictData from '@/components/DictData'
 // 表格组件
 import JTable from '@/components/JTable'
+//workflow组织机构选择
+import FormControls from './components/workflow/FormControls/index.js'
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
@@ -90,6 +97,9 @@ DictData.install()
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size
 })
+
+Vue.use(Avue)
+Vue.use( FormControls )
 
 Vue.config.productionTip = false
 

@@ -132,6 +132,7 @@ public class MyBatisConfig
     	String typeAliasesPackage = env.getProperty("mybatis.typeAliasesPackage");
         String mapperLocations = env.getProperty("mybatis.mapperLocations");
         String configLocation = env.getProperty("mybatis.configLocation");
+        String typeHandlersPackage = env.getProperty("mybatis.type-handlers-package");
         typeAliasesPackage = setTypeAliasesPackage(typeAliasesPackage);
         //全局配置
         GlobalConfig globalConfig = new GlobalConfig();
@@ -142,7 +143,9 @@ public class MyBatisConfig
         VFS.addImplClass(SpringBootVFS.class);
 
         bean.setDataSource(dataSource);
+        bean.setTypeHandlersPackage(typeHandlersPackage);
         bean.setTypeAliasesPackage(typeAliasesPackage);
+        bean.setTypeHandlersPackage(typeHandlersPackage);
         bean.setMapperLocations(resolveMapperLocations(StringUtils.split(mapperLocations, ",")));
         bean.setConfiguration(configuration());
         return bean.getObject();
@@ -154,6 +157,7 @@ public class MyBatisConfig
         mybatisConfiguration.setCacheEnabled(false);
         mybatisConfiguration.addInterceptor(mybatisPlusInterceptor());
         mybatisConfiguration.setLogImpl(Slf4jImpl.class);
+        mybatisConfiguration.setUseGeneratedKeys(true);
         mybatisConfiguration.setJdbcTypeForNull(JdbcType.NULL);
         return mybatisConfiguration;
     }

@@ -13,7 +13,7 @@
 	<artifactId>zhaoxinwy-pms</artifactId>
 	<version>0.8</version>
 	<name>zhaoxinwy-pms</name>
-	<url>http://maven.apache.org</url>
+	<url>http://www.zhaoxinms.com</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

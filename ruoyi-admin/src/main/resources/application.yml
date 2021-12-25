@@ -49,7 +49,7 @@ spring:
     # 国际化资源文件路径
     basename: i18n/messages
   profiles: 
-    active: druid,pms
+    active: druid,wx,pms,workflow
   # 文件上传
   servlet:
      multipart:
@@ -102,6 +102,8 @@ mybatis:
     mapperLocations: classpath*:mapper/**/*Mapper.xml
     # 加载全局的配置文件
     configLocation: classpath:mybatis/mybatis-config.xml
+      # 自定义TypeHandler
+    type-handlers-package: com.zhaoxinms.weixin.config.typehandler
 
 # PageHelper分页插件
 pagehelper: 

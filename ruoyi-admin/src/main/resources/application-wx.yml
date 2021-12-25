@@ -1,0 +1,21 @@
+wx:
+  # 公众号配置
+  mp:
+    configs:
+      - appId: wx42f9c18d3c964618
+        secret: 8ad0b597f06f8751440a910db9ab44f2
+        token: xxxxxxxxxx
+        aesKey: xxxxxxxxxxxxxxxxxxxx
+  # 小程序配置
+  ma:
+    configs:
+      - appId: xxxxxxxxxxxxxxxx
+        secret: xxxxxxxxxxxxx
+        # 微信支付商户号，请去微信支付平台申请
+        mchId: 1588227511
+        # 微信支付商户密钥，请去微信支付平台申请
+        mchKey: xxxxxxxxxxxxxxxxxxxxx
+
+mall:
+  # 支付、物流回调地址，即后台服务7500端口的外网访问域名，要保证外网能访问
+  notify-host: http://xx.xxxx.com

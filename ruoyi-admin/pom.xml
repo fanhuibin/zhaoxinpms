@@ -68,6 +68,21 @@
             <artifactId>zhaoxinwy-pms</artifactId>
             <version>0.8</version>
         </dependency>
+        
+        <!-- 物业管理模块-->
+        <dependency>
+            <groupId>com.zhaoxinms</groupId>
+            <artifactId>zhaoxinwy-workflow</artifactId>
+            <version>0.8</version>
+        </dependency>
+        
+        <!-- 微信模块-->
+        <dependency>
+            <groupId>com.zhaoxinms</groupId>
+            <artifactId>zhaoxinwy-wx</artifactId>
+            <version>0.8.0</version>
+        </dependency>
+        
         <dependency> 
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

@@ -9,7 +9,7 @@
 	<version>0.8.0</version>
 
 	<name>肇新智慧物业</name>
-	<url>http://zhaoxinms.com</url>
+	<url>http://www.zhaoxinms.com</url>
 	<description>肇新智慧物业</description>
 
 	<properties>
@@ -33,6 +33,9 @@
 		<poi.version>4.1.0</poi.version>
 		<velocity.version>1.7</velocity.version>
 		<jwt.version>0.9.1</jwt.version>
+		<hutool.version>5.1.0</hutool.version>
+        <weixin-java.version>3.7.0</weixin-java.version>
+        <ttl.version>2.11.4</ttl.version>
 	</properties>
 
 	<!-- 依赖声明 -->
@@ -241,7 +244,43 @@
 				<artifactId>mybatis-plus-boot-starter</artifactId>
 				<version>3.4.0</version>
 			</dependency>
-
+			
+			<!--hutool-->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <!--weixin-java-common-->
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-common</artifactId>
+                <version>${weixin-java.version}</version>
+            </dependency>
+            <!--weixin-java-admin-->
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-mp</artifactId>
+                <version>${weixin-java.version}</version>
+            </dependency>
+            <!--weixin-java-miniapp-->
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-miniapp</artifactId>
+                <version>${weixin-java.version}</version>
+            </dependency>
+            <!--weixin-java-pay-->
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-pay</artifactId>
+                <version>${weixin-java.version}</version>
+            </dependency>
+            <!--TTL-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>transmittable-thread-local</artifactId>
+                <version>${ttl.version}</version>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -254,6 +293,8 @@
 		<module>ruoyi-common</module>
 		<module>zhaoxinwy-pms</module>
 		<module>zhaoxinwy-jmReport</module>
+		<module>zhaoxinwy-wx</module>
+		<module>zhaoxinwy-workflow</module>
 	</modules>
 	<packaging>pom</packaging>
 

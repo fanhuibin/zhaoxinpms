@@ -1,0 +1,6 @@
+spring:
+  activiti:
+    # 解决启动报错：class path resource [processes/] cannot be resolved to URL because it does not exist
+    check-process-definitions: false
+    # 检测身份信息表是否存在
+    db-identity-used: false
