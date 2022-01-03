@@ -12,15 +12,18 @@
                     </div>
                     <div class="ghost-step step" :style="{ transform: translateX }"></div>
                 </div>
-                <el-button size="small" class="publish-btn" @click="publish">发布</el-button>
+                <div class="designer-actions">
+                    <el-button size="small" class="publish-btn" @click="publish">返回</el-button>
+                    <el-button size="small" class="publish-btn" @click="publish">提交</el-button>
+                </div>
             </header>
-            <section class="Jcommon-layout-main Jflex-main" >
+            <section class="Jcommon-layout-main Jflex-main" v-if="mockData">
                 <BasicSetting
                     ref="basicSetting"
                     :conf="mockData.basicSetting"
                     v-show="activeStep === 'basicSetting'"
                     tabName="basicSetting"
-                    @initiatorChange="onInitiatorChange"
+                    @initiatorChange="onInitiatorChange" 
                 />
 
                 <Process
@@ -56,10 +59,8 @@ export default {
     },
     data() {
         return {
-            mockData: {
-                basicSetting: {},
-                processData: {}
-            }, // 可选择诸如 $route.param，Ajax获取数据等方式自行注入
+            id: null,
+            mockData: null, // 可选择诸如 $route.param，Ajax获取数据等方式自行注入
             activeStep: 'basicSetting', // 激活的步骤面板
             steps: [
                 { label: '基础设置', key: 'basicSetting' },
@@ -80,14 +81,28 @@ export default {
             return `translateX(${this.steps.findIndex(t => t.key === this.activeStep) * 100}%)`;
         },
     },
-    mounted() {
-    },
+    mounted() {},
     methods: {
+        init(id) {
+            this.id = id;
+            if (id == null) {
+                this.mockData = {
+                    basicSetting: {},
+                    processData: {},
+                };
+            } else {
+                request({
+                    url: `/workflow/designer/${id}`,
+                    method: 'get',
+                }).then(res => {
+                    this.mockData = JSON.parse(res.data.json);
+                });
+            }
+        },
         changeSteps(item) {
             this.activeStep = item.key;
         },
         publish() {
-            console.log(this.$refs);
             const getCmpData = name => this.$refs[name].getData();
             // basicSetting  formDesign processDesign 返回的是Promise 因为要做校验
             const p1 = getCmpData('basicSetting');
@@ -106,20 +121,41 @@ export default {
                 });
         },
         sendToServer(param) {
-            this.$notify({
-                title: '数据已整合完成',
-                message: '请在控制台中查看数据输出',
-                position: 'bottom-right',
-            });
-
-            request({
-                url: `/workflow/designer/add`,
-                method: 'post',
-                data: param,
-            }).then(res => {
-                console.log("请求完成");
-            });
-            console.log('配置数据', param);
+            if (this.id) {
+                request({
+                    url: `/workflow/designer/${this.id}`,
+                    method: 'put',
+                    data: param,
+                }).then(res => {
+                    this.$message({
+                        message: res.msg,
+                        type: 'success',
+                        duration: 1000,
+                        onClose: () => {
+                            this.$emit('refresh', true);
+                        },
+                    });
+                });
+            } else {
+                request({
+                    url: `/workflow/designer`,
+                    method: 'post',
+                    data: param,
+                }).then(res => {
+                    this.$message({
+                        message: res.msg,
+                        type: 'success',
+                        duration: 1000,
+                        onClose: () => {
+                            this.$emit('refresh', true);
+                        },
+                    });
+                });
+            }
+            // console.log('配置数据', param);
+        },
+        close() {
+            this.$emit('refresh', true);
         },
         exit() {
             this.$confirm('离开此页面您得修改将会丢失, 是否继续?', '提示', {

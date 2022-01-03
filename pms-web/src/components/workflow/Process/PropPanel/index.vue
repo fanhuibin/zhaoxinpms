@@ -23,15 +23,9 @@
         <section class="condition-pane pd-10" v-if="value && isConditionNode()">
             <el-form size="medium" label-width="100px" label-position="top">
                 <el-form-item label="条件说明" prop="condition">
-                    <el-input
-                        v-model="conditionLabel"
-                        placeholder="条件说明"
-                        :maxlength="100"
-                        :style="{ width: '100%' }"
-                    ></el-input>
+                    <el-input v-model="conditionLabel" placeholder="条件说明" :maxlength="100" :style="{ width: '100%' }"></el-input>
                 </el-form-item>
                 <el-form-item label="条件表达式" prop="condition">
-                    
                     <el-input
                         v-model="condition"
                         type="textarea"
@@ -109,13 +103,54 @@
         </section>
 
         <section v-if="value && isCopyNode()" style="padding-left: 1rem">
-            <p>抄送人</p>
-            <org-select
-                ref="copy-user-org"
-                buttonType="button"
-                v-model="properties.members"
-                title="添加用户"
-            />
+            <el-tabs v-model="activeName" class="pane-tab">
+                <el-tab-pane :label="'设置抄送人'" name="config">
+                    <div>
+                        <div style="padding: 12px">
+                            <el-radio-group v-model="approverForm.assigneeType" style="line-height: 32px" @change="resetOrgColl">
+                                <el-radio v-for="item in copyAssigneeTypeOptions" :label="item.value" :key="item.value" class="radio-item">
+                                    {{ item.label }}
+                                </el-radio>
+                            </el-radio-group>
+                        </div>
+                        <div style="border-bottom: 1px solid #e5e5e5; padding-bottom: 1rem">
+                            <div class="option-box">
+                                <org-select
+                                    v-if="approverForm.assigneeType === 'role'"
+                                    ref="approver-role-org"
+                                    buttonType="button"
+                                    v-model="approverForm.approverRoles"
+                                    title="添加角色"
+                                    type="role"
+                                    @change="onOrgChange"
+                                    class="mb-10"
+                                />
+                                <org-select
+                                    v-if="approverForm.assigneeType === 'user'"
+                                    ref="approver-user-org"
+                                    buttonType="button"
+                                    v-model="approverForm.approvers"
+                                    title="添加用户"
+                                    @change="onOrgChange"
+                                />
+                                <el-form size="medium" label-width="100px" label-position="top">
+                                    <el-form-item label="activiti表达式" prop="expression" v-if="approverForm.assigneeType === 'input'">
+                                        <el-input
+                                            v-model="approverForm.expression"
+                                            type="textarea"
+                                            placeholder="请输入表达式"
+                                            :maxlength="100"
+                                            show-word-limit
+                                            :autosize="{ minRows: 4, maxRows: 4 }"
+                                            :style="{ width: '100%' }"
+                                        ></el-input>
+                                    </el-form-item>
+                                </el-form>
+                            </div>
+                        </div>
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
         </section>
 
         <div class="actions">
@@ -155,7 +190,6 @@ export default {
             properties: {},
             // 发起人  start节点和condition节点需要
             initiator: {
-                'dep&user': [],
             },
             priorityLength: 0, // 当为条件节点时  显示节点优先级选项的数据
             startForm: {
@@ -174,6 +208,20 @@ export default {
                 {
                     label: '发起人',
                     value: 'myself',
+                },
+                {
+                    label: 'activiti表达式',
+                    value: 'input',
+                },
+            ],
+            copyAssigneeTypeOptions: [
+                {
+                    label: '指定成员',
+                    value: 'user',
+                },
+                {
+                    label: '指定角色',
+                    value: 'role',
                 },
                 {
                     label: 'activiti表达式',
@@ -199,7 +247,7 @@ export default {
         },
         resetOrgColl() {
             this.approverForm.approvers = [];
-            this.approverForm.approverPos = [];
+            this.approverForm.approverRoles = [];
         },
         onOrgChange(data) {},
         timeTangeLabel(item) {
@@ -223,8 +271,8 @@ export default {
             return tag.includes(item.tag) && this.showingPCons.includes(item.formId);
         },
 
-        initCopyNode() {
-            this.properties = this.value.properties;
+        initCopyNodeData() {
+            Object.assign(this.approverForm, this.value.properties);
         },
 
         initStartNodeData() {
@@ -232,7 +280,53 @@ export default {
         },
 
         copyNodeConfirm() {
-            this.$emit('confirm', this.properties, this.getOrgSelectLabel('copy-user') || '发起人自选');
+            if (!this.properties.title) {
+                this.$message({
+                    message: '请输入节点名称',
+                    type: 'error',
+                });
+                return;
+            }
+            const assigneeType = this.approverForm.assigneeType;
+            let content = '';
+            if (assigneeType === 'user') {
+                this.approverForm.approverRoles = [];
+                this.approverForm.expression = '';
+                content = this.getOrgSelectLabel('approver-' + assigneeType);
+                if (!this.approverForm.approvers.length) {
+                    this.$message({
+                        message: '请设置审批人',
+                        type: 'error',
+                    });
+                    return;
+                }
+            } else if (assigneeType === 'role') {
+                this.approverForm.approvers = [];
+                this.approverForm.expression = '';
+                content = this.getOrgSelectLabel('approver-' + assigneeType);
+                if (!this.approverForm.approverRoles.length) {
+                    this.$message({
+                        message: '请设置审批人',
+                        type: 'error',
+                    });
+                    return;
+                }
+            } else if (assigneeType === 'input') {
+                this.approverForm.approvers = [];
+                this.approverForm.approverRoles = [];
+                content = '自定义';
+                if (!this.approverForm.expression) {
+                    this.$message({
+                        message: '请设置activiti表达式',
+                        type: 'error',
+                    });
+                    return;
+                }
+            }
+
+            const formOperates = this.approverForm.formOperates.map(t => ({ formId: t.formId, formOperate: t.formOperate }));
+            Object.assign(this.properties, this.approverForm, { formOperates });
+            this.$emit('confirm', this.properties, content || '请设置抄送人');
             this.visible = false;
         },
 
@@ -254,12 +348,12 @@ export default {
                 });
                 return;
             }
-            
+
             let nodeContent = this.conditionLabel;
             this.properties.condition = this.condition;
             this.properties.conditionLabel = this.conditionLabel;
-            this.properties.conditions = [{'condition':this.condition,'conditonLabel':this.conditionLabel}]
-         
+            this.properties.conditions = [{ condition: this.condition, conditonLabel: this.conditionLabel }];
+
             this.$emit('confirm', this.properties, nodeContent || '请设置条件');
             this.visible = false;
         },
@@ -329,8 +423,10 @@ export default {
                 }
             }
 
+            this.approverForm.title = this.properties.title;
             const formOperates = this.approverForm.formOperates.map(t => ({ formId: t.formId, formOperate: t.formOperate }));
             Object.assign(this.properties, this.approverForm, { formOperates });
+            
             this.$emit('confirm', this.properties, content || '请设置审批人');
             this.visible = false;
         },
@@ -381,7 +477,6 @@ export default {
 
         initInitiator() {
             const initiator = this.value.properties && this.value.properties.initiator;
-            this.initiator['dep&user'] = Array.isArray(initiator) ? initiator : [];
         },
         /**
          * 初始化审批节点所需数据
@@ -396,7 +491,7 @@ export default {
             // 初始化条件表单数据
             this.condition = this.value.properties && this.value.properties.condition;
             this.conditionLabel = this.value.properties && this.value.properties.conditionLabel;
-        }
+        },
     },
     watch: {
         visible(val) {
@@ -407,6 +502,7 @@ export default {
             this.isStartNode() && this.initStartNodeData();
             this.isApproverNode() && this.initApproverNodeData();
             this.isConditionNode() && this.initConditionNodeData();
+            this.isCopyNode() && this.initCopyNodeData();
         },
 
         value(newVal) {

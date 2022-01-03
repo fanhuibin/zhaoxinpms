@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication(scanBasePackages = {"com.zhaoxinms", "com.ruoyi"},
     exclude = {DataSourceAutoConfiguration.class, org.activiti.spring.boot.SecurityAutoConfiguration.class,})
 @EnableTransactionManagement
-@MapperScan(basePackages = {"com.ruoyi.**.mapper", "com.zhaoxinms.mapper", "com.zhaoxinms.*.mapper"})
+@MapperScan(basePackages = {"com.ruoyi.**.mapper", "com.zhaoxinms.mapper", "com.zhaoxinms.**.mapper"})
 public class ZhaoXinWY {
     public static void main(String[] args) {
         // System.setProperty("spring.devtools.restart.enabled", "false");

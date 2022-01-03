@@ -10,7 +10,7 @@ export class NodeUtils {
     static idGenerator() {
         let qutient = new Date() - new Date('2020-08-01');
         qutient += Math.ceil(Math.random() * 1000); // 防止重複
-        const chars = '0123456789ABCDEFGHIGKLMNOPQRSTUVWXYZabcdefghigklmnopqrstuvwxyz';
+        const chars = 'ABCDEFGHIGKLMNOPQRSTUVWXYZabcdefghigklmnopqrstuvwxyz';
         const charArr = chars.split('');
         const radix = chars.length;
         const res = [];
@@ -329,12 +329,19 @@ export class NodeUtils {
         this.isConditionNode(node) && !props.isDefault && !props.initiator && isEmptyArray(props.conditions) && (valid = false);
 
         const customSettings = ['myself', 'user', 'role', 'input'];
-
         this.isApproverNode(node) &&
             (!customSettings.includes(props.assigneeType) ||
                 (isEmptyArray(props.approvers) && props.assigneeType === 'user') ||
                 (isEmptyArray(props.approverRoles) && props.assigneeType === 'role') ||
-                (isEmptyArray(props.expression) && props.assigneeType === 'input')) &&
+                (isEmpty(props.expression) && props.assigneeType === 'input')) &&
+            (valid = false);
+
+        const copySettings = ['user', 'role', 'input'];
+        this.isCopyNode(node) &&
+            (!copySettings.includes(props.assigneeType) ||
+                (isEmptyArray(props.approvers) && props.assigneeType === 'user') ||
+                (isEmptyArray(props.approverRoles) && props.assigneeType === 'role') ||
+                (isEmpty(props.expression) && props.assigneeType === 'input')) &&
             (valid = false);
         return valid;
     }

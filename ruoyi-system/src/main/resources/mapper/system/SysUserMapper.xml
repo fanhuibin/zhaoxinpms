@@ -217,4 +217,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach> 
  	</delete>
 	
+	<select id="selectUserListByRoleKey" parameterType="String" resultMap="SysUserResult">
+		select * from sys_user where user_id in ( select user_id from sys_user_role where role_id = ( select role_id from sys_role where role_key = #{roleKey} ) )
+		and del_flag = '0'
+	</select>
 </mapper> 

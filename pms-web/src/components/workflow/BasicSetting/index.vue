@@ -10,52 +10,65 @@
         <el-input v-model="formData.flowCode" placeholder="请输入流程编码" clearable :style="{width: '100%'}">
         </el-input>
       </el-form-item>
+      <!--
       <el-form-item label="流程分组" prop="flowGroup">
         <el-select v-model="formData.flowGroup" placeholder="请选择流程分组" clearable :style="{width: '100%'}">
           <el-option v-for="(item, index) in flowGroupOptions" :key="index" :label="item.label"
             :value="item.value" :disabled="item.disabled"></el-option>
         </el-select>
       </el-form-item>
+      -->
       <el-form-item label="模板图标" prop="icon">
-        <img :src="activeIconSrc" style="width: 28px;height: 28px;vertical-align: middle;">
-        <el-button  plain size="mini" @click="dialogVisible = true" style="margin-left: 10px;">选择图标</el-button>
+        <div :style="{backgroundColor: formData.flowIconBackground}" style="width:44px;height:44px;margin-left:30px;border-radius:5px;">
+            <i :class="formData.flowIcon" style="font-size: 24px;color: white;padding-left:10px;padding-top:10px;" />
+        </div>
+        <div style="vertical-align: middle;">
+            <el-button  plain size="mini" @click="dialogVisible = true" style="margin-left: 10px;">选择图标</el-button>
+            <el-color-picker v-model="formData.flowIconBackground" title="图标背景色" style="vertical-align: middle;"
+                        :predefine="['#008cff', '#35b8e0', '#00cc88','#ff9d00','#ff4d4d', '#5b69bc', '#ff8acc', '#3b3e47','#282828']" />
+        </div>
       </el-form-item>
+      <!--
       <el-form-item label="流程说明" prop="flowRemark">
         <el-input v-model="formData.flowRemark" type="textarea" placeholder="请输入流程说明" :maxlength="100"
           show-word-limit :autosize="{minRows: 4, maxRows: 4}" :style="{width: '100%'}"></el-input>
       </el-form-item>
+      -->
     </el-form>
     <el-dialog
       title="选择图标"
       :visible.sync="dialogVisible"
-      width="612px">
-      <img 
-      v-for="(icon, index) in iconList" 
-      :key="index" :src="icon.src" 
-      class="icon-item" 
-      :class="{active: selectedIcon === icon.id}"
-      @click="selectedIcon = icon.id">
+      width="612px" height="500px">
+      <div style="height:350px;overflow-y:scroll;margin-left:10px;">
+        <i 
+        v-for="(icon, index) in elementIcons" 
+        :key="index" :src="icon.src" 
+        style="font-size:24px;"
+        class="icon-item" 
+        :class="[{active: selectedIcon === icon}, icon]"
+        @click="selectedIcon = icon"/>
+      </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false; selectedIcon = activeIcon" size="small">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false; activeIcon = selectedIcon" size="small">确 定</el-button>
+        <el-button @click="dialogVisible = false; selectedIcon = formData.flowIcon" size="small">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false; formData.flowIcon = selectedIcon" size="small">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 <script>
+import elementIconsJSON from './element-icons.json'
 export default {
   components: {},
   props: ['tabName', 'initiator', 'conf'],
   data() {
-    const req = require.context( '@/assets/approverIcon', false, /\.png$/ )
-    const iconList = req.keys().map((t, idx) => ({src: req(t), id: idx}))
+    const elementIcons = elementIconsJSON.map(name => `el-icon-${name}`)
     return {
       dialogVisible: false,
-      activeIcon: iconList[0].id,
-      selectedIcon: iconList[0].id,
+      selectedIcon: elementIcons[0],
       formData: {
         flowName: '',
-        flowImg: '',
+        flowIcon: elementIcons[0],
+        flowIconBackground: 'rgb(211,82,70)',
         flowGroup: undefined,
         flowRemark: undefined,
         initiator: null
@@ -71,41 +84,13 @@ export default {
           message: '请输入流程编码',
           trigger: 'blur'
         }],
-        flowGroup: [{
-          required: true,
-          message: '请选择流程分组',
-          trigger: 'blur'
-        }],
+        // flowGroup: [{
+        //   required: true,
+        //   message: '请选择流程分组',
+        //   trigger: 'blur'
+        // }],
       },
-      iconList,
-      flowGroupOptions: [{
-        "label": "假勤管理",
-        "value": 1
-      }, {
-        "label": "人事管理",
-        "value": 2
-      }, {
-        "label": "财务管理",
-        "value": 3
-      }, {
-        "label": "业务管理",
-        "value": 4
-      }, {
-        "label": "行政管理",
-        "value": 5
-      }, {
-        "label": "法务管理",
-        "value": 6
-      }, {
-        "label": "其他",
-        "value": 7
-      }],
-    }
-  },
-  computed: {
-    activeIconSrc(){
-      const icon = this.iconList.find(t => t.id === this.activeIcon)
-      return icon ? icon.src : ''
+      elementIcons,
     }
   },
   created() {
@@ -127,7 +112,6 @@ export default {
             reject({ target: this.tabName})
             return
           }
-          this.formData.flowImg = this.activeIcon
           resolve({ formData: this.formData, target: this.tabName})  // TODO 提交表单
         })
       })
