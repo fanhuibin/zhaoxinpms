@@ -80,7 +80,6 @@ public class PaymentMeterController {
     public ActionResult create(@RequestBody @Valid PaymentMeterCrForm paymentMeterCrForm) throws DataException {
         SysUser userInfo = userProvider.get();
         PaymentMeterEntity entity = JsonUtil.getJsonToBean(paymentMeterCrForm, PaymentMeterEntity.class);
-        entity.setId(RandomUtil.uuId());
         paymentMeterService.create(entity);
         return ActionResult.success("新建成功");
     }

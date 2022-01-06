@@ -1,0 +1,50 @@
+package ${packageName}.entity.vo;
+
+#foreach ($import in $importList)
+import ${import};
+#end
+import cn.afterturn.easypoi.excel.annotation.Excel;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import java.util.Date;
+
+
+
+/**
+ * ${functionName}视图对象 ${tableName}
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Data
+@ApiModel("${functionName}视图对象")
+public class ${ClassName}Vo {
+
+	private static final long serialVersionUID = 1L;
+
+#foreach ($column in $columns)
+#if($column.isList)
+    /**
+     * $column.columnComment
+     */
+#set($parentheseIndex=$column.columnComment.indexOf("（"))
+#if($parentheseIndex != -1)
+#set($comment=$column.columnComment.substring(0, $parentheseIndex))
+#else
+#set($comment=$column.columnComment)
+#end
+#if(${column.dictType} && ${column.dictType} != '')
+    @Excel(name = "${comment}")
+#elseif($parentheseIndex != -1)
+	@Excel(name = "${comment}")
+#else
+	@Excel(name = "${comment}")
+#end
+	@ApiModelProperty("$column.columnComment")
+	private $column.javaType $column.javaField;
+
+#end
+#end
+
+}
