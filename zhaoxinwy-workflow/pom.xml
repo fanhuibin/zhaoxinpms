@@ -20,12 +20,12 @@
 			<version>6.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.ruoyi</groupId>
-			<artifactId>ruoyi-framework</artifactId>
+			<groupId>com.zhaoxinms</groupId>
+			<artifactId>zhaoxinwy-framework</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.ruoyi</groupId>
-			<artifactId>ruoyi-system</artifactId>
+			<groupId>com.zhaoxinms</groupId>
+			<artifactId>zhaoxinwy-system</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.zhaoxinms</groupId>

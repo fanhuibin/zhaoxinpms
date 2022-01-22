@@ -8,12 +8,8 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
-import com.zhaoxinms.workflow.engine.entity.InstanceBusiness;
 import com.zhaoxinms.workflow.engine.entity.TaskVo;
 
-/**
- * @author 一只闲鹿
- */
 @Repository
 public interface TaskMapper {
 
@@ -140,7 +136,7 @@ public interface TaskMapper {
             "\t\t\t\tFROM\n" +
             "\t\t\t\t\tACT_HI_TASKINST RES\n" +
             "\t\t\t\tWHERE\n" +
-            "\t\t\t\t\tRES.ASSIGNEE_ = 'ry'\n" +
+            "\t\t\t\t\tRES.ASSIGNEE_ = #{userId}\n" +
             "\t\t\t\tAND RES.END_TIME_ IS NOT NULL\n" +
             "\t\t\t\tORDER BY\n" +
             "\t\t\t\t\tRES.END_TIME_ DESC\n" +
@@ -152,13 +148,4 @@ public interface TaskMapper {
             "\t1 = 1 <if test='taskId != null'> AND ID_ = #{taskId} </if><if test='taskName != null'> AND NAME_ = #{taskName} </if><if test='instanceId != null'> AND PROC_INST_ID_ = #{instanceId} </if> \n" +
             " </script> ")
     Integer findDoneCount(TaskVo taskVo);
-
-    @Insert(" INSERT INTO INSTANCE_BUSINESS (instance_id, business_key, module) VALUES (#{instanceId}, #{businessKey}, #{module}) ")
-    int insertInstanceBusiness(InstanceBusiness instanceBusiness);
-
-    @Select(" SELECT * FROM INSTANCE_BUSINESS WHERE 1=1 AND INSTANCE_ID = #{instanceId} LIMIT 1 ")
-    Map<String, Object> selectInstanceBusinessByInstanceId(String instanceId);
-
-    @Select(" SELECT * FROM ${module} WHERE ID = #{id} ")
-    Map<String, Object> selectBusinessByBusinessKeyAndModule(@Param("id") String id, @Param("module") String module);
 }

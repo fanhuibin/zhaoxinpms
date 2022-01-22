@@ -8,6 +8,7 @@ import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.CustomProperty;
 import org.activiti.bpmn.model.EndEvent;
 import org.activiti.bpmn.model.ExclusiveGateway;
+import org.activiti.bpmn.model.ExtensionAttribute;
 import org.activiti.bpmn.model.MultiInstanceLoopCharacteristics;
 import org.activiti.bpmn.model.ParallelGateway;
 import org.activiti.bpmn.model.SequenceFlow;
@@ -16,7 +17,8 @@ import org.activiti.bpmn.model.StartEvent;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.bpmn.model.Process;
 
-import com.ruoyi.common.utils.StringUtils;
+import com.zhaoxinms.common.utils.JsonUtil;
+import com.zhaoxinms.common.utils.StringUtils;
 import com.zhaoxinms.workflow.engine.model.designer.FlowDesignerModel;
 
 public class BPMNCreator {
@@ -109,10 +111,18 @@ public class BPMNCreator {
         return endEvent;
     }
 
-    public static String createXML(FlowDesignerModel model, List<UserTask> userTasks, List<ExclusiveGateway> gateways, List<SequenceFlow> taskFlows) {
+    public static String createXML(String json, List<UserTask> userTasks, List<ExclusiveGateway> gateways, List<SequenceFlow> taskFlows) {
+        FlowDesignerModel model = JsonUtil.getJsonToBean(json, FlowDesignerModel.class);
         BpmnModel bpmn = new BpmnModel();
+        
+        ExtensionAttribute a = new ExtensionAttribute();
+        a.setName("designerJSON");
+        a.setNamespace("http://activiti.org/bpmn");
+        a.setValue(json);
+        
         Process process = new Process();
         bpmn.addProcess(process);
+        process.addAttribute(a);
         process.setId(model.getBasicSetting().getFlowCode());
         process.setName(model.getBasicSetting().getFlowName());
 

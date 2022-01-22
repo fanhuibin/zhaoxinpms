@@ -89,6 +89,7 @@ export default {
     },
     computed: {},
     created() {
+        console.log("123");
         this.initData();
         this.getFeeItemList();
     },

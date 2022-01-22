@@ -1,6 +1,7 @@
 package com.zhaoxinms.workflow.engine.service.impl;
 
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,28 +26,28 @@ import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSON;
-import com.ruoyi.common.constant.HttpStatus;
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.mapper.SysUserMapper;
+import com.zhaoxinms.common.constant.HttpStatus;
+import com.zhaoxinms.common.core.domain.entity.SysUser;
+import com.zhaoxinms.common.core.page.TableDataInfo;
+import com.zhaoxinms.common.utils.SecurityUtils;
+import com.zhaoxinms.common.utils.StringUtils;
+import com.zhaoxinms.system.mapper.SysUserMapper;
+import com.zhaoxinms.util.DateUtils;
 import com.zhaoxinms.workflow.engine.entity.HistoricActivity;
-import com.zhaoxinms.workflow.engine.entity.InstanceBusiness;
 import com.zhaoxinms.workflow.engine.entity.TaskVo;
+import com.zhaoxinms.workflow.engine.event.WorkflowEvent;
 import com.zhaoxinms.workflow.engine.mapper.TaskMapper;
 import com.zhaoxinms.workflow.engine.service.IProcessService;
 
 import lombok.AllArgsConstructor;
 
-/**
- * @author 一只闲鹿
- */
 @Service
 @Transactional
 @AllArgsConstructor
@@ -60,43 +61,40 @@ public class ProcessServiceImpl implements IProcessService {
     private RuntimeService runtimeService;
     private SysUserMapper userMapper;
     private TaskMapper taskMapper;
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    private static final String INSTANCE_TITLE = "INSTANCE_TITLE";
+    private static final String BUSINESS_NO = "BUSINESS_NO";
 
     /**
      * 提交申请
      */
     @Override
-    public <T> void submitApply(T entity, String key) throws Exception {
-        this.submitApply(entity, key, null);
+    public <T> void submitApply(T entity, String key, String title) throws Exception {
+        Map<String, Object> variables = new HashMap<String, Object>();
+        variables.put(INSTANCE_TITLE, title);
+        // variables.put(BUSINESS_NO, no);
+        this.submitApply(entity, key, variables);
     }
 
     @Override
-    public <T> void submitApply(T entity, String key, Map<String, Object> variables) throws Exception {
+    public <T> void submitApply(T entity, String key, String title, Map<String, Object> variables) throws Exception {
+        variables.put(INSTANCE_TITLE, title);
+        // variables.put(BUSINESS_NO, no);
+        this.submitApply(entity, key, variables);
+    }
+
+    private <T> void submitApply(T entity, String key, Map<String, Object> variables) throws Exception {
+
         Class clazz = entity.getClass();
 
         Method getId = clazz.getDeclaredMethod("getId");
-        Long id = (Long) getId.invoke(entity);
-
-        Method setApplyUserId = clazz.getDeclaredMethod("setApplyUserId", String.class);
-        Method setApplyUserName = clazz.getDeclaredMethod("setApplyUserName", String.class);
-        Method setApplyTime = clazz.getDeclaredMethod("setApplyTime", Date.class);
-        Method setProcessKey = clazz.getDeclaredMethod("setProcessKey", String.class);
-
-        Method setUpdateBy = clazz.getSuperclass().getSuperclass().getDeclaredMethod("setUpdateBy", String.class);
-        Method setUpdateTime = clazz.getSuperclass().getSuperclass().getDeclaredMethod("setUpdateTime", Date.class);
+        Long id = Long.valueOf((String)getId.invoke(entity));
 
         Method setInstanceId = clazz.getDeclaredMethod("setInstanceId", String.class);
 
         String username = SecurityUtils.getUsername();
-        String nickName = SecurityUtils.getLoginUser().getUser().getNickName();
-        Date now = new Date();
-
-        // 更新流程通用字段
-        setApplyUserId.invoke(entity, username);
-        setApplyUserName.invoke(entity, nickName);
-        setApplyTime.invoke(entity, now);
-        setProcessKey.invoke(entity, key);
-        setUpdateBy.invoke(entity, username);
-        setUpdateTime.invoke(entity, now);
 
         // 用来设置启动流程的人员ID，引擎会自动把用户ID保存到activiti:initiator中
         identityService.setAuthenticatedUserId(username);
@@ -105,13 +103,6 @@ public class ProcessServiceImpl implements IProcessService {
 
         // 更新业务表流程实例id字段
         setInstanceId.invoke(entity, instance.getId());
-
-        // 记录流程实例业务关系
-        InstanceBusiness ib = new InstanceBusiness();
-        ib.setInstanceId(instance.getId());
-        ib.setBusinessKey(id + "");
-        ib.setModule(humpToLine(entity.getClass().getSimpleName()).substring(1));
-        taskMapper.insertInstanceBusiness(ib);
     }
 
     /** 驼峰转下划线 */
@@ -145,23 +136,23 @@ public class ProcessServiceImpl implements IProcessService {
     @Override
     public <T> void richProcessField(T entity) throws Exception {
         Class clazz = entity.getClass();
-
         Method getInstanceId = clazz.getDeclaredMethod("getInstanceId");
-        String instanceId = (String) getInstanceId.invoke(entity);
+        String instanceId = (String)getInstanceId.invoke(entity);
 
         Method setTaskId = clazz.getSuperclass().getDeclaredMethod("setTaskId", String.class);
         Method setTaskName = clazz.getSuperclass().getDeclaredMethod("setTaskName", String.class);
+        Method setTaskDefKey = clazz.getSuperclass().getDeclaredMethod("setTaskDefKey", String.class);
         Method setSuspendState = clazz.getSuperclass().getDeclaredMethod("setSuspendState", String.class);
         Method setSuspendStateName = clazz.getSuperclass().getDeclaredMethod("setSuspendStateName", String.class);
 
         // 当前环节
         if (StringUtils.isNotBlank(instanceId)) {
-            List<Task> taskList = taskService.createTaskQuery()
-                    .processInstanceId(instanceId)
-                    .list();    // 例如请假会签，会同时拥有多个任务
+            List<Task> taskList = taskService.createTaskQuery().processInstanceId(instanceId).list(); // 例如请假会签，会同时拥有多个任务
             if (!CollectionUtils.isEmpty(taskList)) {
-                TaskEntityImpl task = (TaskEntityImpl) taskList.get(0);
+                TaskEntityImpl task = (TaskEntityImpl)taskList.get(0);
+
                 setTaskId.invoke(entity, task.getId());
+                setTaskDefKey.invoke(entity, task.getTaskDefinitionKey());
                 if (task.getSuspensionState() == 2) {
                     setTaskName.invoke(entity, "已挂起");
                     setSuspendState.invoke(entity, "2");
@@ -173,11 +164,8 @@ public class ProcessServiceImpl implements IProcessService {
                 }
             } else {
                 // 已办结或者已撤销
-                List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
-                        .processInstanceId(instanceId)
-                        .orderByTaskCreateTime()
-                        .desc()
-                        .list();
+                List<HistoricTaskInstance> list =
+                    historyService.createHistoricTaskInstanceQuery().processInstanceId(instanceId).orderByTaskCreateTime().desc().list();
                 if (!CollectionUtils.isEmpty(list)) {
                     HistoricTaskInstance lastTask = list.get(0); // 该流程实例最后一个任务
                     if (StringUtils.isNotBlank(lastTask.getDeleteReason())) {
@@ -214,7 +202,8 @@ public class ProcessServiceImpl implements IProcessService {
                 newTaskVo.setTaskName(task.get("NAME_").toString());
                 newTaskVo.setInstanceId(task.get("PROC_INST_ID_").toString());
                 newTaskVo.setSuspendState(task.get("SUSPENSION_STATE_").toString());
-                newTaskVo.setCreateTime((Date) task.get("CREATE_TIME_"));
+                newTaskVo.setCreateTime((Date)task.get("CREATE_TIME_"));
+                newTaskVo.setTaskDefKey(task.get("TASK_DEF_KEY_").toString());
                 if ("2".equals(newTaskVo.getSuspendState())) {
                     newTaskVo.setSuspendStateName("已挂起");
                 } else {
@@ -222,14 +211,14 @@ public class ProcessServiceImpl implements IProcessService {
                 }
                 newTaskVo.setAssigneeName(userMapper.selectUserByUserName(newTaskVo.getUserId()).getNickName());
 
-                // 查询业务表单数据，放入 map 中
-                Map ibMap = taskMapper.selectInstanceBusinessByInstanceId(task.get("PROC_INST_ID_").toString());
-                if (!CollectionUtils.isEmpty(ibMap)) {
-                    Map<String, Object> formData = taskMapper.selectBusinessByBusinessKeyAndModule(ibMap.get("business_key").toString(), ibMap.get("module").toString());
-                    if (!CollectionUtils.isEmpty(formData)) {
-                        newTaskVo.setFormData(getLine2HumpMap(formData));
-                    }
-                }
+                // 添加流程title
+                String title = (String)taskService.getVariable(newTaskVo.getTaskId(), INSTANCE_TITLE);
+                newTaskVo.setInstanceTitle(title);
+
+                // 添加流程key
+                ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(newTaskVo.getInstanceId()).singleResult();
+                String key = processInstance.getProcessDefinitionKey();
+                newTaskVo.setProcessDefinitionKey(key);
 
                 taskVos.add(newTaskVo);
             });
@@ -273,19 +262,30 @@ public class ProcessServiceImpl implements IProcessService {
                 newTaskVo.setTaskName(task.get("NAME_").toString());
                 newTaskVo.setInstanceId(task.get("PROC_INST_ID_").toString());
                 newTaskVo.setAssignee(task.get("ASSIGNEE_").toString());
-                newTaskVo.setStartTime((Date) task.get("START_TIME_"));
-                newTaskVo.setEndTime((Date) task.get("END_TIME_"));
+                LocalDateTime startTime = (LocalDateTime)task.get("START_TIME_");
+                LocalDateTime endTime = (LocalDateTime)task.get("END_TIME_");
+                newTaskVo.setStartTime(DateUtils.localDateTimeToDate(startTime));
+                newTaskVo.setEndTime(DateUtils.localDateTimeToDate(endTime));
                 newTaskVo.setAssigneeName(userMapper.selectUserByUserName(newTaskVo.getAssignee()).getNickName());
 
-                // 查询业务表单数据，放入 map 中
-                Map ibMap = taskMapper.selectInstanceBusinessByInstanceId(task.get("PROC_INST_ID_").toString());
-                if (!CollectionUtils.isEmpty(ibMap)) {
-                    Map<String, Object> formData = taskMapper.selectBusinessByBusinessKeyAndModule(ibMap.get("business_key").toString(), ibMap.get("module").toString());
-                    if (!CollectionUtils.isEmpty(formData)) {
-                        newTaskVo.setFormData(getLine2HumpMap(formData));
-                    }
+                // 添加流程title
+                String title = historyService.createHistoricVariableInstanceQuery()
+                    .processInstanceId(newTaskVo.getInstanceId())
+                    .variableName(INSTANCE_TITLE)
+                    .excludeTaskVariables().singleResult().getValue().toString();
+                newTaskVo.setInstanceTitle(title);
+                
+                // 添加流程key
+                ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(newTaskVo.getInstanceId()).singleResult();
+                String key = "";
+                if(processInstance == null) {
+                    HistoricProcessInstance historicProcessInstance =
+                        historyService.createHistoricProcessInstanceQuery().processInstanceId(newTaskVo.getInstanceId()).singleResult();
+                    key = historicProcessInstance.getProcessDefinitionKey();
+                }else {
+                    key = processInstance.getProcessDefinitionKey();
                 }
-
+                newTaskVo.setProcessDefinitionKey(key);
                 taskVos.add(newTaskVo);
             });
         }
@@ -302,7 +302,7 @@ public class ProcessServiceImpl implements IProcessService {
     @Override
     public void complete(String taskId, String instanceId, String variablesStr) {
         System.out.println("variables: " + variablesStr);
-        Map<String, Object> variables = (Map<String, Object>) JSON.parse(variablesStr);
+        Map<String, Object> variables = (Map<String, Object>)JSON.parse(variablesStr);
         String comment = variables.get("comment").toString();
         String pass = variables.get("pass").toString();
         try {
@@ -312,9 +312,7 @@ public class ProcessServiceImpl implements IProcessService {
             // 所以在 complete 之前需要先 resolved
 
             // 判断该任务是否是委托任务（转办）
-            TaskEntityImpl task = (TaskEntityImpl) taskService.createTaskQuery()
-                    .taskId(taskId)
-                    .singleResult();
+            TaskEntityImpl task = (TaskEntityImpl)taskService.createTaskQuery().taskId(taskId).singleResult();
             // DELEGATION_ 为 PENDING 表示该任务是转办任务
             if (task.getDelegationState() != null && task.getDelegationState().equals(DelegationState.PENDING)) {
                 taskService.resolveTask(taskId, variables);
@@ -338,16 +336,16 @@ public class ProcessServiceImpl implements IProcessService {
 
             taskService.complete(taskId, variables);
         } catch (Exception e) {
-            logger.error("error on complete task {}, variables={}", new Object[]{taskId, variables, e});
+            logger.error("error on complete task {}, variables={}", new Object[] {taskId, variables, e});
         }
     }
 
     @Override
     public List<HistoricActivity> selectHistoryList(HistoricActivity historicActivity) {
         // 说明：以下实现方案是手动封装 开始节点 和 结束节点 的数据，因此不考虑分页功能
-//        PageDomain pageDomain = TableSupport.buildPageRequest();
-//        Integer pageNum = pageDomain.getPageNum();
-//        Integer pageSize = pageDomain.getPageSize();
+        // PageDomain pageDomain = TableSupport.buildPageRequest();
+        // Integer pageNum = pageDomain.getPageNum();
+        // Integer pageSize = pageDomain.getPageSize();
         List<HistoricActivity> activityList = new ArrayList<>();
         HistoricActivityInstanceQuery query = historyService.createHistoricActivityInstanceQuery();
         if (StringUtils.isNotBlank(historicActivity.getAssignee())) {
@@ -356,13 +354,9 @@ public class ProcessServiceImpl implements IProcessService {
         if (StringUtils.isNotBlank(historicActivity.getActivityName())) {
             query.activityName(historicActivity.getActivityName());
         }
-        List<HistoricActivityInstance> list = query.processInstanceId(historicActivity.getProcessInstanceId())
-                .activityType("userTask")
-                .finished()
-                .orderByHistoricActivityInstanceStartTime()
-                .asc()
-                .list();
-//                .listPage((pageNum - 1) * pageSize, pageNum * pageSize);
+        List<HistoricActivityInstance> list = query.processInstanceId(historicActivity.getProcessInstanceId()).activityType("userTask").finished()
+            .orderByHistoricActivityInstanceStartTime().asc().list();
+        // .listPage((pageNum - 1) * pageSize, pageNum * pageSize);
         list.forEach(instance -> {
             HistoricActivity activity = new HistoricActivity();
             BeanUtils.copyProperties(instance, activity);
@@ -385,13 +379,11 @@ public class ProcessServiceImpl implements IProcessService {
         // 以下手动封装发起人节点的数据
         HistoricActivity startActivity = new HistoricActivity();
         query = historyService.createHistoricActivityInstanceQuery();
-        HistoricActivityInstance startActivityInstance = query.processInstanceId(historicActivity.getProcessInstanceId())
-                .activityType("startEvent")
-                .singleResult();
+        HistoricActivityInstance startActivityInstance =
+            query.processInstanceId(historicActivity.getProcessInstanceId()).activityType("startEvent").singleResult();
         BeanUtils.copyProperties(startActivityInstance, startActivity);
-        HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
-                .processInstanceId(historicActivity.getProcessInstanceId())
-                .singleResult();
+        HistoricProcessInstance historicProcessInstance =
+            historyService.createHistoricProcessInstanceQuery().processInstanceId(historicActivity.getProcessInstanceId()).singleResult();
         startActivity.setAssignee(historicProcessInstance.getStartUserId());
         SysUser sysUser = userMapper.selectUserByUserName(historicProcessInstance.getStartUserId());
         if (sysUser != null) {
@@ -412,9 +404,7 @@ public class ProcessServiceImpl implements IProcessService {
         // 以下手动封装结束节点的数据
         HistoricActivity endActivity = new HistoricActivity();
         query = historyService.createHistoricActivityInstanceQuery();
-        HistoricActivityInstance endActivityInstance = query.processInstanceId(historicActivity.getProcessInstanceId())
-                .activityType("endEvent")
-                .singleResult();
+        HistoricActivityInstance endActivityInstance = query.processInstanceId(historicActivity.getProcessInstanceId()).activityType("endEvent").singleResult();
         if (null != endActivityInstance) {
             BeanUtils.copyProperties(endActivityInstance, endActivity);
             endActivity.setAssignee("admin");
@@ -427,7 +417,7 @@ public class ProcessServiceImpl implements IProcessService {
             // 手动过滤该条发起人数据
             necessaryAdd = true;
             if ((StringUtils.isNotBlank(historicActivity.getActivityName()) && !endActivity.getActivityName().equals(historicActivity.getActivityName()))
-                    || (StringUtils.isNotBlank(historicActivity.getAssignee()) && !endActivity.getAssignee().equals(historicActivity.getAssignee()))) {
+                || (StringUtils.isNotBlank(historicActivity.getAssignee()) && !endActivity.getAssignee().equals(historicActivity.getAssignee()))) {
                 necessaryAdd = false;
             }
             if (necessaryAdd) {
@@ -444,7 +434,10 @@ public class ProcessServiceImpl implements IProcessService {
     }
 
     @Override
+    @Transactional
     public void cancelApply(String instanceId, String deleteReason) {
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(instanceId).singleResult();
+        applicationEventPublisher.publishEvent(new WorkflowEvent(this, processInstance, WorkflowEvent.EVENT_CANCEL_APPLY));
         // 执行此方法后未审批的任务 act_ru_task 会被删除，流程历史 act_hi_taskinst 不会被删除，并且流程历史的状态为finished完成
         runtimeService.deleteProcessInstance(instanceId, deleteReason);
     }

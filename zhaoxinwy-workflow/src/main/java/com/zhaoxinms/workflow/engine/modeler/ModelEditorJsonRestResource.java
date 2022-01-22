@@ -12,13 +12,14 @@
  */
 package com.zhaoxinms.workflow.engine.modeler;
 
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.entity.SysRole;
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.system.mapper.SysUserMapper;
-import com.ruoyi.system.service.ISysRoleService;
-import com.ruoyi.system.service.ISysUserService;
+import com.zhaoxinms.common.core.controller.BaseController;
+import com.zhaoxinms.common.core.domain.entity.SysRole;
+import com.zhaoxinms.common.core.domain.entity.SysUser;
+import com.zhaoxinms.common.core.page.TableDataInfo;
+import com.zhaoxinms.system.mapper.SysUserMapper;
+import com.zhaoxinms.system.service.ISysRoleService;
+import com.zhaoxinms.system.service.ISysUserService;
+
 import lombok.AllArgsConstructor;
 import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.engine.ActivitiException;
@@ -35,10 +36,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-/**
- * @author Tijs Rademakers
- * @author 一只闲鹿
- */
 @RestController
 @AllArgsConstructor
 public class ModelEditorJsonRestResource extends BaseController implements ModelDataJsonConstants {

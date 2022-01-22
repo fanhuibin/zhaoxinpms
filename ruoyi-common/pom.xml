@@ -8,9 +8,7 @@
 		<version>0.8.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.ruoyi</groupId>
-	<artifactId>ruoyi-common</artifactId>
-	<version>3.7.0</version>
+	<artifactId>zhaoxinwy-common</artifactId>
 
 	<description>
         common通用工具

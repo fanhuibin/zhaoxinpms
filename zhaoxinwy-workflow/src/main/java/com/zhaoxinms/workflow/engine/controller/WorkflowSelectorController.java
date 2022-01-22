@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.entity.SysDept;
-import com.ruoyi.common.core.domain.entity.SysRole;
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.system.service.ISysDeptService;
-import com.ruoyi.system.service.ISysRoleService;
-import com.ruoyi.system.service.ISysUserService;
+import com.zhaoxinms.common.core.domain.AjaxResult;
+import com.zhaoxinms.common.core.domain.entity.SysDept;
+import com.zhaoxinms.common.core.domain.entity.SysRole;
+import com.zhaoxinms.common.core.domain.entity.SysUser;
+import com.zhaoxinms.system.service.ISysDeptService;
+import com.zhaoxinms.system.service.ISysRoleService;
+import com.zhaoxinms.system.service.ISysUserService;
 import com.zhaoxinms.workflow.engine.model.TreeSelectModel;
 
 @RestController

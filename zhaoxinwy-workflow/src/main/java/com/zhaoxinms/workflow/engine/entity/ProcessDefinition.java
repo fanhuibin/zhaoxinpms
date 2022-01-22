@@ -1,15 +1,13 @@
 package com.zhaoxinms.workflow.engine.entity;
 
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
-/**
- * @author 一只闲鹿
- */
+import com.zhaoxinms.common.annotation.Excel;
+import com.zhaoxinms.common.core.domain.BaseEntity;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ProcessDefinition extends BaseEntity {

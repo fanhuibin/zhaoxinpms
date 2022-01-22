@@ -85,7 +85,9 @@ public class ApproverNodeCreator {
                     List<String> roleIds = groups.stream().map(TreeSelectModel::getId).collect(Collectors.toList());
                     userTask.setCandidateGroups(roleIds);
                 }else if(node.getProperties().getAssigneeType().equals(ApproverNodeCreator.ASSIGNEE_TYPE_INPUT)) {
-                    userTask.setAssignee(node.getProperties().getExpression());
+                    List<String> userList = new ArrayList<String>();
+                    userList.add(node.getProperties().getExpression());
+                    userTask.setCandidateUsers(userList);
                 }else if(node.getProperties().getAssigneeType().equals(ApproverNodeCreator.ASSIGNEE_TYPE_MYSELF)) {
                     userTask.setAssignee("${apply}");
                 }

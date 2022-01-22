@@ -1,6 +1,8 @@
 <template>
-  <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+      <div class="Jcommon-layout">
+        <div class="Jcommon-layout-center">
+            <el-row class="Jcommon-search-box" :gutter="16">
+    			<el-form :model="queryParams" ref="queryForm" v-show="showSearch">
 #foreach($column in $columns)
 #if($column.query)
 #set($dictType=$column.dictType)
@@ -12,112 +14,128 @@
 #set($comment=$column.columnComment)
 #end
 #if($column.htmlType == "input")
-      <el-form-item label="${comment}" prop="${column.javaField}">
-        <el-input
-          v-model="queryParams.${column.javaField}"
-          placeholder="请输入${comment}"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+					<el-col :span="6">
+				      <el-form-item label="${comment}" prop="${column.javaField}">
+				        <el-input
+				          v-model="queryParams.${column.javaField}"
+				          placeholder="请输入${comment}"
+				          clearable
+				          size="small"
+				          @keyup.enter.native="handleQuery"
+				        />
+				      </el-form-item>
+				     </el-col>
 #elseif(($column.htmlType == "select" || $column.htmlType == "radio") && "" != $dictType)
-      <el-form-item label="${comment}" prop="${column.javaField}">
-        <el-select v-model="queryParams.${column.javaField}" placeholder="请选择${comment}" clearable size="small">
-          <el-option
-            v-for="dict in dict.type.${dictType}"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
+      				<el-col :span="6">
+					  <el-form-item label="${comment}" prop="${column.javaField}">
+					    <el-select v-model="queryParams.${column.javaField}" placeholder="请选择${comment}" clearable size="small">
+					      <el-option
+					        v-for="dict in dict.type.${dictType}"
+					        :key="dict.value"
+					        :label="dict.label"
+					        :value="dict.value"
+					      />
+					    </el-select>
+					  </el-form-item>
+					 </el-col>
 #elseif(($column.htmlType == "select" || $column.htmlType == "radio") && $dictType)
-      <el-form-item label="${comment}" prop="${column.javaField}">
-        <el-select v-model="queryParams.${column.javaField}" placeholder="请选择${comment}" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
+				      <el-col :span="6">
+					      <el-form-item label="${comment}" prop="${column.javaField}">
+					        <el-select v-model="queryParams.${column.javaField}" placeholder="请选择${comment}" clearable size="small">
+					          <el-option label="请选择字典生成" value="" />
+					        </el-select>
+					      </el-form-item>
+				      </el-col>
 #elseif($column.htmlType == "datetime" && $column.queryType != "BETWEEN")
-      <el-form-item label="${comment}" prop="${column.javaField}">
-        <el-date-picker clearable size="small"
-          v-model="queryParams.${column.javaField}"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择${comment}">
-        </el-date-picker>
-      </el-form-item>
+				      <el-col :span="6">
+					      <el-form-item label="${comment}" prop="${column.javaField}">
+					        <el-date-picker clearable size="small"
+					          v-model="queryParams.${column.javaField}"
+					          type="date"
+					          value-format="yyyy-MM-dd"
+					          placeholder="选择${comment}">
+					        </el-date-picker>
+					      </el-form-item>
+				      </el-col>
 #elseif($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
-      <el-form-item label="${comment}">
-        <el-date-picker
-          v-model="daterange${AttrName}"
-          size="small"
-          style="width: 240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>
+				      <el-col :span="6">
+					      <el-form-item label="${comment}">
+					        <el-date-picker
+					          v-model="daterange${AttrName}"
+					          size="small"
+					          style="width: 240px"
+					          value-format="yyyy-MM-dd"
+					          type="daterange"
+					          range-separator="-"
+					          start-placeholder="开始日期"
+					          end-placeholder="结束日期"
+					        ></el-date-picker>
+					      </el-form-item>
+				      </el-col>
 #end
 #end
 #end
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
+					  <el-col :span="6">
+					      <el-form-item>
+					        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+					        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+					      </el-form-item>
+				      </el-col>
+				</el-form>
+			</el-row>
+			<div class="Jcommon-layout-main Jflex-main">
+				<div class="Jcommon-head">
+				    <el-row :gutter="10" class="mb8">
+				      <el-col :span="1.5">
+				        <el-button
+				          type="primary"
+				          plain
+				          icon="el-icon-plus"
+				          size="mini"
+				          @click="handleAdd"
+				          v-hasPermi="['${moduleName}:${businessName}:add']"
+				        >新增</el-button>
+				      </el-col>
+				      <el-col :span="1.5">
+				        <el-button
+				          type="success"
+				          plain
+				          icon="el-icon-edit"
+				          size="mini"
+				          :disabled="single"
+				          @click="handleUpdate"
+				          v-hasPermi="['${moduleName}:${businessName}:edit']"
+				        >修改</el-button>
+				      </el-col>
+				      <el-col :span="1.5">
+				        <el-button
+				          type="danger"
+				          plain
+				          icon="el-icon-delete"
+				          size="mini"
+				          :disabled="multiple"
+				          @click="handleDelete"
+				          v-hasPermi="['${moduleName}:${businessName}:remove']"
+				        >删除</el-button>
+				      </el-col>
+				      <el-col :span="1.5">
+				        <el-button
+				          type="warning"
+				          plain
+				          icon="el-icon-download"
+				          size="mini"
+				          :loading="exportLoading"
+				          @click="handleExport"
+				          v-hasPermi="['${moduleName}:${businessName}:export']"
+				        >导出</el-button>
+				      </el-col>
+				     
+				    </el-row>
+				     <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+				 </div>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['${moduleName}:${businessName}:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['${moduleName}:${businessName}:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['${moduleName}:${businessName}:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          :loading="exportLoading"
-          @click="handleExport"
-          v-hasPermi="['${moduleName}:${businessName}:export']"
-        >导出</el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
-
-    <el-table v-loading="loading" :data="${businessName}List" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+			    <JTable v-loading="loading" :data="${businessName}List" @selection-change="handleSelectionChange">
+			      <el-table-column type="selection" width="55" align="center" />
 #foreach($column in $columns)
 #set($javaField=$column.javaField)
 #set($parentheseIndex=$column.columnComment.indexOf("（"))
@@ -127,50 +145,52 @@
 #set($comment=$column.columnComment)
 #end
 #if($column.pk)
-      <el-table-column label="${comment}" align="center" prop="${javaField}" />
+				  <el-table-column label="${comment}" align="center" prop="${javaField}" />
 #elseif($column.list && $column.htmlType == "datetime")
-      <el-table-column label="${comment}" align="center" prop="${javaField}" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.${javaField}, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
+			      <el-table-column label="${comment}" align="center" prop="${javaField}" width="180">
+			        <template slot-scope="scope">
+			          <span>{{ parseTime(scope.row.${javaField}, '{y}-{m}-{d}') }}</span>
+			        </template>
+			      </el-table-column>
 #elseif($column.list && "" != $column.dictType)
-      <el-table-column label="${comment}" align="center" prop="${javaField}">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.${column.dictType}" :value="scope.row.${javaField}"/>
-        </template>
-      </el-table-column>
+			      <el-table-column label="${comment}" align="center" prop="${javaField}">
+			        <template slot-scope="scope">
+			          <dict-tag :options="dict.type.${column.dictType}" :value="scope.row.${javaField}"/>
+			        </template>
+			      </el-table-column>
 #elseif($column.list && "" != $javaField)
-      <el-table-column label="${comment}" align="center" prop="${javaField}" />
+  				  <el-table-column label="${comment}" align="center" prop="${javaField}" />
 #end
 #end
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['${moduleName}:${businessName}:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['${moduleName}:${businessName}:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+			      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+			        <template slot-scope="scope">
+			          <el-button
+			            size="mini"
+			            type="text"
+			            icon="el-icon-edit"
+			            @click="handleUpdate(scope.row)"
+			            v-hasPermi="['${moduleName}:${businessName}:edit']"
+			          >修改</el-button>
+			          <el-button
+			            size="mini"
+			            type="text"
+			            icon="el-icon-delete"
+			            @click="handleDelete(scope.row)"
+			            v-hasPermi="['${moduleName}:${businessName}:remove']"
+			          >删除</el-button>
+			        </template>
+			      </el-table-column>
+			    </JTable>
+			    
+			    <pagination
+			      v-show="total>0"
+			      :total="total"
+			      :page.sync="queryParams.pageNum"
+			      :limit.sync="queryParams.pageSize"
+			      @pagination="getList"
+			    />
+			  </div>
+		  </div>
 
     <!-- 添加或修改${functionName}对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -412,8 +432,8 @@ export default {
 #end
 #end
       list${BusinessName}(this.queryParams).then(response => {
-        this.${businessName}List = response.rows;
-        this.total = response.total;
+        this.${businessName}List = response.data.list;
+        this.total = response.data.pagination.total;
         this.loading = false;
       });
     },

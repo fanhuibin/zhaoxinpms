@@ -4,9 +4,6 @@ import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.ExecutionListener;
 import org.springframework.stereotype.Component;
 
-/**
- * @author 一只闲鹿
- */
 @Component
 public class ServiceTaskExecListener implements ExecutionListener {
     @Override

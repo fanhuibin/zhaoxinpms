@@ -21,9 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.enums.BusinessType;
 import com.zhaoxinms.base.ActionResult;
 import com.zhaoxinms.base.exception.DataException;
 import com.zhaoxinms.base.util.DynDicUtil;
@@ -40,6 +37,9 @@ import com.zhaoxinms.baseconfig.model.house.HouseListVO;
 import com.zhaoxinms.baseconfig.model.house.HousePagination;
 import com.zhaoxinms.baseconfig.model.house.HouseUpForm;
 import com.zhaoxinms.baseconfig.service.ConfigHouseService;
+import com.zhaoxinms.common.annotation.Log;
+import com.zhaoxinms.common.core.domain.entity.SysUser;
+import com.zhaoxinms.common.enums.BusinessType;
 import com.zhaoxinms.payment.service.PaymentContractService;
 import com.zhaoxinms.util.ConstantsUtil;
 
@@ -119,7 +119,6 @@ public class ConfigHouseController {
     public ActionResult create(@RequestBody @Valid HouseCrForm houseCrForm) throws DataException {
         SysUser userInfo = userProvider.get();
         ConfigHouseEntity entity = JsonUtil.getJsonToBean(houseCrForm, ConfigHouseEntity.class);
-        entity.setId(RandomUtil.uuId());
         configHouseService.create(entity);
         return ActionResult.success("新建成功");
     }

@@ -39,7 +39,7 @@ server:
 # 日志配置
 logging:
   level:
-    com.ruoyi: debug
+    com.zhaoxinms: debug
     org.springframework: warn
 
 # Spring配置
@@ -97,18 +97,16 @@ token:
 # MyBatis配置
 mybatis:
     # 搜索指定包别名
-    typeAliasesPackage: com.ruoyi.**.domain,com.zhaoxinms.entity,com.zhaoxinms.**.entity
+    typeAliasesPackage: com.zhaoxinms.**.domain,com.zhaoxinms.entity,com.zhaoxinms.**.entity
     # 配置mapper的扫描，找到所有的mapper.xml映射文件
     mapperLocations: classpath*:mapper/**/*Mapper.xml
     # 加载全局的配置文件
     configLocation: classpath:mybatis/mybatis-config.xml
-      # 自定义TypeHandler
-    type-handlers-package: com.zhaoxinms.weixin.config.typehandler
 
 # PageHelper分页插件
 pagehelper: 
   helperDialect: mysql
-  supportMethodsArguments: true
+  supportMethodsArguments: false
   params: count=countSql 
 
 # Swagger配置

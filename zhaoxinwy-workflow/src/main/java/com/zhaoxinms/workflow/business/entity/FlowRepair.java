@@ -11,10 +11,10 @@ import java.math.BigDecimal;
 import java.math.BigDecimal;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ruoyi.common.core.mybatisplus.BaseEntity;
+import com.zhaoxinms.common.core.mybatisplus.BaseEntity;
 
 /**
- * 报事工单对象 flow_repair
+ * 报修工单对象 flow_repair
  *
  * @author ruoyi
  * @date 2022-01-06
@@ -88,11 +88,15 @@ public class FlowRepair extends BaseEntity {
      */
     private String repairUser;
     /**
+     * 指派维修人员显示名
+     */
+    private String repairUserName;
+    /**
      * 维修材料费用
      */
     private BigDecimal repairMaterialsFee;
     /**
-     * f维修服务费用
+     * 维修服务费用
      */
     private BigDecimal repairServiceFee;
     /**

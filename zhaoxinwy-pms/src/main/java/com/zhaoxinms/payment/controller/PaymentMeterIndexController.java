@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ruoyi.common.core.domain.entity.SysUser;
 import com.zhaoxinms.base.ActionResult;
 import com.zhaoxinms.base.exception.DataException;
 import com.zhaoxinms.base.util.JsonUtil;
@@ -24,6 +23,7 @@ import com.zhaoxinms.base.util.RandomUtil;
 import com.zhaoxinms.base.util.UserProvider;
 import com.zhaoxinms.base.vo.PageListVO;
 import com.zhaoxinms.base.vo.PaginationVO;
+import com.zhaoxinms.common.core.domain.entity.SysUser;
 import com.zhaoxinms.payment.entity.PaymentMeterIndexEntity;
 import com.zhaoxinms.payment.model.paymentmeterindex.PaymentMeterIndexCrForm;
 import com.zhaoxinms.payment.model.paymentmeterindex.PaymentMeterIndexInfoVO;

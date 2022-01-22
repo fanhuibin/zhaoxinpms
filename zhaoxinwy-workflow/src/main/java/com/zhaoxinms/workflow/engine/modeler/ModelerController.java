@@ -4,13 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.pagehelper.Page;
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.page.PageDomain;
-import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.core.page.TableSupport;
-import com.ruoyi.common.enums.BusinessType;
+import com.zhaoxinms.common.annotation.Log;
+import com.zhaoxinms.common.core.controller.BaseController;
+import com.zhaoxinms.common.core.domain.AjaxResult;
+import com.zhaoxinms.common.core.page.PageDomain;
+import com.zhaoxinms.common.core.page.TableDataInfo;
+import com.zhaoxinms.common.core.page.TableSupport;
+import com.zhaoxinms.common.enums.BusinessType;
+
 import lombok.AllArgsConstructor;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.model.BpmnModel;
@@ -35,16 +36,11 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static com.ruoyi.common.core.domain.AjaxResult.error;
-import static com.ruoyi.common.core.domain.AjaxResult.success;
+import static com.zhaoxinms.common.core.domain.AjaxResult.error;
+import static com.zhaoxinms.common.core.domain.AjaxResult.success;
 import static org.activiti.editor.constants.ModelDataJsonConstants.MODEL_DESCRIPTION;
 import static org.activiti.editor.constants.ModelDataJsonConstants.MODEL_NAME;
 
-/**
- * 流程模型控制层
- *
- * @author 一只闲鹿
- */
 @Controller
 @RequestMapping("/activiti/modeler")
 @AllArgsConstructor
@@ -65,10 +61,10 @@ public class ModelerController extends BaseController {
         modelQuery.orderByLastUpdateTime().desc();
 
         // 条件过滤
-        if (com.ruoyi.common.utils.StringUtils.isNotBlank(modelEntity.getKey())) {
+        if (com.zhaoxinms.common.utils.StringUtils.isNotBlank(modelEntity.getKey())) {
             modelQuery.modelKey(modelEntity.getKey());
         }
-        if (com.ruoyi.common.utils.StringUtils.isNotBlank(modelEntity.getName())) {
+        if (com.zhaoxinms.common.utils.StringUtils.isNotBlank(modelEntity.getName())) {
             modelQuery.modelNameLike("%" + modelEntity.getName() + "%");
         }
 

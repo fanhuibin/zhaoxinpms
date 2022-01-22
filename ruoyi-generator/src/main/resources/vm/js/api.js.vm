@@ -27,9 +27,9 @@ export function add${BusinessName}(data) {
 }
 
 // 修改${functionName}
-export function update${BusinessName}(data) {
+export function update${BusinessName}(${pkColumn.javaField}, data) {
   return request({
-    url: '/${moduleName}/${businessName}',
+    url: '/${moduleName}/${businessName}'+ ${pkColumn.javaField},
     method: 'put',
     data: data
   })

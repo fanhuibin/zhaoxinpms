@@ -6,18 +6,23 @@ import lombok.Data;
 import java.util.Date;
 import java.util.Map;
 
-/**
- * @author 一只闲鹿
- */
 @Data
 public class TaskVo {
 
-    private String taskId;
+    private String taskId; 
+    
+    private String taskDefKey;
+    
+    private String instanceTitle;
+    
+    private String processDefinitionKey;
+    
+    private String businessNo; //业务编号
 
     private String taskName;
 
     private String instanceId;
-
+    
     private String suspendState;
 
     private String suspendStateName;

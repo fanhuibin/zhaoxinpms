@@ -11,9 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.system.mapper.SysUserMapper;
-import com.ruoyi.system.service.ISysRoleService;
+import com.zhaoxinms.common.core.domain.entity.SysUser;
+import com.zhaoxinms.system.mapper.SysUserMapper;
+import com.zhaoxinms.system.service.ISysRoleService;
 
 @Component
 public class GroupCounterSignListener implements TaskListener {

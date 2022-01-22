@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.zhaoxinms.workflow.business.entity.FlowRepair;
 
 /**
- * 报事工单Mapper接口
+ * 报修工单Mapper接口
  * 
  * @author ruoyi
  * @date 2022-01-06

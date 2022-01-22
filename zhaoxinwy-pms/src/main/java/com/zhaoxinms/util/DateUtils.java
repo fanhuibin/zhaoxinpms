@@ -2,6 +2,10 @@ package com.zhaoxinms.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -299,6 +303,14 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
             }
         }
         return list;
+    }
+    
+    public static Date localDateTimeToDate(LocalDateTime dateTime) {
+        ZoneId zoneId = ZoneId.systemDefault();
+        ZonedDateTime zonedDateTime = dateTime.atZone(zoneId);
+        Instant instant = zonedDateTime.toInstant();
+        Date date = Date.from(instant);
+        return date;
     }
 
     /**

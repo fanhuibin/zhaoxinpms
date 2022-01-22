@@ -12,9 +12,9 @@ import java.math.BigDecimal;
 import ${import};
 #end
 #if($table.crud || $table.sub)
-import com.ruoyi.common.core.mybatisplus.BaseEntity;
+import com.zhaoxinms.common.core.mybatisplus.BaseEntity;
 #elseif($table.tree)
-import com.ruoyi.common.core.mybatisplus.TreeEntity;
+import com.zhaoxinms.common.core.mybatisplus.TreeEntity;
 #end
 
 /**

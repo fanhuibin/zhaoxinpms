@@ -1,75 +1,178 @@
 package com.zhaoxinms.workflow.business.service.impl;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.StringUtils;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.zhaoxinms.base.exception.DataException;
+import com.zhaoxinms.base.service.BillRuleService;
+import com.zhaoxinms.base.util.JsonUtil;
 import com.zhaoxinms.base.util.UserProvider;
-import com.zhaoxinms.workflow.business.mapper.FlowRepairMapper;
+import com.zhaoxinms.baseconfig.entity.ConfigHouseEntity;
+import com.zhaoxinms.baseconfig.service.ConfigHouseService;
+import com.zhaoxinms.common.exception.ServiceException;
+import com.zhaoxinms.common.utils.StringUtils;
+import com.zhaoxinms.util.ValidateUtil;
 import com.zhaoxinms.workflow.business.entity.FlowRepair;
-import com.zhaoxinms.workflow.business.service.IFlowRepairService;
+import com.zhaoxinms.workflow.business.entity.bo.FlowRepairBo;
 import com.zhaoxinms.workflow.business.entity.pagination.FlowRepairPagination;
+import com.zhaoxinms.workflow.business.mapper.FlowRepairMapper;
+import com.zhaoxinms.workflow.business.service.IFlowRepairService;
+import com.zhaoxinms.workflow.engine.event.WorkflowEvent;
+import com.zhaoxinms.workflow.engine.service.IProcessService;
 
 /**
- * 报事工单Service业务层处理
+ * 报修工单Service业务层处理
  * 
  * @author ruoyi
  * @date 2022-01-06
  */
 @Service
-public class FlowRepairServiceImpl extends ServiceImpl<FlowRepairMapper, FlowRepair> implements IFlowRepairService
-{
+public class FlowRepairServiceImpl extends ServiceImpl<FlowRepairMapper, FlowRepair> implements IFlowRepairService {
     @Autowired
     private FlowRepairMapper flowRepairMapper;
     @Autowired
     private UserProvider userProvider;
-    
+    @Autowired
+    private IProcessService processService;
+    @Autowired
+    private BillRuleService billRuleService;
+    @Autowired
+    private ConfigHouseService configHouseService;
+
+    private final static String FLOW_ID = "repair";
+
     @Override
     public List<FlowRepair> getList(FlowRepairPagination pagination) {
-    	LambdaQueryWrapper<FlowRepair> lqw = buildQueryWrapper(pagination);
-    	lqw.orderByDesc(FlowRepair::getCreateTime);
-    	
-        Page<FlowRepair> page =
-            new Page<>(pagination.getCurrentPage(), pagination.getPageSize());
+        LambdaQueryWrapper<FlowRepair> lqw = buildQueryWrapper(pagination);
+        lqw.orderByDesc(FlowRepair::getCreateTime);
+
+        Page<FlowRepair> page = new Page<>(pagination.getCurrentPage(), pagination.getPageSize());
         IPage<FlowRepair> userIPage = this.page(page, lqw);
         return pagination.setData(userIPage.getRecords(), userIPage.getTotal());
     }
-    
+
     @Override
     public FlowRepair getInfo(String id) {
         QueryWrapper<FlowRepair> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(FlowRepair::getId, id);
         return this.getOne(queryWrapper);
     }
-    
+
+    @Override
+    public FlowRepair getInfoByInstanceId(String instanceId) {
+        QueryWrapper<FlowRepair> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(FlowRepair::getInstanceId, instanceId);
+        return this.getOne(queryWrapper);
+    }
+
     @Override
     public void create(FlowRepair entity) {
-		validEntityBeforeSave(entity);
+        validEntityBeforeCreate(entity);
+        String no = billRuleService.getBillNumber("repair", false);
+        entity.setNo(no);
+        entity.setTitle("报修工单");
+        entity.setState("apply");
+        entity.setApplyTime(new Date());
+        entity.setReturnState("0");
         this.save(entity);
+
+        // 发起流程
+        Map<String, Object> variables = new HashMap<>();
+        try {
+            processService.submitApply(entity, FLOW_ID, "报修工单申请", variables);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException("发起流程失败");
+        }
+        this.updateById(entity);
     }
-    
-    @Override
-    public boolean update(String id, FlowRepair entity) {
-      	entity.setId(id);
-      	validEntityBeforeSave(entity);
-        return this.updateById(entity);
-    }
-    
-    @Override
-    public void delete(FlowRepair entity) {
-        if (entity != null) {
-        	 this.delete(entity);
+
+    private void validEntityBeforeCreate(FlowRepair entity) {
+        if (StringUtils.isNotEmpty(entity.getApplyHouse())) {
+            ConfigHouseEntity house = configHouseService.getByName(entity.getApplyHouse());
+            if (house == null) {
+                throw new ServiceException("该商铺编号不存在");
+            }
         }
     }
 
-	private LambdaQueryWrapper<FlowRepair> buildQueryWrapper(FlowRepairPagination pagination) {
+    @Override
+    public boolean update(String id, FlowRepairBo bo) {
+        // 获取当前流程的状态
+        FlowRepair entity = JsonUtil.getJsonToBean(bo, FlowRepair.class);
+        FlowRepair oldEntity = this.getById(bo.getId());
+        Map<String, Object> variables = new HashMap<>();
+        if (entity.getState().equals("apply")) {
+            if (StringUtils.isEmpty(bo.getRepairUser())) {
+                throw new DataException("请选择维修人员");
+            }
+            if (bo.getRepairUser().length() > 200 || bo.getRepairUserName().length() > 200) {
+                throw new DataException("选择的维修人员过多，最多选择5个左右的维修人员");
+            }
+            entity.setState("unconfirmed");
+            entity.setRepairUser(bo.getRepairUser());
+            this.updateById(entity);
+            variables.put("repairAssignee", entity.getRepairUser());
+            variables.put("comment", "完成工单分配");
+        } else if (entity.getState().equals("complete")) {
+
+        } else if (entity.getState().equals("unconfirmed")) {
+
+            if ("repaired".equals(bo.getRepairState())) {
+                entity.setState("score");
+                entity.setRepairMaterialsFee(bo.getRepairMaterialsFee());
+                entity.setRepairServiceFee(bo.getRepairServiceFee());
+                variables.put("comment", "维修完成");
+            }else if("repairing".equals(bo.getRepairState())) {
+                entity.setState("repairing");
+                entity.setRepairContent(bo.getRepairContent());
+                this.updateById(entity);
+                variables.put("comment", "现场确认完成");
+            }
+            variables.put("repairState", bo.getRepairState());
+        } else if (entity.getState().equals("repairing")) {
+            entity.setState("score");
+            entity.setRepairMaterialsFee(bo.getRepairMaterialsFee());
+            entity.setRepairServiceFee(bo.getRepairServiceFee());
+            variables.put("comment", "维修完成");
+            variables.put("repairState", bo.getRepairState());
+        } else if (entity.getState().equals("score")) {
+            entity.setReturnState("1");
+            entity.setReturnResult(bo.getReturnResult());
+            entity.setReturnRemark(bo.getReturnRemark());
+            entity.setState("complete");
+            variables.put("comment", "录入回访数据");
+        }
+
+        // 执行流程
+        variables.put("pass", "true");
+        processService.complete(bo.getTaskId(), oldEntity.getInstanceId(), JsonUtil.getObjectToString(variables));
+
+        entity.setId(id);
+        validEntityBeforeSave(entity);
+        return this.updateById(entity);
+    }
+
+    @Override
+    public void delete(FlowRepair entity) {
+        if (entity != null) {
+            this.delete(entity);
+        }
+    }
+
+    private LambdaQueryWrapper<FlowRepair> buildQueryWrapper(FlowRepairPagination pagination) {
         LambdaQueryWrapper<FlowRepair> lqw = Wrappers.lambdaQuery();
         lqw.eq(StringUtils.isNotBlank(pagination.getInstanceId()), FlowRepair::getInstanceId, pagination.getInstanceId());
         lqw.eq(StringUtils.isNotBlank(pagination.getNo()), FlowRepair::getNo, pagination.getNo());
@@ -98,13 +201,25 @@ public class FlowRepairServiceImpl extends ServiceImpl<FlowRepairMapper, FlowRep
         return lqw;
     }
 
-
     /**
      * 保存前的数据校验
      *
-     * @param entity 实体类数据
+     * @param entity
+     *            实体类数据
      */
-    private void validEntityBeforeSave(FlowRepair entity){
-        //TODO 做一些数据校验,如唯一约束
+    private void validEntityBeforeSave(FlowRepair entity) {
+        // TODO 做一些数据校验,如唯一约束
+    }
+    
+    @EventListener
+    public void cancel(WorkflowEvent event) {
+        if (event.getEventName().equals(WorkflowEvent.EVENT_CANCEL_APPLY)) {
+            //1.通过instanceId查询到业务数据
+             FlowRepair repair = this.getInfoByInstanceId(event.getProcessInstance().getProcessInstanceId());
+            
+            //2.设置流程的状态为已取消
+            repair.setState("cancel");
+            this.updateById(repair);
+        }
     }
 }

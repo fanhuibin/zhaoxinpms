@@ -1,22 +1,23 @@
 package com.zhaoxinms.workflow.business.entity.pagination;
 
-import com.ruoyi.common.core.validate.AddGroup;
-import com.ruoyi.common.core.validate.EditGroup;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import javax.validation.constraints.*;
 import com.zhaoxinms.base.vo.Pagination;
+import com.zhaoxinms.common.core.domain.BaseEntity;
+import com.zhaoxinms.common.core.validate.AddGroup;
+import com.zhaoxinms.common.core.validate.EditGroup;
+
 import java.util.Date;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 报事工单业务对象 flow_repair
+ * 报修工单业务对象 flow_repair
  *
  * @author ruoyi
  * @date 2022-01-06
@@ -24,7 +25,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("报事工单业务对象")
+@ApiModel("报修工单业务对象")
 public class FlowRepairPagination extends Pagination {
 
     @ApiModelProperty(value = "$column.columnComment", required = true)
@@ -79,7 +80,7 @@ public class FlowRepairPagination extends Pagination {
     @ApiModelProperty(value = "维修材料费用")
     private BigDecimal repairMaterialsFee;
 
-    @ApiModelProperty(value = "f维修服务费用")
+    @ApiModelProperty(value = "维修服务费用")
     private BigDecimal repairServiceFee;
 
     @ApiModelProperty(value = "修理备注")

@@ -3,21 +3,18 @@ package com.zhaoxinms.workflow.engine.service;
 import java.util.List;
 import java.util.Map;
 
-import com.ruoyi.common.core.page.TableDataInfo;
+import com.zhaoxinms.common.core.page.TableDataInfo;
 import com.zhaoxinms.workflow.engine.entity.HistoricActivity;
 import com.zhaoxinms.workflow.engine.entity.TaskVo;
 
-/**
- * @author 一只闲鹿
- */
 public interface IProcessService {
 
     /**
      * 提交申请
      */
-    <T> void submitApply(T entity, String key) throws Exception;
+    <T> void submitApply(T entity, String key, String title) throws Exception;
 
-    <T> void submitApply(T entity, String key, Map<String, Object> variables) throws Exception;
+    <T> void submitApply(T entity, String key, String title, Map<String, Object> variables) throws Exception;
 
     /**
      * 填充流程相关字段

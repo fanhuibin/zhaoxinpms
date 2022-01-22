@@ -3,9 +3,6 @@ package com.zhaoxinms.workflow.engine.service;
 import com.github.pagehelper.Page;
 import com.zhaoxinms.workflow.engine.entity.ProcessDefinition;
 
-/**
- * @author 一只闲鹿
- */
 public interface IProcessDefinitionService {
 
     Page<ProcessDefinition> listProcessDefinition(ProcessDefinition processDefinition);

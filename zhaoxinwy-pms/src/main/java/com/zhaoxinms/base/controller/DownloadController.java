@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ruoyi.common.core.domain.entity.SysUser;
 import com.zhaoxinms.base.ActionResult;
 import com.zhaoxinms.base.exception.DataException;
 import com.zhaoxinms.base.service.DictionaryDataService;
@@ -32,6 +31,7 @@ import com.zhaoxinms.base.util.UploaderUtil;
 import com.zhaoxinms.base.util.UploaderVO;
 import com.zhaoxinms.base.util.UserProvider;
 import com.zhaoxinms.base.vo.DownloadVO;
+import com.zhaoxinms.common.core.domain.entity.SysUser;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

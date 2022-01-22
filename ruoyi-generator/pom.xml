@@ -8,9 +8,7 @@
         <version>0.8.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.ruoyi</groupId>
-    <artifactId>ruoyi-generator</artifactId>
-    <version>3.7.0</version>
+    <artifactId>zhaoxinwy-generator</artifactId>
     <description>
         generator代码生成
     </description>
@@ -31,8 +29,8 @@
 
         <!-- 通用工具-->
         <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-common</artifactId>
+            <groupId>com.zhaoxinms</groupId>
+            <artifactId>zhaoxinwy-common</artifactId>
         </dependency>
 
     </dependencies>

@@ -14,8 +14,8 @@ import org.activiti.bpmn.model.StartEvent;
 import org.activiti.bpmn.model.UserTask;
 
 import com.alibaba.druid.util.StringUtils;
-import com.ruoyi.common.exception.ServiceException;
-import com.ruoyi.common.utils.JsonUtil;
+import com.zhaoxinms.common.exception.ServiceException;
+import com.zhaoxinms.common.utils.JsonUtil;
 import com.zhaoxinms.workflow.engine.designer.node.ApproverNodeCreator;
 import com.zhaoxinms.workflow.engine.designer.node.ConditionNodeCreator;
 import com.zhaoxinms.workflow.engine.model.designer.ChildNode;
@@ -67,7 +67,7 @@ public class DesignerAdapterUtil {
         startFlow.setTargetRef(startNextId);
         taskFlows.add(startFlow);
 
-        return BPMNCreator.createXML(model, userTasks, gateways, taskFlows);
+        return BPMNCreator.createXML(json, userTasks, gateways, taskFlows);
     }
 
     private static void createConditionFlow(ProcessData process, List<ChildNode> allChildNodes, List<ConditionNode> conditions, List<SequenceFlow> taskFlows) {

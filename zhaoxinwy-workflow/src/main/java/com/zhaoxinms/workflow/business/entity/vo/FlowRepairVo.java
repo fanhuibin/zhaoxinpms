@@ -3,31 +3,37 @@ package com.zhaoxinms.workflow.business.entity.vo;
 import java.math.BigDecimal;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zhaoxinms.workflow.engine.entity.ProcessEntity;
+
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
+
 import java.util.Date;
 
 
 
 /**
- * 报事工单视图对象 flow_repair
+ * 报修工单视图对象 flow_repair
  *
  * @author ruoyi
  * @date 2022-01-06
  */
 @Data
-@ApiModel("报事工单视图对象")
-public class FlowRepairVo {
+@ApiModel("报修工单视图对象")
+public class FlowRepairVo extends ProcessEntity {
 
 	private static final long serialVersionUID = 1L;
+	
+	private String id;
 
     /**
-     * $column.columnComment
+     *
      */
-	@Excel(name = "${comment}")
-	@ApiModelProperty("$column.columnComment")
+	@Excel(name = "流程实例")
+	@ApiModelProperty("流程实例")
 	private String instanceId;
 
     /**
@@ -83,6 +89,7 @@ public class FlowRepairVo {
      * 报修时间
      */
 	@Excel(name = "报修时间")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@ApiModelProperty("报修时间")
 	private Date applyTime;
 
@@ -104,6 +111,7 @@ public class FlowRepairVo {
      * 预约时间
      */
 	@Excel(name = "预约时间")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@ApiModelProperty("预约时间")
 	private Date appointmentTime;
 
@@ -111,6 +119,7 @@ public class FlowRepairVo {
      * 受理时间
      */
 	@Excel(name = "受理时间")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@ApiModelProperty("受理时间")
 	private Date appTime;
 
@@ -120,6 +129,13 @@ public class FlowRepairVo {
 	@Excel(name = "指派维修人员")
 	@ApiModelProperty("指派维修人员")
 	private String repairUser;
+	
+    /**
+     * 指派维修人员显示名
+     */
+	@Excel(name = "指派维修人员名称")
+    @ApiModelProperty(value = "指派维修人员显示名")
+    private String repairUserName;
 
     /**
      * 维修材料费用
@@ -129,10 +145,10 @@ public class FlowRepairVo {
 	private BigDecimal repairMaterialsFee;
 
     /**
-     * f维修服务费用
+     * 维修服务费用
      */
-	@Excel(name = "f维修服务费用")
-	@ApiModelProperty("f维修服务费用")
+	@Excel(name = "维修服务费用")
+	@ApiModelProperty("维修服务费用")
 	private BigDecimal repairServiceFee;
 
     /**
@@ -167,6 +183,7 @@ public class FlowRepairVo {
      * 流程结束时间
      */
 	@Excel(name = "流程结束时间")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@ApiModelProperty("流程结束时间")
 	private Date endTime;
 
@@ -197,6 +214,4 @@ public class FlowRepairVo {
 	@Excel(name = "备注")
 	@ApiModelProperty("备注")
 	private String remark;
-
-
 }
