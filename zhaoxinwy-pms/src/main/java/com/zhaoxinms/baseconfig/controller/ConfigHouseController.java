@@ -188,6 +188,8 @@ public class ConfigHouseController {
         ConfigHouseEntity entity = configHouseService.getInfo(id);
         if (entity != null) {
             configHouseService.delete(entity);
+        }else {
+            throw new DataException("商铺不存在，删除失败");
         }
         return ActionResult.success("删除成功");
     }
