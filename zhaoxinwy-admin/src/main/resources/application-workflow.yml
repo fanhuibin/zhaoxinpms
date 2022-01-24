@@ -4,3 +4,5 @@ spring:
     check-process-definitions: false
     # 检测身份信息表是否存在
     db-identity-used: false
+    #是否自动建表
+    databaseSchemaUpdate: false

@@ -23,7 +23,7 @@ import com.zhaoxinms.system.service.ISysMenuService;
  * 
  * @author ruoyi
  */
-@RestController
+@RestController 
 public class SysLoginController
 {
     @Autowired
