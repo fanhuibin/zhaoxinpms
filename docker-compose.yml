@@ -1,0 +1,59 @@
+version: "3.2"
+services:
+  webapp-pms:
+    image: "openjdk:8-jre-buster"
+    container_name: zhaoxinpms-web-backend
+    command: java -jar /app.jar
+    expose:
+      - 8080
+    volumes:
+      - $PWD/uploads:/uploads
+      - $PWD/admin/zhaoxinwy-admin.jar:/admin/app.jar
+      - $PWD/admin/config:/admin/config
+    networks:
+      - default
+
+  webapp-report:
+    image: "openjdk:8-jre-buster"
+    container_name: zhaoxinpms-web-report
+    command: java -jar /app.jar
+    expose:
+      - 9000
+    volumes:
+      - $PWD/report/zhaoxinwy-jmReport.jar:/report/app.jar
+      - $PWD/report/config:/report/config
+    networks:
+      - default
+
+  nginx:
+    image: nginx:latest
+    container_name: zhaoxinpms-web-nginx
+    ports:
+      - 9009:80
+    volumes:
+      - $PWD/frontend:/frontend
+      - $PWD/nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - webapp-pms
+    networks:
+      - default
+
+  redis:
+    image: "redis:6-buster"
+    container_name: zhaoxinpms-redis
+    restart: always
+    command: redis-server
+    expose:
+     - 6379
+#假定不持久化redis的数据，如果需要自行打开
+#    volumes:
+#      - $PWD/redis-data:/var/lib/redis
+#      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - default
+
+#假定使用外部MySQL（MariaDB），桥接到mariadb的网络
+networks:
+  default:
+    external: true
+    name: mysql_default

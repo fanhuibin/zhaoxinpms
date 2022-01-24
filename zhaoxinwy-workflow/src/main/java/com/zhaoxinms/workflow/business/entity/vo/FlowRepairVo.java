@@ -29,9 +29,6 @@ public class FlowRepairVo extends ProcessEntity {
 	
 	private String id;
 
-    /**
-     *
-     */
 	@Excel(name = "流程实例")
 	@ApiModelProperty("流程实例")
 	private String instanceId;

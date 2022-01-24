@@ -80,9 +80,14 @@ public class FlowRepairServiceImpl extends ServiceImpl<FlowRepairMapper, FlowRep
     @Override
     public void create(FlowRepair entity) {
         validEntityBeforeCreate(entity);
-        String no = billRuleService.getBillNumber("repair", false);
+        String no = billRuleService.getBillNumber(FLOW_ID, false);
         entity.setNo(no);
-        entity.setTitle("报修工单");
+        
+        String prefix = entity.getApplyName();
+        if(StringUtils.isNotEmpty(entity.getApplyHouse())) {
+           prefix = "商铺（"+entity.getApplyHouse()+")";
+        }
+        entity.setTitle(prefix + "发起的报修工单");
         entity.setState("apply");
         entity.setApplyTime(new Date());
         entity.setReturnState("0");
@@ -91,7 +96,7 @@ public class FlowRepairServiceImpl extends ServiceImpl<FlowRepairMapper, FlowRep
         // 发起流程
         Map<String, Object> variables = new HashMap<>();
         try {
-            processService.submitApply(entity, FLOW_ID, "报修工单申请", variables);
+            processService.submitApply(entity, FLOW_ID, entity.getTitle(), no, variables);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServiceException("发起流程失败");

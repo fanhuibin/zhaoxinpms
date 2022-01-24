@@ -14,14 +14,8 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="流程实例" prop="instanceId">
-                            <el-input
-                                v-model="queryParams.instanceId"
-                                placeholder="请输入流程实例ID"
-                                clearable
-                                size="small"
-                                @keyup.enter.native="handleQuery"
-                            />
+                        <el-form-item label="流程编号" prop="businessNo">
+                            <el-input v-model="queryParams.businessNo" placeholder="请输入流程编号" clearable size="small" @keyup.enter.native="handleQuery" />
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
@@ -39,7 +33,8 @@
                 </div>
 
                 <JTable v-loading="loading" :data="taskList" @selection-change="handleSelectionChange">
-                    <el-table-column label="流程标题" align="left" prop="instanceTitle" />
+                    <el-table-column label="流程编号" align="left" prop="businessNo" />
+                    <el-table-column label="标题" align="left" prop="instanceTitle" />
                     <el-table-column label="任务ID" align="center" prop="taskId" width="150" />
                     <el-table-column label="任务名称" align="center" prop="taskName" width="150" />
                     <el-table-column label="创建时间" align="center" prop="createTime" width="180" />
@@ -96,6 +91,7 @@ export default {
                 pageSize: 10,
                 taskId: null,
                 taskName: null,
+                businessNo: null,
             },
             // 表单参数
             form: {},

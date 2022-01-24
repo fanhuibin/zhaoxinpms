@@ -100,7 +100,6 @@ public class FlowRepairController
      * 获取报修工单详细信息
      * @throws Exception 
      */
-    @PreAuthorize("@ss.hasPermi('business:repair:query')")
     @GetMapping(value = "/instanceId/{instanceId}")
     public ActionResult<FlowRepairVo> repairInfo(@PathVariable("instanceId") String instanceId) throws Exception {
         FlowRepair entity = flowRepairService.getInfoByInstanceId(instanceId);
@@ -126,7 +125,6 @@ public class FlowRepairController
     /**
      * 修改报修工单
      */
-    @PreAuthorize("@ss.hasPermi('business:repair:edit')")
     @Log(title = "报修工单", businessType = BusinessType.UPDATE)
     @PutMapping("/{id}")
     @Transactional

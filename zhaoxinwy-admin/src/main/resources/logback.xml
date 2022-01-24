@@ -73,8 +73,6 @@
 	
 	<!-- 系统模块日志级别控制  -->
 	<logger name="com.zhaoxinms" level="info" />
-	<logger name="com.zhaoxinms" level="debug" />
-	<logger name="com.baomidou" level="debug" />
 	<!-- Spring日志级别控制  -->
 	<logger name="org.springframework" level="warn" />
 

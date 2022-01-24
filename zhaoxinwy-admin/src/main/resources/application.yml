@@ -3,7 +3,7 @@ ruoyi:
   # 名称
   name: 肇新智慧物业
   # 版本
-  version: 0.80
+  version: 0.9.0
   # 版权年份
   copyrightYear: 2021
   # 实例演示开关
@@ -40,6 +40,7 @@ server:
 logging:
   level:
     com.zhaoxinms: debug
+    com.baomidou: debug
     org.springframework: warn
 
 # Spring配置
@@ -49,7 +50,7 @@ spring:
     # 国际化资源文件路径
     basename: i18n/messages
   profiles: 
-    active: druid,wx,pms,workflow
+    active: druid,workflow
   # 文件上传
   servlet:
      multipart:

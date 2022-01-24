@@ -12,9 +12,9 @@ public interface IProcessService {
     /**
      * 提交申请
      */
-    <T> void submitApply(T entity, String key, String title) throws Exception;
+    <T> void submitApply(T entity, String key, String title, String businessNo) throws Exception;
 
-    <T> void submitApply(T entity, String key, String title, Map<String, Object> variables) throws Exception;
+    <T> void submitApply(T entity, String key, String title, String businessNo, Map<String, Object> variables) throws Exception;
 
     /**
      * 填充流程相关字段

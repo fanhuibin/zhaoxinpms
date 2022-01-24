@@ -6,14 +6,14 @@
 
 	<groupId>com.zhaoxinms</groupId>
 	<artifactId>pms-parent</artifactId>
-	<version>0.8.0</version>
+	<version>0.9.0</version>
 
 	<name>肇新智慧物业</name>
 	<url>http://www.zhaoxinms.com</url>
 	<description>肇新智慧物业</description>
 
 	<properties>
-		<zhaoxinwy.version>0.8.0</zhaoxinwy.version>
+		<zhaoxinwy.version>0.9.0</zhaoxinwy.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
@@ -293,7 +293,6 @@
 		<module>zhaoxinwy-common</module>
 		<module>zhaoxinwy-pms</module>
 		<module>zhaoxinwy-jmReport</module>
-		<module>zhaoxinwy-wx</module>
 		<module>zhaoxinwy-workflow</module>
 	</modules>
 	<packaging>pom</packaging>

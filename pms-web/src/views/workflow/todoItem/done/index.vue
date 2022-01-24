@@ -4,37 +4,36 @@
             <el-row class="Jcommon-search-box" :gutter="16">
                 <el-form :model="queryParams" ref="queryForm" v-show="showSearch">
                     <el-col :span="6">
-                    <el-form-item label="任务ID" prop="taskId">
-                        <el-input v-model="queryParams.taskId" placeholder="请输入任务ID" clearable size="small" @keyup.enter.native="handleQuery" />
-                    </el-form-item>
+                        <el-form-item label="任务ID" prop="taskId">
+                            <el-input v-model="queryParams.taskId" placeholder="请输入任务ID" clearable size="small" @keyup.enter.native="handleQuery" />
+                        </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                    <el-form-item label="任务名称" prop="taskName">
-                        <el-input v-model="queryParams.taskName" placeholder="任务名称" clearable size="small" @keyup.enter.native="handleQuery" />
-                    </el-form-item>
+                        <el-form-item label="任务名称" prop="taskName">
+                            <el-input v-model="queryParams.taskName" placeholder="任务名称" clearable size="small" @keyup.enter.native="handleQuery" />
+                        </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                    <el-form-item label="流程实例" prop="instanceId">
-                        <el-input v-model="queryParams.instanceId" placeholder="请输入流程实例ID" clearable size="small" @keyup.enter.native="handleQuery" />
-                    </el-form-item>
+                        <el-form-item label="流程编号" prop="businessNo">
+                            <el-input v-model="queryParams.businessNo" placeholder="请输入流程编号" clearable size="small" @keyup.enter.native="handleQuery" />
+                        </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                    <el-form-item>
-                        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-                        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-                    </el-form-item>
+                        <el-form-item>
+                            <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+                            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+                        </el-form-item>
                     </el-col>
                 </el-form>
             </el-row>
             <div class="Jcommon-layout-main Jflex-main">
                 <div class="Jcommon-head">
-                    <el-row :gutter="10" class="mb8">
-                        
-                    </el-row>
+                    <el-row :gutter="10" class="mb8"></el-row>
                     <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
                 </div>
                 <JTable v-loading="loading" :data="taskList" @selection-change="handleSelectionChange">
-                    <el-table-column label="流程标题" align="left" prop="instanceTitle" />
+                    <el-table-column label="流程编号" align="left" prop="businessNo" />
+                    <el-table-column label="标题" align="left" prop="instanceTitle" />
                     <el-table-column label="任务ID" align="center" prop="taskId" width="150" />
                     <el-table-column label="任务名称" align="center" prop="taskName" width="150" />
                     <el-table-column label="办理人" align="center" prop="assigneeName" width="150" />
@@ -42,13 +41,7 @@
                     <el-table-column label="结束时间" align="center" prop="endTime" width="180" />
                     <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
                         <template slot-scope="scope">
-                            <el-button
-                                size="mini"
-                                type="text"
-                                @click="toDetail(scope.row)"
-                            >
-                                查看
-                            </el-button>
+                            <el-button size="mini" type="text" @click="toDetail(scope.row)">查看</el-button>
                         </template>
                     </el-table-column>
                 </JTable>
@@ -56,7 +49,7 @@
                 <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList" />
             </div>
         </div>
-        <AuditForm v-if="formVisible" ref="auditForm" />
+        <AuditForm v-if="formVisible" ref="auditForm"  @close="colseForm"/>
     </div>
 </template>
 
@@ -91,6 +84,7 @@ export default {
                 pageSize: 10,
                 taskId: null,
                 taskName: null,
+                businessN: null,
             },
             // 表单参数
             form: {},
@@ -123,9 +117,13 @@ export default {
             this.open = false;
             this.reset();
         },
+        colseForm(isRefresh) {
+            this.formVisible = false;
+            if (isRefresh) this.getList();
+        },
         toDetail(item) {
             let data = {
-                processDefinitionKey: 'repair',
+                processDefinitionKey: item.processDefinitionKey,
                 instanceId: item.instanceId,
                 delegateId: item.delegateId,
                 taskId: item.taskId,

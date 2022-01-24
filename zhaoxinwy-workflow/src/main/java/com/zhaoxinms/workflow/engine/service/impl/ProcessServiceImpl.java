@@ -71,17 +71,17 @@ public class ProcessServiceImpl implements IProcessService {
      * 提交申请
      */
     @Override
-    public <T> void submitApply(T entity, String key, String title) throws Exception {
+    public <T> void submitApply(T entity, String key, String title, String businessNo) throws Exception {
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put(INSTANCE_TITLE, title);
-        // variables.put(BUSINESS_NO, no);
+        variables.put(BUSINESS_NO, businessNo);
         this.submitApply(entity, key, variables);
     }
 
     @Override
-    public <T> void submitApply(T entity, String key, String title, Map<String, Object> variables) throws Exception {
+    public <T> void submitApply(T entity, String key, String title, String businessNo, Map<String, Object> variables) throws Exception {
         variables.put(INSTANCE_TITLE, title);
-        // variables.put(BUSINESS_NO, no);
+        variables.put(BUSINESS_NO, businessNo);
         this.submitApply(entity, key, variables);
     }
 
@@ -189,6 +189,16 @@ public class ProcessServiceImpl implements IProcessService {
     public TableDataInfo findTodoTasks(TaskVo taskVo) {
         taskVo.setUserId(SecurityUtils.getUsername());
         taskVo.setOffset((taskVo.getPageNum() - 1) * taskVo.getPageSize());
+        
+        if(StringUtils.isNotEmpty(taskVo.getBusinessNo())) {
+            ProcessInstance instance = runtimeService.createProcessInstanceQuery().variableValueEquals(BUSINESS_NO, taskVo.getBusinessNo()).singleResult();
+            if(instance != null) {
+                taskVo.setInstanceId(instance.getId());
+            }else {
+                taskVo.setInstanceId("undefined");
+            }
+         }
+        
         List<Map> tasks = taskMapper.findTodoList(taskVo);
         Integer count = taskMapper.findTodoCount(taskVo);
 
@@ -214,6 +224,10 @@ public class ProcessServiceImpl implements IProcessService {
                 // 添加流程title
                 String title = (String)taskService.getVariable(newTaskVo.getTaskId(), INSTANCE_TITLE);
                 newTaskVo.setInstanceTitle(title);
+                
+                // 添加流程编号
+                String no = (String)taskService.getVariable(newTaskVo.getTaskId(), BUSINESS_NO);
+                newTaskVo.setBusinessNo(no);
 
                 // 添加流程key
                 ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(newTaskVo.getInstanceId()).singleResult();
@@ -249,6 +263,16 @@ public class ProcessServiceImpl implements IProcessService {
     public TableDataInfo findDoneTasks(TaskVo taskVo) {
         taskVo.setUserId(SecurityUtils.getUsername());
         taskVo.setOffset((taskVo.getPageNum() - 1) * taskVo.getPageSize());
+        
+        if(StringUtils.isNotEmpty(taskVo.getBusinessNo())) {
+           HistoricProcessInstance instance = historyService.createHistoricProcessInstanceQuery().variableValueEquals(BUSINESS_NO, taskVo.getBusinessNo()).singleResult();
+           if(instance != null) {
+               taskVo.setInstanceId(instance.getId());
+           }else {
+               taskVo.setInstanceId("undefined");
+           }
+        }
+        
         List<Map> tasks = taskMapper.findDoneList(taskVo);
         Integer count = taskMapper.findDoneCount(taskVo);
 
@@ -274,6 +298,13 @@ public class ProcessServiceImpl implements IProcessService {
                     .variableName(INSTANCE_TITLE)
                     .excludeTaskVariables().singleResult().getValue().toString();
                 newTaskVo.setInstanceTitle(title);
+                
+                // 添加流程编码
+                String no = historyService.createHistoricVariableInstanceQuery()
+                    .processInstanceId(newTaskVo.getInstanceId())
+                    .variableName(BUSINESS_NO)
+                    .excludeTaskVariables().singleResult().getValue().toString();
+                newTaskVo.setBusinessNo(no);
                 
                 // 添加流程key
                 ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(newTaskVo.getInstanceId()).singleResult();
