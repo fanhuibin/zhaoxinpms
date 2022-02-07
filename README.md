@@ -79,6 +79,7 @@ if(数量<=230){
 ```
 
 ### 收费功能使用流程
+
 http://zhaoxinms.com:81/#/manual/demoData
 
 ## 协同办公模块
@@ -155,10 +156,13 @@ npm run dev
 
 * zhaoxinwy-admin项目数据库配置，编辑resources目录下的application-druid.yml
 <img width="80%" src="Resources/readme/admin_db.png"/>
+
 * zhaoxinwy-admin项目系统文件路径配置，编辑resource目录下的application.yml
 <img width="80%" src="Resources/readme/profile_address.png"/>
+
 * zhaoxinwy-jmreport数据库配置，编辑resource下的application.yml
 <img width="80%" src="Resources/readme/jmreport_db.png"/>
+
 * zhaoxinwy-jmreport报表数据源设置
 <img width="80%" src="Resources/readme/change_data_source.png"/>
 
@@ -168,11 +172,15 @@ npm run dev
 > 管理账号：admin / admin123
 >
 > 流程演示：
+> 
 > 作者这人较懒，未能提供多角色的账号体验。
+> 
 > 系统已内嵌支持多角色参与的复杂交互流程
+> 
 > 创建账号并分配角色即可演示功能
 
 演示地址：http://zhaoxinms.com:82/
+
 文档地址：http://zhaoxinms.com:81/
 
 
