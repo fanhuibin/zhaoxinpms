@@ -13,7 +13,7 @@
             >
                 <el-col :span="24">
                     <el-form-item label="编号" prop="resourceName">
-                        <el-input v-model="dataForm.resourceName" placeholder="商业区-商铺编号" clearable :style="{ width: '70%' }"></el-input>
+                        <HouseInput  v-model="dataForm.resourceName"/>
                         <el-button type="primary" @click="searchHouse()">搜索</el-button>
                     </el-form-item>
                 </el-col>
@@ -94,9 +94,10 @@
 <script>
 import request from '@/utils/request';
 import { getDictionaryDataSelector } from '@/api/systemData/dictionary';
+import HouseInput from '@/components/HouseInput';
 
 export default {
-    components: {},
+    components: {HouseInput},
     props: [],
     data() {
         return {

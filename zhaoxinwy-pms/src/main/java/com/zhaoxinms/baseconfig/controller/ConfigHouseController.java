@@ -79,6 +79,19 @@ public class ConfigHouseController {
         vo.setPagination(page);
         return ActionResult.success(vo);
     }
+    
+    /**
+     * 列表
+     *
+     * @param housePagination
+     * @return
+     */
+    @GetMapping("/tips/{resourceName}")
+    public ActionResult tips(@PathVariable("resourceName")String resourceName) throws IOException {
+        List<ConfigHouseEntity> houses = configHouseService.getByResourceNameTips(resourceName);
+        List<HouseListVO> listVO = JsonUtil.getJsonToList(houses, HouseListVO.class);
+        return ActionResult.success(listVO);
+    }
 
     /**
      * 状态字典

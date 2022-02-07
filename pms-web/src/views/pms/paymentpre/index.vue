@@ -5,7 +5,7 @@
                 <el-form @submit.native.prevent>
                     <el-col :span="6">
                         <el-form-item label="编号">
-                            <el-input v-model="query.resourceName" placeholder="商业区-商铺编号" clearable></el-input>
+                            <HouseInput  v-model="query.resourceName"/>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
@@ -117,9 +117,10 @@ import EditForm from './Form';
 import WithdrawForm from './WithdrawForm';
 import Print from '../print';
 import { getUsername } from '@/utils/auth';
+import HouseInput from '@/components/HouseInput';
 
 export default {
-    components: { EditForm, Print, WithdrawForm },
+    components: { EditForm, Print, WithdrawForm,HouseInput },
     data() {
         return {
             showAll: false,

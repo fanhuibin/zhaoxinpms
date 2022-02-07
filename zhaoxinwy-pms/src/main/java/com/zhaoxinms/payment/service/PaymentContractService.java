@@ -48,4 +48,6 @@ public interface PaymentContractService extends IService<PaymentContractEntity> 
     void update(String id, PaymentContractCrForm form) throws DataException;
 
     PaymentContractEntity getByResourceName(String resourceName);
+
+    List<PaymentContractEntity> getByResourceNameTips(String resourceName);
 }

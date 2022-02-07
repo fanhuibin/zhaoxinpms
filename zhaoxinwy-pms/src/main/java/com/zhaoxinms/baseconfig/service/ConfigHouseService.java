@@ -38,4 +38,6 @@ public interface ConfigHouseService extends IService<ConfigHouseEntity> {
 	ConfigHouseEntity getByName(String name);
 
 	List<ConfigHouseEntity> getByNames(String[] ids);
+
+    List<ConfigHouseEntity> getByResourceNameTips(String resourceName);
 }

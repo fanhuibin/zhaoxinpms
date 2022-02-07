@@ -176,6 +176,19 @@ public class PaymentContractController {
         map.put("contract", entity);
         return ActionResult.success(map);
     }
+    
+    /**
+     * 搜索合约的autocomplete
+     *
+     * @param resourceName
+     * @return
+     */
+    @GetMapping("/resourceNameTips/{resourceName}")
+    public ActionResult<PaymentContractInfoVO> getByResourceNameTips(@PathVariable("resourceName") String resourceName) {
+
+        List<PaymentContractEntity> list = paymentContractService.getByResourceNameTips(resourceName);
+        return ActionResult.success(list);
+    }
 
     /**
      * 收回商铺
