@@ -15,6 +15,7 @@
       :file-list="fileList"
       :on-preview="handlePictureCardPreview"
       :class="{hide: this.fileList.length >= this.limit}"
+      :disabled="disabled"
     >
       <i class="el-icon-plus"></i>
     </el-upload>
@@ -66,7 +67,9 @@ export default {
     isShowTip: {
       type: Boolean,
       default: true
-    }
+    },
+    //是否禁用
+    disabled: false,
   },
   data() {
     return {

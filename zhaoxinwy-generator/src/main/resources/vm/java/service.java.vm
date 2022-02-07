@@ -1,0 +1,26 @@
+package ${packageName}.service;
+
+import java.util.List;
+import com.baomidou.mybatisplus.extension.service.IService;
+import ${packageName}.entity.${ClassName};
+import ${packageName}.entity.pagination.${ClassName}Pagination;
+
+/**
+ * ${functionName}Service接口
+ * 
+ * @author ${author}
+ * @date ${datetime}
+ */
+public interface I${ClassName}Service extends IService<${ClassName}>
+{
+
+    List<${ClassName}> getList(${ClassName}Pagination pagination);
+
+    ${ClassName} getInfo(String id);
+
+    void delete(${ClassName} entity);
+
+    void create(${ClassName} entity);
+
+    boolean update(String id, ${ClassName} entity);
+}

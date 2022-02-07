@@ -19,9 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.enums.BusinessType;
 import com.zhaoxinms.base.ActionResult;
 import com.zhaoxinms.base.exception.DataException;
 import com.zhaoxinms.base.util.DynDicUtil;
@@ -34,6 +31,9 @@ import com.zhaoxinms.baseconfig.entity.ConfigHouseEntity;
 import com.zhaoxinms.baseconfig.model.configfeeitem.ConfigFeeItemPagination;
 import com.zhaoxinms.baseconfig.service.ConfigFeeItemService;
 import com.zhaoxinms.baseconfig.service.ConfigHouseService;
+import com.zhaoxinms.common.annotation.Log;
+import com.zhaoxinms.common.core.domain.entity.SysUser;
+import com.zhaoxinms.common.enums.BusinessType;
 import com.zhaoxinms.payment.entity.PaymentContractEntity;
 import com.zhaoxinms.payment.entity.PaymentContractFeeEntity;
 import com.zhaoxinms.payment.model.paymentcontract.PaymentContractCrForm;
@@ -175,6 +175,19 @@ public class PaymentContractController {
         map.put("house", house);
         map.put("contract", entity);
         return ActionResult.success(map);
+    }
+    
+    /**
+     * 搜索合约的autocomplete
+     *
+     * @param resourceName
+     * @return
+     */
+    @GetMapping("/resourceNameTips/{resourceName}")
+    public ActionResult<PaymentContractInfoVO> getByResourceNameTips(@PathVariable("resourceName") String resourceName) {
+
+        List<PaymentContractEntity> list = paymentContractService.getByResourceNameTips(resourceName);
+        return ActionResult.success(list);
     }
 
     /**

@@ -5,7 +5,7 @@
                 <el-form @submit.native.prevent>
                     <el-col :span="6">
                         <el-form-item label="商铺编号">
-                            <el-input v-model="query.resourceName" placeholder="请输入" clearable></el-input>
+                            <HouseInput  v-model="query.resourceName"/>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
@@ -126,9 +126,10 @@ import BatchGenerateForm from './BatchGenerateForm';
 import MeterGenerateForm from '../paymentbill/MeterGenerateForm.vue';
 import ExportBox from './ExportBox';
 import ImportForm from './ImportForm';
+import HouseInput from '@/components/HouseInput';
 
 export default {
-    components: { EditForm, ExportBox, ImportForm, BatchAddForm, BatchGenerateForm, MeterGenerateForm },
+    components: { EditForm, ExportBox, ImportForm, BatchAddForm, BatchGenerateForm, MeterGenerateForm, HouseInput },
     data() {
         return {
             query: {

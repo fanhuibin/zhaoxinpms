@@ -5,7 +5,7 @@
                 <el-form @submit.native.prevent>
                     <el-col :span="6">
                         <el-form-item label="编号">
-                            <el-input v-model="query.resourceName" placeholder="商业区-商铺编号" clearable></el-input>
+                            <HouseInput  v-model="query.resourceName"/>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
@@ -31,9 +31,10 @@
 <script>
 import request from '@/utils/request';
 import { getDictionaryDataSelector } from '@/api/systemData/dictionary';
+import HouseInput from '@/components/HouseInput';
 
 export default {
-    components: {},
+    components: {HouseInput},
     data() {
         return {
             showAll: false,

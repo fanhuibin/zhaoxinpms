@@ -5,7 +5,7 @@
                 <el-form @submit.native.prevent>
                     <el-col :span="6">
                         <el-form-item label="商铺编号">
-                            <el-input v-model="query.resourceName" placeholder="商业区-商铺编号" clearable></el-input>
+                            <HouseInput  v-model="query.resourceName" type="contract"/>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
@@ -102,9 +102,10 @@ import PayDepositList from './payDepositList';
 import PayPreList from './payPreList';
 import PayTempList from './payTempList';
 import { mapGetters, mapState } from 'vuex';
+import HouseInput from '@/components/HouseInput';
 
 export default {
-    components: { Print, PayBillList, PayDepositList, PayPreList, PayTempList },
+    components: { Print, PayBillList, PayDepositList, PayPreList, PayTempList, HouseInput },
     data() {
         return {
             showAll: false,

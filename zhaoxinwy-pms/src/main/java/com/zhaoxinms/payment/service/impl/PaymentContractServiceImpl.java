@@ -38,7 +38,7 @@ import com.zhaoxinms.util.ValidateUtil;
 /**
  *
  * payment_contract 版本： V3.1.0 版权： 作者： CYCBERFORM 日期： 2021-08-23 15:28:33
- */
+ */ 
 @Service
 
 public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMapper, PaymentContractEntity>
@@ -126,6 +126,15 @@ public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMappe
         queryWrapper.lambda().eq(PaymentContractEntity::getResourceName, resourceName);
         queryWrapper.lambda().eq(PaymentContractEntity::getEnabledMark, "1");
         return this.getOne(queryWrapper);
+    }
+    
+    @Override
+    public List<PaymentContractEntity> getByResourceNameTips(String resourceName) {
+        QueryWrapper<PaymentContractEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().like(PaymentContractEntity::getResourceName, resourceName);
+        queryWrapper.lambda().eq(PaymentContractEntity::getEnabledMark, "1");
+        queryWrapper.last("limit 10");
+        return this.list(queryWrapper);
     }
 
     @Override

@@ -21,9 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.enums.BusinessType;
 import com.zhaoxinms.base.ActionResult;
 import com.zhaoxinms.base.exception.DataException;
 import com.zhaoxinms.base.util.DynDicUtil;
@@ -40,6 +37,9 @@ import com.zhaoxinms.baseconfig.model.house.HouseListVO;
 import com.zhaoxinms.baseconfig.model.house.HousePagination;
 import com.zhaoxinms.baseconfig.model.house.HouseUpForm;
 import com.zhaoxinms.baseconfig.service.ConfigHouseService;
+import com.zhaoxinms.common.annotation.Log;
+import com.zhaoxinms.common.core.domain.entity.SysUser;
+import com.zhaoxinms.common.enums.BusinessType;
 import com.zhaoxinms.payment.service.PaymentContractService;
 import com.zhaoxinms.util.ConstantsUtil;
 
@@ -78,6 +78,19 @@ public class ConfigHouseController {
         PaginationVO page = JsonUtil.getJsonToBean(housePagination, PaginationVO.class);
         vo.setPagination(page);
         return ActionResult.success(vo);
+    }
+    
+    /**
+     * 列表
+     *
+     * @param housePagination
+     * @return
+     */
+    @GetMapping("/tips/{resourceName}")
+    public ActionResult tips(@PathVariable("resourceName")String resourceName) throws IOException {
+        List<ConfigHouseEntity> houses = configHouseService.getByResourceNameTips(resourceName);
+        List<HouseListVO> listVO = JsonUtil.getJsonToList(houses, HouseListVO.class);
+        return ActionResult.success(listVO);
     }
 
     /**
@@ -119,7 +132,6 @@ public class ConfigHouseController {
     public ActionResult create(@RequestBody @Valid HouseCrForm houseCrForm) throws DataException {
         SysUser userInfo = userProvider.get();
         ConfigHouseEntity entity = JsonUtil.getJsonToBean(houseCrForm, ConfigHouseEntity.class);
-        entity.setId(RandomUtil.uuId());
         configHouseService.create(entity);
         return ActionResult.success("新建成功");
     }
@@ -189,6 +201,8 @@ public class ConfigHouseController {
         ConfigHouseEntity entity = configHouseService.getInfo(id);
         if (entity != null) {
             configHouseService.delete(entity);
+        }else {
+            throw new DataException("商铺不存在，删除失败");
         }
         return ActionResult.success("删除成功");
     }

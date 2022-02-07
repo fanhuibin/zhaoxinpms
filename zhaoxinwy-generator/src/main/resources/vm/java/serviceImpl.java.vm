@@ -1,0 +1,118 @@
+package ${packageName}.service.impl;
+
+import java.util.List;
+#foreach ($column in $columns)
+#if($column.javaField == 'createTime' || $column.javaField == 'updateTime')
+import com.zhaoxinms.common.utils.DateUtils;
+#break
+#end
+#end
+import com.zhaoxinms.common.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.zhaoxinms.base.util.UserProvider;
+#if($table.sub)
+import java.util.ArrayList;
+import com.zhaoxinms.common.utils.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
+import ${packageName}.entity.${subClassName};
+#end
+import ${packageName}.mapper.${ClassName}Mapper;
+import ${packageName}.entity.${ClassName};
+import ${packageName}.service.I${ClassName}Service;
+import ${packageName}.entity.pagination.${ClassName}Pagination;
+
+/**
+ * ${functionName}Service业务层处理
+ * 
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Service
+public class ${ClassName}ServiceImpl extends ServiceImpl<${ClassName}Mapper, ${ClassName}> implements I${ClassName}Service 
+{
+    @Autowired
+    private ${ClassName}Mapper ${className}Mapper;
+    @Autowired
+    private UserProvider userProvider;
+    
+    @Override
+    public List<${ClassName}> getList(${ClassName}Pagination pagination) {
+    	LambdaQueryWrapper<${ClassName}> lqw = buildQueryWrapper(pagination);
+    	lqw.orderByDesc(${ClassName}::getCreateTime);
+    	
+        Page<${ClassName}> page =
+            new Page<>(pagination.getCurrentPage(), pagination.getPageSize());
+        IPage<${ClassName}> userIPage = this.page(page, lqw);
+        return pagination.setData(userIPage.getRecords(), userIPage.getTotal());
+    }
+    
+    @Override
+    public ${ClassName} getInfo(String id) {
+        QueryWrapper<${ClassName}> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(${ClassName}::getId, id);
+        return this.getOne(queryWrapper);
+    }
+    
+    @Override
+    public void create(${ClassName} entity) {
+		validEntityBeforeSave(entity);
+        this.save(entity);
+    }
+    
+    @Override
+    public boolean update(String id, ${ClassName} entity) {
+      	entity.setId(id);
+      	validEntityBeforeSave(entity);
+        return this.updateById(entity);
+    }
+    
+    @Override
+    public void delete(${ClassName} entity) {
+        if (entity != null) {
+        	 this.delete(entity);
+        }
+    }
+
+	private LambdaQueryWrapper<${ClassName}> buildQueryWrapper(${ClassName}Pagination pagination) {
+        LambdaQueryWrapper<${ClassName}> lqw = Wrappers.lambdaQuery();
+#foreach($column in $columns)
+#if($column.query)
+#set($queryType=$column.queryType)
+#set($javaField=$column.javaField)
+#set($javaType=$column.javaType)
+#set($columnName=$column.columnName)
+#set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+#set($mpMethod=$column.queryType.toLowerCase())
+#if($queryType != 'BETWEEN')
+#if($javaType == 'String')
+#set($condition='StringUtils.isNotBlank(pagination.get'+$AttrName+'())')
+#else
+#set($condition='pagination.get'+$AttrName+'() != null')
+#end
+        lqw.$mpMethod($condition, ${ClassName}::get$AttrName, pagination.get$AttrName());
+#else
+        lqw.between(params.get("begin$AttrName") != null && params.get("end$AttrName") != null,
+            ${ClassName}::get$AttrName ,params.get("begin$AttrName"), params.get("end$AttrName"));
+#end
+#end
+#end
+        return lqw;
+    }
+
+
+    /**
+     * 保存前的数据校验
+     *
+     * @param entity 实体类数据
+     */
+    private void validEntityBeforeSave(${ClassName} entity){
+        //TODO 做一些数据校验,如唯一约束
+    }
+}

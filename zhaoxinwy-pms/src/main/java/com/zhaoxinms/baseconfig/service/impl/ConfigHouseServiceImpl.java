@@ -34,6 +34,7 @@ import com.zhaoxinms.baseconfig.model.house.HousePagination;
 import com.zhaoxinms.baseconfig.service.ConfigHouseBlockService;
 import com.zhaoxinms.baseconfig.service.ConfigHouseService;
 import com.zhaoxinms.event.BlockEvent;
+import com.zhaoxinms.payment.entity.PaymentContractEntity;
 import com.zhaoxinms.util.ConstantsUtil;
 import com.zhaoxinms.util.InputCheckUtil;
 import com.zhaoxinms.util.ValidateUtil;
@@ -113,6 +114,15 @@ public class ConfigHouseServiceImpl extends ServiceImpl<ConfigHouseMapper, Confi
         QueryWrapper<ConfigHouseEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().and(t -> t.in(ConfigHouseEntity::getName, ids));
         queryWrapper.lambda().orderByDesc(ConfigHouseEntity::getCreatorTime);
+        return this.list(queryWrapper);
+    }
+    
+    @Override
+    public List<ConfigHouseEntity> getByResourceNameTips(String resourceName) {
+        QueryWrapper<ConfigHouseEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().like(ConfigHouseEntity::getName, resourceName);
+        queryWrapper.lambda().eq(ConfigHouseEntity::getEnabledMark, "1");
+        queryWrapper.last("limit 10");
         return this.list(queryWrapper);
     }
 

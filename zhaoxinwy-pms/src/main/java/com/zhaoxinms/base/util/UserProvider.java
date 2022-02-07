@@ -2,8 +2,8 @@ package com.zhaoxinms.base.util;
 
 import org.springframework.stereotype.Component;
 
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.utils.SecurityUtils;
+import com.zhaoxinms.common.core.domain.entity.SysUser;
+import com.zhaoxinms.common.utils.SecurityUtils;
 
 @Component
 public class UserProvider {

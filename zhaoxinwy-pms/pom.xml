@@ -7,25 +7,23 @@
 	<parent>
 		<groupId>com.zhaoxinms</groupId>
 		<artifactId>pms-parent</artifactId>
-		<version>0.8.0</version>
+		<version>0.9.0</version>
 	</parent>
-	<groupId>com.zhaoxinms</groupId>
 	<artifactId>zhaoxinwy-pms</artifactId>
-	<version>0.8</version>
 	<name>zhaoxinwy-pms</name>
-	<url>http://maven.apache.org</url>
+	<url>http://www.zhaoxinms.com</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
 		<!-- 通用工具 -->
 		<dependency>
-			<groupId>com.ruoyi</groupId>
-			<artifactId>ruoyi-common</artifactId>
+			<groupId>com.zhaoxinms</groupId>
+			<artifactId>zhaoxinwy-common</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.ruoyi</groupId>
-			<artifactId>ruoyi-system</artifactId>
+			<groupId>com.zhaoxinms</groupId>
+			<artifactId>zhaoxinwy-system</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>cn.afterturn</groupId>
