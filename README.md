@@ -106,8 +106,10 @@ http://zhaoxinms.com:81/#/manual/demoData
 
 ### 流程分配图
 <img  src="Resources/readme/workflow/workflow_assignee.png"/>
+
 ### 流程运行图
 <img  src="Resources/readme/workflow/workflow_process.png"/>
+
 ### 流程执行记录
 <img  src="Resources/readme/workflow/workflow_his.png"/>
 
