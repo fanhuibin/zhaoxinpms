@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
+import com.zhaoxinms.workflow.engine.entity.MyApplyVo;
 import com.zhaoxinms.workflow.engine.entity.TaskVo;
 
 @Repository

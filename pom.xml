@@ -294,6 +294,8 @@
 		<module>zhaoxinwy-workflow</module>
     <module>zhaoxinwy-wxcp</module>
     <module>zhaoxinwy-wx</module>
+    <module>zhaoxinwy-tenant</module>
+    <module>zhaoxinwy-owner</module>
   </modules>
 	<packaging>pom</packaging>
 

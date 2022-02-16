@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.zhaoxinms.common.core.page.TableDataInfo;
 import com.zhaoxinms.workflow.engine.entity.HistoricActivity;
+import com.zhaoxinms.workflow.engine.entity.MyApplyVo;
 import com.zhaoxinms.workflow.engine.entity.TaskVo;
 
 public interface IProcessService {
@@ -35,6 +36,11 @@ public interface IProcessService {
      * 我的已办
      */
     TableDataInfo findDoneTasks(TaskVo taskVo);
+    
+    /**
+     * 我发起的流程
+     */
+    TableDataInfo findTaskApplyedByMe(MyApplyVo myApplyVo);
 
     /**
      * 办理任务

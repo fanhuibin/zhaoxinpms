@@ -50,6 +50,7 @@ import com.zhaoxinms.common.utils.StringUtils;
 import com.zhaoxinms.workflow.engine.config.ICustomProcessDiagramGenerator;
 import com.zhaoxinms.workflow.engine.config.WorkflowConstants;
 import com.zhaoxinms.workflow.engine.entity.HistoricActivity;
+import com.zhaoxinms.workflow.engine.entity.MyApplyVo;
 import com.zhaoxinms.workflow.engine.entity.TaskVo;
 import com.zhaoxinms.workflow.engine.event.WorkflowEvent;
 import com.zhaoxinms.workflow.engine.model.designer.FlowDesignerModel;
@@ -142,7 +143,7 @@ public class ActivitiProcessController extends BaseController {
     }
 
     /**
-     * 激活/挂起流程实例
+     * 激活/挂起流程实例 
      */
     @PostMapping( "/suspendOrActiveApply")
     @ResponseBody
@@ -177,6 +178,15 @@ public class ActivitiProcessController extends BaseController {
     @ResponseBody
     public TableDataInfo taskDoneList(TaskVo taskVo) {
         return processService.findDoneTasks(taskVo);
+    }
+    
+    /**
+     * 我发起的流程
+     */
+    @GetMapping("/taskApplyList")
+    @ResponseBody
+    public TableDataInfo taskApplyList(MyApplyVo myApplyVo) {
+        return processService.findTaskApplyedByMe(myApplyVo);
     }
 
 }

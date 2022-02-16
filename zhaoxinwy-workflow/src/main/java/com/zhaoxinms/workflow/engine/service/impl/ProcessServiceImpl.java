@@ -17,6 +17,7 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricActivityInstanceQuery;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.persistence.entity.TaskEntityImpl;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -41,6 +42,7 @@ import com.zhaoxinms.common.utils.StringUtils;
 import com.zhaoxinms.system.mapper.SysUserMapper;
 import com.zhaoxinms.util.DateUtils;
 import com.zhaoxinms.workflow.engine.entity.HistoricActivity;
+import com.zhaoxinms.workflow.engine.entity.MyApplyVo;
 import com.zhaoxinms.workflow.engine.entity.TaskVo;
 import com.zhaoxinms.workflow.engine.event.WorkflowEvent;
 import com.zhaoxinms.workflow.engine.mapper.TaskMapper;
@@ -75,17 +77,17 @@ public class ProcessServiceImpl implements IProcessService {
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put(INSTANCE_TITLE, title);
         variables.put(BUSINESS_NO, businessNo);
-        this.submitApply(entity, key, variables);
+        this.submitApply(entity, title, key, variables);
     }
 
     @Override
     public <T> void submitApply(T entity, String key, String title, String businessNo, Map<String, Object> variables) throws Exception {
         variables.put(INSTANCE_TITLE, title);
         variables.put(BUSINESS_NO, businessNo);
-        this.submitApply(entity, key, variables);
+        this.submitApply(entity, title, key, variables);
     }
 
-    private <T> void submitApply(T entity, String key, Map<String, Object> variables) throws Exception {
+    private <T> void submitApply(T entity, String name, String key, Map<String, Object> variables) throws Exception {
 
         Class clazz = entity.getClass();
 
@@ -100,7 +102,8 @@ public class ProcessServiceImpl implements IProcessService {
         identityService.setAuthenticatedUserId(username);
         // 启动流程时设置业务 key
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(key, id + "", variables);
-
+        //设置流程实例的name
+        runtimeService.setProcessInstanceName(instance.getId(),name);
         // 更新业务表流程实例id字段
         setInstanceId.invoke(entity, instance.getId());
     }
@@ -332,7 +335,6 @@ public class ProcessServiceImpl implements IProcessService {
 
     @Override
     public void complete(String taskId, String instanceId, String variablesStr) {
-        System.out.println("variables: " + variablesStr);
         Map<String, Object> variables = (Map<String, Object>)JSON.parse(variablesStr);
         String comment = variables.get("comment").toString();
         String pass = variables.get("pass").toString();
@@ -484,6 +486,32 @@ public class ProcessServiceImpl implements IProcessService {
         } else if ("2".equals(suspendState)) {
             runtimeService.activateProcessInstanceById(instanceId);
         }
+    }
+
+    @Override
+    public TableDataInfo findTaskApplyedByMe(MyApplyVo myApplyVo) {
+        String username = SecurityUtils.getUsername();
+        myApplyVo.setOffset((myApplyVo.getPageNum() - 1) * myApplyVo.getPageSize());
+        HistoricProcessInstanceQuery  query = historyService.createHistoricProcessInstanceQuery().startedBy(username);
+        
+        if(StringUtils.isNotEmpty(myApplyVo.getProcInstName())) {
+            query.processInstanceNameLike("%"+myApplyVo.getProcInstName()+"%");
+        }
+        if(myApplyVo.getStartTimeBegin() != null && myApplyVo.getStartTimeEnd() != null) {
+            query.startedBefore(myApplyVo.getStartTimeEnd());
+            query.startedAfter(myApplyVo.getStartTimeBegin());
+        }
+        
+        List<HistoricProcessInstance> process = query.listPage(myApplyVo.getOffset(), myApplyVo.getPageSize());
+        Long count = query.count();
+        
+        TableDataInfo rspData = new TableDataInfo();
+        rspData.setCode(HttpStatus.SUCCESS);
+        rspData.setMsg("查询成功");
+        rspData.setRows(process);
+        rspData.setTotal(count);
+
+        return rspData;
     }
 
 }

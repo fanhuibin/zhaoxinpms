@@ -4,20 +4,11 @@
             <el-row class="Jcommon-search-box" :gutter="16">
                 <el-form :model="queryParams" ref="queryForm" v-show="showSearch">
                     <el-col :span="6">
-                        <el-form-item label="任务ID" prop="taskId">
-                            <el-input v-model="queryParams.taskId" placeholder="请输入任务ID" clearable size="small" @keyup.enter.native="handleQuery" />
+                        <el-form-item label="关键字" prop="procInstName">
+                            <el-input v-model="queryParams.procInstName" placeholder="请输入关键字" clearable size="small" @keyup.enter.native="handleQuery" />
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="任务名称" prop="taskName">
-                            <el-input v-model="queryParams.taskName" placeholder="任务名称" clearable size="small" @keyup.enter.native="handleQuery" />
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="流程编号" prop="businessNo">
-                            <el-input v-model="queryParams.businessNo" placeholder="请输入流程编号" clearable size="small" @keyup.enter.native="handleQuery" />
-                        </el-form-item>
-                    </el-col>
+                   
                     <el-col :span="6">
                         <el-form-item>
                             <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -28,26 +19,33 @@
             </el-row>
             <div class="Jcommon-layout-main Jflex-main">
                 <div class="Jcommon-head">
-                    <el-row :gutter="10" class="mb8"></el-row>
+                     <div>
+                        <el-button type="primary" icon="el-icon-plus" @click="create()">发起流程</el-button>
+                    </div>
                     <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
                 </div>
-
-                <JTable v-loading="loading" :data="taskList" @selection-change="handleSelectionChange">
-                    <el-table-column label="流程编号" align="left" prop="businessNo" />
-                    <el-table-column label="标题" align="left" prop="instanceTitle" />
-                    <el-table-column label="任务ID" align="center" prop="taskId" width="150" />
-                    <el-table-column label="任务名称" align="center" prop="taskName" width="150" />
-                    <el-table-column label="创建时间" align="center" prop="createTime" width="180" />
-                    <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="180">
+                <JTable v-loading="loading" :data="proInstList" @selection-change="handleSelectionChange">
+                    <el-table-column label="标题" align="left" prop="name" />
+                    <el-table-column label="流程类型" prop="processDefinitionName" width="150"/>
+                    <el-table-column label="发起时间" align="center" prop="startTime" width="150">
                         <template slot-scope="scope">
-                            <el-button
-                                size="mini"
-                                type="text"
-                                @click="toAudit(scope.row)"
-                                :disabled="scope.row.taskId == '-1' || scope.row.taskId == '' || scope.row.taskId == '-2'"
-                            >
-                                处理
-                            </el-button>
+                            <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="结束时间" align="center" prop="endTime" width="150" >
+                        <template slot-scope="scope">
+                            <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="状态" align="center" prop="state" width="100">
+                        <template slot-scope="scope">
+                            <el-tag type="success" v-if="scope.row.endTime">已结束</el-tag>
+                            <el-tag v-else>进行中</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" align="center" width="100" class-name="small-padding fixed-width">
+                        <template slot-scope="scope">
+                            <el-button size="mini" type="text" @click="toDetail(scope.row)">查看</el-button>
                         </template>
                     </el-table-column>
                 </JTable>
@@ -55,16 +53,17 @@
                 <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList" />
             </div>
         </div>
-        <!-- 处理框-->
-        <AuditForm v-if="formVisible" @close="colseForm" ref="auditForm" />
+        <AuditForm v-if="formVisible" ref="auditForm"  @close="colseForm"/>
+        <CreateForm v-if="showCreate" ref="createForm"/>
     </div>
 </template>
 
 <script>
 import request from '@/utils/request';
-import AuditForm from '../../form/Audit';
+import AuditForm from '../form/Audit';
+import CreateForm from './create';
 export default {
-    components: { AuditForm },
+    components: { AuditForm, CreateForm },
     data() {
         return {
             // 遮罩层
@@ -79,8 +78,8 @@ export default {
             showSearch: true,
             // 总条数
             total: 0,
-            // 待办表格数据
-            taskList: [],
+            // 我发起的任务列表
+            proInstList: [],
             // 弹出层标题
             title: '',
             // 是否显示弹出层
@@ -89,66 +88,67 @@ export default {
             queryParams: {
                 pageNum: 1,
                 pageSize: 10,
-                taskId: null,
-                taskName: null,
-                businessNo: null,
+                procInstName: null,
+                startTimeRange: [],
             },
             // 表单参数
             form: {},
             // 表单校验
             rules: {},
             formVisible: false,
+            showCreate: false,
         };
     },
     created() {
         this.getList();
     },
     methods: {
-        /** 查询待办列表 */
+        /** 查询已办列表 */
         getList() {
             this.loading = true;
-
             return request({
-                url: '/activiti/process/taskList',
+                url: '/activiti/process/taskApplyList',
                 method: 'get',
                 params: this.queryParams,
             })
                 .then(response => {
-                    this.taskList = response.rows;
+                    this.proInstList = response.rows;
                     this.total = response.total;
                     this.loading = false;
                 })
                 .then(() => {});
         },
-        toAudit(item) {
+        create() {
+            this.showCreate = true;
+            this.$nextTick(() => {
+                this.$refs.createForm.init();
+            });
+        },
+        // 取消按钮
+        cancel() {
+            this.open = false;
+            this.reset();
+        },
+        colseForm(isRefresh) {
+            this.formVisible = false;
+            if (isRefresh) this.getList();
+        },
+        toDetail(item) {
             let data = {
                 processDefinitionKey: item.processDefinitionKey,
-                instanceId: item.instanceId,
-                taskId: item.taskId,
-                taskDefKey: item.taskDefKey,
-                isSelf: true,
+                instanceId: item.processInstanceId,
+                taskId: '',
+                taskDefKey: '',
+                isSelf: false,
                 isAudit: false, //是否可以审核
                 hasCancel: false, //可不可以撤销
             };
-            if (item.taskId > 0) {
-                data.isAudit = true;
-                data.hasCancel = true;
-            }
             this.$nextTick(() => {
                 this.formVisible = true;
                 this.$nextTick(() => {
                     this.$refs.auditForm.init(data);
                 });
             });
-        },
-        colseForm(isRefresh) {
-            this.formVisible = false;
-            if (isRefresh) this.getList();
-        },
-        // 取消按钮
-        cancel() {
-            this.open = false;
-            this.reset();
         },
         // 表单重置
         reset() {
@@ -179,7 +179,7 @@ export default {
         handleAdd() {
             this.reset();
             this.open = true;
-            this.title = '添加待办';
+            this.title = '添加已办';
         },
         /** 修改按钮操作 */
         handleUpdate(row) {
@@ -188,7 +188,7 @@ export default {
             getDemo(id).then(response => {
                 this.form = response.data;
                 this.open = true;
-                this.title = '修改待办';
+                this.title = '修改已办';
             });
         },
         /** 提交按钮 */
@@ -214,7 +214,7 @@ export default {
         /** 删除按钮操作 */
         handleDelete(row) {
             const ids = row.id || this.ids;
-            this.$confirm('是否确认删除待办编号为"' + ids + '"的数据项?', '警告', {
+            this.$confirm('是否确认删除已办编号为"' + ids + '"的数据项?', '警告', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning',
@@ -230,7 +230,7 @@ export default {
         /** 导出按钮操作 */
         handleExport() {
             const queryParams = this.queryParams;
-            this.$confirm('是否确认导出所有待办数据项?', '警告', {
+            this.$confirm('是否确认导出所有已办数据项?', '警告', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning',

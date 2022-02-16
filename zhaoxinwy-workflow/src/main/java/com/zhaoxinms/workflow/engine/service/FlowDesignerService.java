@@ -27,7 +27,6 @@ public interface FlowDesignerService extends IService<FlowDesignerEntity> {
      *
      * @param enCode 流程编码
      * @return
-     * @throws WorkFlowException 异常
      */
     FlowDesignerEntity getInfoByEnCode(String enCode);
 
