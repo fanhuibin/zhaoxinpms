@@ -99,6 +99,39 @@
                         </div>
                     </div>
                 </el-tab-pane>
+                <el-tab-pane label="表单权限" name="formAuth">
+                    <div class="form-auth-table">
+                        <el-table :data="getFormOperates()" size="mini">
+                            <el-table-column prop="label" label="表单字段" align="left"></el-table-column>
+                            <el-table-column prop="operate" label="操作" align="center" width="300px">
+                                <template slot-scope="scope">
+                                <el-checkbox v-model="scope.row.read">查看权限</el-checkbox>
+                                <el-checkbox v-model="scope.row.write">修改权限</el-checkbox>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <!--
+                        <header class="auth-table-header">
+                            <div class="row">
+                                <div class="label">表单字段</div>
+                                <div class="label">字段权限</div>
+                            </div>
+                        </header>
+                        <div class="auth-table-body">
+                            <div v-for="item in getFormOperates()" :key="item.formId" class="row">
+                                <div class="label">
+                                    <span class="required" v-show="item.required">*</span>
+                                    {{ item.label }}
+                                </div>
+                                <el-radio-group v-model="item.formOperate" class="radio-group">
+                                    <el-radio :label="2" style="margin-left: 1rem"><span style="opacity: 0">是否可见</span></el-radio>
+                                    <el-radio :label="1"><span style="opacity: 0">是否可编辑</span></el-radio>
+                                </el-radio-group>
+                            </div>
+                        </div>
+                        -->
+                    </div>
+                </el-tab-pane>
             </el-tabs>
         </section>
 
@@ -189,8 +222,7 @@ export default {
             // 当前节点数据
             properties: {},
             // 发起人  start节点和condition节点需要
-            initiator: {
-            },
+            initiator: {},
             priorityLength: 0, // 当为条件节点时  显示节点优先级选项的数据
             startForm: {
                 formOperates: [],
@@ -232,7 +264,7 @@ export default {
     },
     computed: {
         usedFormItems() {
-            return this.$store.state.formItemList;
+            return this.$store.state.designer.formItemList;
         },
     },
     directives: {
@@ -271,12 +303,37 @@ export default {
             return tag.includes(item.tag) && this.showingPCons.includes(item.formId);
         },
 
+        initFormOperates(target) {
+            const formOperates = (target.properties && target.properties.formOperates) || [];
+            // 自定义组件不加入权限控制
+            const res = [];
+            const defaultType = this.isApproverNode() ? 1 : 2; // 操作权限 0 隐藏 1 只读 2 可编辑
+            const getPermissionById = id => {
+                const permission = formOperates.find(t => t.formId === id);
+                return permission !== undefined ? permission.formOperate : defaultType;
+            };
+            const format = (list, parentName = '') =>
+                list.map(t => {
+                    const data = {
+                        formId: t.formId,
+                        required: t.required,
+                        label: parentName ? [parentName, t.label].join('.') : t.label,
+                        formOperate: getPermissionById(t.formId),
+                    };
+                    res.push(data);
+                    Array.isArray(t.children) && format(t.children, t.label);
+                });
+            const formItems = this.$store.state.designer.formItemList.filter(t => t.cmpType !== 'custom');
+            format(formItems);
+            return res;
+        },
         initCopyNodeData() {
             Object.assign(this.approverForm, this.value.properties);
         },
 
         initStartNodeData() {
             this.initInitiator();
+            this.startForm.formOperates = this.initFormOperates(this.value)
         },
 
         copyNodeConfirm() {
@@ -426,7 +483,7 @@ export default {
             this.approverForm.title = this.properties.title;
             const formOperates = this.approverForm.formOperates.map(t => ({ formId: t.formId, formOperate: t.formOperate }));
             Object.assign(this.properties, this.approverForm, { formOperates });
-            
+
             this.$emit('confirm', this.properties, content || '请设置审批人');
             this.visible = false;
         },
@@ -483,6 +540,7 @@ export default {
          */
         initApproverNodeData() {
             Object.assign(this.approverForm, this.value.properties);
+            this.approverForm.formOperates = this.initFormOperates(this.value)
         },
         /**
          * 初始化条件节点数据
@@ -581,6 +639,8 @@ export default {
 
 .form-auth-table{
   font-size: 14px;
+  padding-left: 10px;
+  padding-right: 10px;
   .auth-table-header{
     background: #fafafa
     line-height: 40px;

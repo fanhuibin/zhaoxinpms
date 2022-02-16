@@ -246,6 +246,7 @@ import { makeUpCss } from "./components/generator/css";
 import drawingDefalut from "./components/generator/drawingDefalut";
 // import CodeTypeDialog from './CodeTypeDialog'
 import DraggableItem from "./DraggableItem";
+import { debounce } from '@/utils/activiti/index.js'
 import {
   getDrawingList,
   saveDrawingList,
@@ -253,7 +254,7 @@ import {
   // saveIdGlobal,
   getFormConf
 } from "./utils/db";
-import { debounce } from '@/utils'
+
 
 const emptyActiveData = { style: {}, autosize: {} };
 let oldActiveId;

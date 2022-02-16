@@ -13,7 +13,7 @@
                     <div class="ghost-step step" :style="{ transform: translateX }"></div>
                 </div>
                 <div class="designer-actions">
-                    <el-button size="small" class="publish-btn" @click="publish">返回</el-button>
+                    <el-button size="small" class="publish-btn" @click="close">返回</el-button>
                     <el-button size="small" class="publish-btn" @click="publish">提交</el-button>
                 </div>
             </header>
@@ -23,9 +23,9 @@
                     :conf="mockData.basicSetting"
                     v-show="activeStep === 'basicSetting'"
                     tabName="basicSetting"
-                    @initiatorChange="onInitiatorChange" 
+                    @initiatorChange="onInitiatorChange"
                 />
-
+                <DynamicForm ref="formDesign" :conf="mockData.formData" v-show="activeStep === 'formDesign'" tabName="formDesign" />
                 <Process
                     ref="processDesign"
                     :conf="mockData.processData"
@@ -42,6 +42,7 @@
 // @ is an alias to /src
 import Process from '@/components/workflow/Process';
 import BasicSetting from '@/components/workflow/BasicSetting';
+import DynamicForm from "@/views/tool/build";
 import request from '@/utils/request';
 const beforeUnload = function (e) {
     var confirmationMessage = '离开网站可能会丢失您编辑得内容';
@@ -64,6 +65,7 @@ export default {
             activeStep: 'basicSetting', // 激活的步骤面板
             steps: [
                 { label: '基础设置', key: 'basicSetting' },
+                { label: "表单设计", key: "formDesign" },
                 { label: '流程设计', key: 'processDesign' },
             ],
         };
@@ -89,6 +91,7 @@ export default {
                 this.mockData = {
                     basicSetting: {},
                     processData: {},
+                    formData: {},
                 };
             } else {
                 request({
@@ -106,13 +109,16 @@ export default {
             const getCmpData = name => this.$refs[name].getData();
             // basicSetting  formDesign processDesign 返回的是Promise 因为要做校验
             const p1 = getCmpData('basicSetting');
-            const p2 = getCmpData('processDesign');
-            Promise.all([p1, p2])
+            const p2 = getCmpData('formDesign');
+            const p3 = getCmpData('processDesign');
+            Promise.all([p1, p2, p3])
                 .then(res => {
                     const param = {
                         basicSetting: res[0].formData,
-                        processData: res[1].formData,
+                        processData: res[2].formData,
+                        formData: res[1].formData,
                     };
+                    console.log(param);
                     this.sendToServer(param);
                 })
                 .catch(err => {
@@ -192,6 +198,7 @@ export default {
     components: {
         Process,
         BasicSetting,
+        DynamicForm,
     },
 };
 </script>

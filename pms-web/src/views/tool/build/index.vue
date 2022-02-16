@@ -150,6 +150,7 @@ import drawingDefalut from '@/utils/generator/drawingDefalut'
 import logo from '@/assets/logo/logo.png'
 import CodeTypeDialog from './CodeTypeDialog'
 import DraggableItem from './DraggableItem'
+import { debounce } from '@/utils/activiti/index.js'
 
 let oldActiveId
 let tempActiveData
@@ -162,6 +163,7 @@ export default {
     CodeTypeDialog,
     DraggableItem
   },
+  props:['tabName', 'conf'],
   data() {
     return {
       logo,
@@ -183,6 +185,16 @@ export default {
     }
   },
   created() {
+    //初始化数据
+    if (typeof this.conf === 'object' && this.conf !== null ) {
+
+      if (this.conf.fields){
+          this.drawingList = this.conf.fields
+      }
+      Object.assign(this.formConf, this.conf)
+      if (this.drawingList.length) this.activeFormItem(this.drawingList[0])
+    }
+
     // 防止 firefox 下 拖拽 会新打卡一个选项卡
     document.body.ondrop = event => {
       event.preventDefault()
@@ -206,7 +218,18 @@ export default {
         oldActiveId = val
       },
       immediate: true
-    }
+    },
+    drawingList: {
+      handler(val) {
+        if (!val) return
+        if (!this.afterDrawingChange) {
+          this.afterDrawingChange = debounce(this.handlerListChange, 400) // 使用了deep 所以刷新会比较频繁
+        }
+        this.afterDrawingChange()
+      },
+      deep: true,
+      immediate: true
+    },
   },
   mounted() {
     const clipboard = new ClipboardJS('#copyNode', {
@@ -225,6 +248,11 @@ export default {
     })
   },
   methods: {
+    handlerListChange(val){
+      const vm = this
+      //saveDrawingList(this.drawingList)
+      this.$store.commit('designer/updateFormItemList', this.drawingList)
+    },
     activeFormItem(element) {
       this.activeData = element
       this.activeId = element.formId
@@ -314,6 +342,20 @@ export default {
         if (len) {
           this.activeFormItem(this.drawingList[len - 1])
         }
+      })
+    },
+    /**
+     * 供父组件使用 获取表单JSON
+     */
+    getData() {
+      return new Promise((resolve, reject) => {       
+        if(this.drawingList.length === 0){
+          reject({ msg: '表单不允许为空', target: this.tabName})
+          return
+        }
+
+        this.AssembleFormData();
+        resolve({ formData: this.formData, target: this.tabName})
       })
     },
     generateCode() {
@@ -513,6 +555,7 @@ $lighterBlue: #409EFF;
 
 .container {
   position: relative;
+  overflow:hidden;
   width: 100%;
   height: 100%;
 }
@@ -566,21 +609,21 @@ $lighterBlue: #409EFF;
   position: absolute;
   left: 0;
   top: 0;
-  height: 100vh;
+  height: 100%;
 }
 .left-scrollbar{
-  height: calc(100vh - 42px);
+  height: calc(100% - 42px);
   overflow: hidden;
 }
 .center-scrollbar {
-  height: calc(100vh - 42px);
+  height: calc(100% - 42px);
   overflow: hidden;
   border-left: 1px solid #f1e8e8;
   border-right: 1px solid #f1e8e8;
   box-sizing: border-box;
 }
 .center-board {
-  height: 100vh;
+  height: 100%;
   width: auto;
   margin: 0 350px 0 260px;
   box-sizing: border-box;
@@ -644,7 +687,7 @@ $lighterBlue: #409EFF;
   box-sizing: border-box;
   & > .el-form {
     // 69 = 12+15+42
-    height: calc(100vh - 69px);
+    height: calc(100% - 69px);
   }
 }
 .drawing-board {

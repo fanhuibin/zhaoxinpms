@@ -924,7 +924,7 @@ export default {
           })
         }
       }
-      loop(this.$store.state.formItemList)
+      loop(this.$store.state.designer.formItemList)
       return calcList
     }
   },
