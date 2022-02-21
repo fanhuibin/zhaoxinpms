@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.activiti.bpmn.model.ExclusiveGateway;
 
-import com.zhaoxinms.workflow.engine.model.designer.ConditionNode;
+import com.zhaoxinms.workflow.engine.designer.entity.ConditionNode;
 
 public class ConditionNodeCreator {
     

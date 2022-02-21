@@ -126,7 +126,7 @@ export default {
                 instanceId: item.instanceId,
                 taskId: item.taskId,
                 taskDefKey: item.taskDefKey,
-                isSelf: true,
+                isSelf: false,
                 isAudit: false, //是否可以审核
                 hasCancel: false, //可不可以撤销
             };

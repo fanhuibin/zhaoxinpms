@@ -1,4 +1,4 @@
-package com.zhaoxinms.workflow.engine.model.designer;
+package com.zhaoxinms.workflow.engine.designer.entity;
 import java.util.List;
 
 import com.zhaoxinms.workflow.engine.model.TreeSelectModel;
@@ -11,6 +11,7 @@ public class ChildProperties {
     private String assigneeType;
     private String optionalMultiUser;
     private String expression;
+    private List<FormOperate> formOperates;
     public String getTitle() {
         return title;
     }
@@ -46,5 +47,11 @@ public class ChildProperties {
     }
     public void setExpression(String expression) {
         this.expression = expression;
+    }
+    public List<FormOperate> getFormOperates() {
+        return formOperates;
+    }
+    public void setFormOperates(List<FormOperate> formOperates) {
+        this.formOperates = formOperates;
     }
 }

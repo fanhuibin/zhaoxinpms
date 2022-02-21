@@ -17,12 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zhaoxinms.base.ActionResult;
 import com.zhaoxinms.base.exception.DataException;
 import com.zhaoxinms.base.vo.ListVO;
+import com.zhaoxinms.common.config.RuoYiConfig;
 import com.zhaoxinms.common.core.domain.AjaxResult;
 import com.zhaoxinms.common.utils.JsonUtil;
 import com.zhaoxinms.workflow.engine.designer.DesignerAdapterUtil;
+import com.zhaoxinms.workflow.engine.designer.entity.FlowDesignerModel;
+import com.zhaoxinms.workflow.engine.designer.entity.ProcessData;
 import com.zhaoxinms.workflow.engine.entity.FlowDesignerEntity;
-import com.zhaoxinms.workflow.engine.model.designer.FlowDesignerModel;
-import com.zhaoxinms.workflow.engine.model.designer.ProcessData;
 import com.zhaoxinms.workflow.engine.model.flowDesigner.PaginationFlowDesigner;
 import com.zhaoxinms.workflow.engine.service.FlowDesignerService;
 import com.zhaoxinms.workflow.engine.service.IProcessDefinitionService;
@@ -39,6 +40,8 @@ public class WorkflowDesignerController {
     private IProcessDefinitionService processDefinitionService;
     @Autowired
     private FlowDesignerService flowDesignerService;
+    @Autowired
+    private RuoYiConfig ruoYiConfig;
 
     // 部署流程
     @GetMapping("/deploy/{id}")
@@ -118,6 +121,10 @@ public class WorkflowDesignerController {
     @ApiOperation("更新流程设计")
     @PutMapping("/{id}")
     public ActionResult update(@RequestBody String json) {
+        if(ruoYiConfig.isDemoEnabled()) {
+            return ActionResult.fail("演示模式不允许修改流程");
+        }
+        
         FlowDesignerModel model = JsonUtil.getJsonToBean(json, FlowDesignerModel.class);
         ProcessData process = model.getProcessData();
         FlowDesignerEntity flowDesignerEntity = flowDesignerService.getById(model.getBasicSetting().getId());

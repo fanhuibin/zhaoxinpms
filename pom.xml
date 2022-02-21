@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.zhaoxinms</groupId>
@@ -32,8 +34,8 @@
 		<velocity.version>1.7</velocity.version>
 		<jwt.version>0.9.1</jwt.version>
 		<hutool.version>5.1.0</hutool.version>
-        <weixin-java.version>3.7.0</weixin-java.version>
-        <ttl.version>2.11.4</ttl.version>
+		<weixin-java.version>3.7.0</weixin-java.version>
+		<ttl.version>2.11.4</ttl.version>
 	</properties>
 
 	<!-- 依赖声明 -->
@@ -48,38 +50,38 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-			
-			<!-- 解决log4j的漏洞 -->			
+
+			<!-- 解决log4j的漏洞 -->
 			<dependency>
-			    <groupId>org.springframework.boot</groupId>
-			    <artifactId>spring-boot-starter-log4j2</artifactId>
-			    <exclusions>
-			        <exclusion>
-			            <groupId>org.apache.logging.log4j</groupId>
-			            <artifactId>log4j-api</artifactId>
-			        </exclusion>
-			        <exclusion>
-			            <groupId>org.apache.logging.log4j</groupId>
-			            <artifactId>log4j-core</artifactId>
-			        </exclusion>
-			    </exclusions>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-log4j2</artifactId>
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-api</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-core</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
-			    <groupId>org.apache.logging.log4j</groupId>
-			    <artifactId>log4j-api</artifactId>
-			    <version>2.15.0</version>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-api</artifactId>
+				<version>2.15.0</version>
 			</dependency>
 			<dependency>
-			    <groupId>org.apache.logging.log4j</groupId>
-			    <artifactId>log4j-api</artifactId>
-			    <version>2.15.0</version>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-api</artifactId>
+				<version>2.15.0</version>
 			</dependency>
 			<dependency>
-			    <groupId>org.apache.logging.log4j</groupId>
-			    <artifactId>log4j-to-slf4j</artifactId>
-			    <version>2.15.0</version>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-to-slf4j</artifactId>
+				<version>2.15.0</version>
 			</dependency>
-			
+
 			<!-- 阿里数据库连接池 -->
 			<dependency>
 				<groupId>com.alibaba</groupId>
@@ -242,43 +244,43 @@
 				<artifactId>mybatis-plus-boot-starter</artifactId>
 				<version>3.4.0</version>
 			</dependency>
-			
-			<!--hutool-->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-            <!--weixin-java-common-->
-            <dependency>
-                <groupId>com.github.binarywang</groupId>
-                <artifactId>weixin-java-common</artifactId>
-                <version>${weixin-java.version}</version>
-            </dependency>
-            <!--weixin-java-admin-->
-            <dependency>
-                <groupId>com.github.binarywang</groupId>
-                <artifactId>weixin-java-mp</artifactId>
-                <version>${weixin-java.version}</version>
-            </dependency>
-            <!--weixin-java-miniapp-->
-            <dependency>
-                <groupId>com.github.binarywang</groupId>
-                <artifactId>weixin-java-miniapp</artifactId>
-                <version>${weixin-java.version}</version>
-            </dependency>
-            <!--weixin-java-pay-->
-            <dependency>
-                <groupId>com.github.binarywang</groupId>
-                <artifactId>weixin-java-pay</artifactId>
-                <version>${weixin-java.version}</version>
-            </dependency>
-            <!--TTL-->
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>transmittable-thread-local</artifactId>
-                <version>${ttl.version}</version>
-            </dependency>
+
+			<!--hutool -->
+			<dependency>
+				<groupId>cn.hutool</groupId>
+				<artifactId>hutool-all</artifactId>
+				<version>${hutool.version}</version>
+			</dependency>
+			<!--weixin-java-common -->
+			<dependency>
+				<groupId>com.github.binarywang</groupId>
+				<artifactId>weixin-java-common</artifactId>
+				<version>${weixin-java.version}</version>
+			</dependency>
+			<!--weixin-java-admin -->
+			<dependency>
+				<groupId>com.github.binarywang</groupId>
+				<artifactId>weixin-java-mp</artifactId>
+				<version>${weixin-java.version}</version>
+			</dependency>
+			<!--weixin-java-miniapp -->
+			<dependency>
+				<groupId>com.github.binarywang</groupId>
+				<artifactId>weixin-java-miniapp</artifactId>
+				<version>${weixin-java.version}</version>
+			</dependency>
+			<!--weixin-java-pay -->
+			<dependency>
+				<groupId>com.github.binarywang</groupId>
+				<artifactId>weixin-java-pay</artifactId>
+				<version>${weixin-java.version}</version>
+			</dependency>
+			<!--TTL -->
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>transmittable-thread-local</artifactId>
+				<version>${ttl.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -292,11 +294,9 @@
 		<module>zhaoxinwy-pms</module>
 		<module>zhaoxinwy-jmReport</module>
 		<module>zhaoxinwy-workflow</module>
-    <module>zhaoxinwy-wxcp</module>
-    <module>zhaoxinwy-wx</module>
-    <module>zhaoxinwy-tenant</module>
-    <module>zhaoxinwy-owner</module>
-  </modules>
+		<module>zhaoxinwy-tenant</module>
+		<module>zhaoxinwy-owner</module>
+	</modules>
 	<packaging>pom</packaging>
 
 

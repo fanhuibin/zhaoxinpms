@@ -1,4 +1,4 @@
-package com.zhaoxinms.workflow.engine.model.designer;
+package com.zhaoxinms.workflow.engine.designer.entity;
 
 public class Conditions {
 

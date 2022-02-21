@@ -27,6 +27,11 @@
                         </el-tooltip>
                     </div>
                 </div>
+                <el-alert
+                    title="”报修流程“与”投诉流程“表单字段权限实现逻辑不同，一个基于流程设计器，一个自定义实现"
+                    type="success"
+                    description="">
+                </el-alert>
                 <JTable v-loading="listLoading" :data="list">
                     <el-table-column label="流程图标" width="100">
                         <template slot-scope="scope">

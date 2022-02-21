@@ -1,4 +1,4 @@
-package com.zhaoxinms.workflow.engine.model.designer;
+package com.zhaoxinms.workflow.engine.designer.entity;
 import java.util.List;
 
 public class ConditionProperties {

@@ -311,7 +311,7 @@ export default {
                 taskId: item.taskId,
                 taskDefKey: item.taskDefKey,
                 id: item.id,
-                isSelf: false,
+                isSelf: true,
                 isAudit: false, //是否可以审核
                 hasCancel: false, //可不可以撤销
             };

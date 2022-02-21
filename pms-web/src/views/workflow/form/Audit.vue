@@ -324,4 +324,7 @@ export default {
     display: block;
     margin-bottom: 20px;
 }
+::v-deep .el-select--small{
+    height: 33.403px;
+}
 </style>

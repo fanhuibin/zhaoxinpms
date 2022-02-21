@@ -92,6 +92,10 @@ public class FlowRepair extends BaseEntity {
      */
     private String repairUserName;
     /**
+     * 维修的状态
+     */
+    private String repairState;
+    /**
      * 维修材料费用
      */
     private BigDecimal repairMaterialsFee;

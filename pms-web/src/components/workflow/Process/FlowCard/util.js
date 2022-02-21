@@ -324,7 +324,7 @@ export class NodeUtils {
         // 抄送人应该可以默认自选
         let valid = true;
         const props = node.properties;
-        this.isStartNode(node) && !props.initiator && (valid = false);
+        this.isStartNode(node) && !(props.initiator && props.formOperates) && (valid = false);
 
         this.isConditionNode(node) && !props.isDefault && !props.initiator && isEmptyArray(props.conditions) && (valid = false);
 

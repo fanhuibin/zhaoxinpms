@@ -67,7 +67,7 @@
             <version>0.9.0</version>
         </dependency>
         
-        <!-- 物业管理模块-->
+        <!-- 物业管理工作流模块-->
         <dependency>
             <groupId>com.zhaoxinms</groupId>
             <artifactId>zhaoxinwy-workflow</artifactId>

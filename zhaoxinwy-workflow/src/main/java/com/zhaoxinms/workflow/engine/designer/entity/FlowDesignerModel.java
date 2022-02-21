@@ -1,9 +1,12 @@
-package com.zhaoxinms.workflow.engine.model.designer;
+package com.zhaoxinms.workflow.engine.designer.entity;
+
+import com.alibaba.fastjson.JSONObject;
 
 public class FlowDesignerModel {
 
     private BasicSetting basicSetting;
     private ProcessData processData;
+    private JSONObject formData;
 
     public void setBasicSetting(BasicSetting basicSetting) {
         this.basicSetting = basicSetting;
@@ -21,4 +24,11 @@ public class FlowDesignerModel {
         return processData;
     }
 
+    public JSONObject getFormData() {
+        return formData;
+    }
+
+    public void setFormData(JSONObject formData) {
+        this.formData = formData;
+    }
 }

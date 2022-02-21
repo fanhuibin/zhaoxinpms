@@ -135,6 +135,13 @@ public class FlowRepairVo extends ProcessEntity {
     private String repairUserName;
 
     /**
+     * 维修状态
+     */
+    @Excel(name = "维修状态")
+    @ApiModelProperty(value = "维修状态")
+    private String repairState;
+	
+    /**
      * 维修材料费用
      */
 	@Excel(name = "维修材料费用")

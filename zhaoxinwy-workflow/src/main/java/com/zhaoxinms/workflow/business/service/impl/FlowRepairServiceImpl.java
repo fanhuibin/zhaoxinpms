@@ -114,6 +114,7 @@ public class FlowRepairServiceImpl extends ServiceImpl<FlowRepairMapper, FlowRep
     }
 
     @Override
+    //TODO 优化代码，采用流程设计器的字段权限判断哪些字段可以修改
     public boolean update(String id, FlowRepairBo bo) {
         // 获取当前流程的状态
         FlowRepair entity = JsonUtil.getJsonToBean(bo, FlowRepair.class);
@@ -139,10 +140,12 @@ public class FlowRepairServiceImpl extends ServiceImpl<FlowRepairMapper, FlowRep
                 entity.setState("score");
                 entity.setRepairMaterialsFee(bo.getRepairMaterialsFee());
                 entity.setRepairServiceFee(bo.getRepairServiceFee());
+                entity.setRepairState(bo.getRepairState());
                 variables.put("comment", "维修完成");
             }else if("repairing".equals(bo.getRepairState())) {
                 entity.setState("repairing");
                 entity.setRepairContent(bo.getRepairContent());
+                entity.setRepairState(bo.getRepairState());
                 this.updateById(entity);
                 variables.put("comment", "现场确认完成");
             }

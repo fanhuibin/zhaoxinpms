@@ -12,8 +12,8 @@ import org.activiti.bpmn.model.MultiInstanceLoopCharacteristics;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.delegate.ExecutionListener;
 
+import com.zhaoxinms.workflow.engine.designer.entity.ChildNode;
 import com.zhaoxinms.workflow.engine.model.TreeSelectModel;
-import com.zhaoxinms.workflow.engine.model.designer.ChildNode;
 
 public class ApproverNodeCreator {
     public static final String OR_SIGN = "orSign";

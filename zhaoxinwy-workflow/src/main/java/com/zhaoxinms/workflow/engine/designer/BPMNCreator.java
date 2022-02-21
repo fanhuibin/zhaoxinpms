@@ -19,7 +19,7 @@ import org.activiti.bpmn.model.Process;
 
 import com.zhaoxinms.common.utils.JsonUtil;
 import com.zhaoxinms.common.utils.StringUtils;
-import com.zhaoxinms.workflow.engine.model.designer.FlowDesignerModel;
+import com.zhaoxinms.workflow.engine.designer.entity.FlowDesignerModel;
 
 public class BPMNCreator {
 
@@ -154,7 +154,6 @@ public class BPMNCreator {
         byte[] convertToXML = bpmnXMLConverter.convertToXML(bpmn);
         String bytes = new String(convertToXML);
         bytes = bytes.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
-        System.out.println(bytes);
         return bytes;
     }
 }

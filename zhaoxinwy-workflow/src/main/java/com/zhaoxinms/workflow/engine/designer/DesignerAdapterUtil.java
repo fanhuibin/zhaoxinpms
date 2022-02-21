@@ -16,13 +16,13 @@ import org.activiti.bpmn.model.UserTask;
 import com.alibaba.druid.util.StringUtils;
 import com.zhaoxinms.common.exception.ServiceException;
 import com.zhaoxinms.common.utils.JsonUtil;
+import com.zhaoxinms.workflow.engine.designer.entity.ChildNode;
+import com.zhaoxinms.workflow.engine.designer.entity.ConditionNode;
+import com.zhaoxinms.workflow.engine.designer.entity.FlowDesignerModel;
+import com.zhaoxinms.workflow.engine.designer.entity.Node;
+import com.zhaoxinms.workflow.engine.designer.entity.ProcessData;
 import com.zhaoxinms.workflow.engine.designer.node.ApproverNodeCreator;
 import com.zhaoxinms.workflow.engine.designer.node.ConditionNodeCreator;
-import com.zhaoxinms.workflow.engine.model.designer.ChildNode;
-import com.zhaoxinms.workflow.engine.model.designer.ConditionNode;
-import com.zhaoxinms.workflow.engine.model.designer.FlowDesignerModel;
-import com.zhaoxinms.workflow.engine.model.designer.Node;
-import com.zhaoxinms.workflow.engine.model.designer.ProcessData;
 
 public class DesignerAdapterUtil {
 
@@ -68,6 +68,27 @@ public class DesignerAdapterUtil {
         taskFlows.add(startFlow);
 
         return BPMNCreator.createXML(json, userTasks, gateways, taskFlows);
+    }
+
+    /**
+     * 查询指定的childNode
+     * 
+     * @param json
+     * @param taskDefKey
+     * @return
+     */
+    public static ChildNode getChildNode(String json, String taskDefKey) {
+        FlowDesignerModel model = JsonUtil.getJsonToBean(json, FlowDesignerModel.class);
+        ProcessData process = model.getProcessData();
+        List<ChildNode> allChildNodes = new ArrayList<ChildNode>();
+        List<ConditionNode> conditions = new ArrayList<ConditionNode>();
+        DesignerAdapterUtil.getChildNode("", process.getChildNode(), allChildNodes, conditions);
+        for (ChildNode node : allChildNodes) {
+            if (node.getNodeId().equals(taskDefKey)) {
+                return node;
+            }
+        }
+        return null;
     }
 
     private static void createConditionFlow(ProcessData process, List<ChildNode> allChildNodes, List<ConditionNode> conditions, List<SequenceFlow> taskFlows) {

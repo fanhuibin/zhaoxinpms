@@ -39,6 +39,29 @@
             </el-form>
         </section>
 
+        <!-- 发起人 -->
+        <section class="approver-pane" style="height: 100%" v-if="value && isStartNode()">
+            <el-tabs v-model="activeName" style="height: 100%" class="pane-tab">
+                <el-tab-pane label="设置发起人">
+                    <h3 style="padding-left: 20px">所有人都可以发起流程</h3>
+                </el-tab-pane>
+                <el-tab-pane label="表单权限" name="formAuth">
+                    <div class="form-auth-table">
+                        <el-table :data="getFormOperates()" size="mini">
+                            <el-table-column prop="vModel" label="字段名" align="left"></el-table-column>
+                            <el-table-column prop="label" label="字段标题" align="left"></el-table-column>
+                            <el-table-column prop="operate" label="操作" align="center" width="300px">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="scope.row.read">查看权限</el-checkbox>
+                                    <el-checkbox v-model="scope.row.write">修改权限</el-checkbox>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
+        </section>
+
         <!-- 审批人 -->
         <section class="approver-pane" style="height: 100%" v-if="value && isApproverNode()">
             <el-tabs v-model="activeName" class="pane-tab">
@@ -102,34 +125,15 @@
                 <el-tab-pane label="表单权限" name="formAuth">
                     <div class="form-auth-table">
                         <el-table :data="getFormOperates()" size="mini">
-                            <el-table-column prop="label" label="表单字段" align="left"></el-table-column>
+                            <el-table-column prop="vModel" label="字段名" align="left"></el-table-column>
+                            <el-table-column prop="label" label="字段标题" align="left"></el-table-column>
                             <el-table-column prop="operate" label="操作" align="center" width="300px">
                                 <template slot-scope="scope">
-                                <el-checkbox v-model="scope.row.read">查看权限</el-checkbox>
-                                <el-checkbox v-model="scope.row.write">修改权限</el-checkbox>
+                                    <el-checkbox v-model="scope.row.read">查看权限</el-checkbox>
+                                    <el-checkbox v-model="scope.row.write">修改权限</el-checkbox>
                                 </template>
                             </el-table-column>
                         </el-table>
-                        <!--
-                        <header class="auth-table-header">
-                            <div class="row">
-                                <div class="label">表单字段</div>
-                                <div class="label">字段权限</div>
-                            </div>
-                        </header>
-                        <div class="auth-table-body">
-                            <div v-for="item in getFormOperates()" :key="item.formId" class="row">
-                                <div class="label">
-                                    <span class="required" v-show="item.required">*</span>
-                                    {{ item.label }}
-                                </div>
-                                <el-radio-group v-model="item.formOperate" class="radio-group">
-                                    <el-radio :label="2" style="margin-left: 1rem"><span style="opacity: 0">是否可见</span></el-radio>
-                                    <el-radio :label="1"><span style="opacity: 0">是否可编辑</span></el-radio>
-                                </el-radio-group>
-                            </div>
-                        </div>
-                        -->
                     </div>
                 </el-tab-pane>
             </el-tabs>
@@ -307,18 +311,25 @@ export default {
             const formOperates = (target.properties && target.properties.formOperates) || [];
             // 自定义组件不加入权限控制
             const res = [];
-            const defaultType = this.isApproverNode() ? 1 : 2; // 操作权限 0 隐藏 1 只读 2 可编辑
-            const getPermissionById = id => {
+            const defaultRead = true;
+            const defaultWrite = false;
+            const getReadPermissionById = id => {
                 const permission = formOperates.find(t => t.formId === id);
-                return permission !== undefined ? permission.formOperate : defaultType;
+                return permission !== undefined ? permission.read : defaultRead;
+            };
+            const getWritePermissionById = id => {
+                const permission = formOperates.find(t => t.formId === id);
+                return permission !== undefined ? permission.write : defaultWrite;
             };
             const format = (list, parentName = '') =>
                 list.map(t => {
                     const data = {
                         formId: t.formId,
                         required: t.required,
+                        vModel: t.vModel,
                         label: parentName ? [parentName, t.label].join('.') : t.label,
-                        formOperate: getPermissionById(t.formId),
+                        read: getReadPermissionById(t.formId),
+                        write: getWritePermissionById(t.formId),
                     };
                     res.push(data);
                     Array.isArray(t.children) && format(t.children, t.label);
@@ -333,7 +344,8 @@ export default {
 
         initStartNodeData() {
             this.initInitiator();
-            this.startForm.formOperates = this.initFormOperates(this.value)
+            this.activeName = 'formAuth';
+            this.startForm.formOperates = this.initFormOperates(this.value);
         },
 
         copyNodeConfirm() {
@@ -381,8 +393,9 @@ export default {
                 }
             }
 
-            const formOperates = this.approverForm.formOperates.map(t => ({ formId: t.formId, formOperate: t.formOperate }));
-            Object.assign(this.properties, this.approverForm, { formOperates });
+            //const formOperates = this.approverForm.formOperates.map(t => ({ formId: t.formId, formOperate: t.formOperate }));
+            //Object.assign(this.properties, this.approverForm, { formOperates });
+            Object.assign(this.properties, this.approverForm);
             this.$emit('confirm', this.properties, content || '请设置抄送人');
             this.visible = false;
         },
@@ -421,10 +434,11 @@ export default {
          * 开始节点确认保存
          */
         startNodeComfirm() {
-            this.properties.initiator = this.initiator['dep&user'];
-            const formOperates = this.startForm.formOperates.map(t => ({ formId: t.formId, formOperate: t.formOperate }));
+            //TODO 支持选择发起人
+            this.properties.initiator = 'all';
+            const formOperates = this.startForm.formOperates;
             Object.assign(this.properties, { formOperates });
-            this.$emit('confirm', this.properties, this.getOrgSelectLabel('start') || '所有人');
+            this.$emit('confirm', this.properties, '所有人');
             this.visible = false;
         },
         /**
@@ -481,9 +495,9 @@ export default {
             }
 
             this.approverForm.title = this.properties.title;
-            const formOperates = this.approverForm.formOperates.map(t => ({ formId: t.formId, formOperate: t.formOperate }));
-            Object.assign(this.properties, this.approverForm, { formOperates });
-
+            //const formOperates = this.approverForm.formOperates.map(t => ({ formId: t.formId, formOperate: t.formOperate }));
+            //Object.assign(this.properties, this.approverForm, { formOperates });
+            Object.assign(this.properties, this.approverForm);
             this.$emit('confirm', this.properties, content || '请设置审批人');
             this.visible = false;
         },
@@ -540,7 +554,8 @@ export default {
          */
         initApproverNodeData() {
             Object.assign(this.approverForm, this.value.properties);
-            this.approverForm.formOperates = this.initFormOperates(this.value)
+            this.approverForm.formOperates = this.initFormOperates(this.value);
+            this.activeName = 'config';
         },
         /**
          * 初始化条件节点数据
@@ -549,6 +564,7 @@ export default {
             // 初始化条件表单数据
             this.condition = this.value.properties && this.value.properties.condition;
             this.conditionLabel = this.value.properties && this.value.properties.conditionLabel;
+            this.activeName = 'config';
         },
     },
     watch: {
