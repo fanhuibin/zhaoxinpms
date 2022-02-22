@@ -175,7 +175,7 @@ npm run dev
 > 
 > 创建账号并分配角色即可演示功能
 
-演示地址：http://zhaoxinms.com:82/
+演示地址：http://demo1.pms.zhaoxinms.com/
 
 文档地址：http://zhaoxinms.com:81/
 
