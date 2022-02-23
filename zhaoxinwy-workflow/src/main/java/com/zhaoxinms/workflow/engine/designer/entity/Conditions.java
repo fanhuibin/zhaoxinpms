@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 肇新智慧物业管理系统
  *
  * Licensed under AGPL开源协议
