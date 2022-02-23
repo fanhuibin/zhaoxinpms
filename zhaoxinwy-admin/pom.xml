@@ -42,12 +42,6 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
-        <!-- 核心模块-->
-        <dependency>
-            <groupId>com.zhaoxinms</groupId>
-            <artifactId>zhaoxinwy-framework</artifactId>
-        </dependency>
-
         <!-- 定时任务-->
         <dependency>
             <groupId>com.zhaoxinms</groupId>
@@ -63,7 +57,7 @@
         <!-- 物业管理模块-->
         <dependency>
             <groupId>com.zhaoxinms</groupId>
-            <artifactId>zhaoxinwy-pms</artifactId>
+            <artifactId>zhaoxinwy-owner</artifactId>
             <version>0.9.0</version>
         </dependency>
         
