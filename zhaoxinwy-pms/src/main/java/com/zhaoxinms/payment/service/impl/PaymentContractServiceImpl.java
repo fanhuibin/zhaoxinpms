@@ -140,6 +140,14 @@ public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMappe
         queryWrapper.lambda().eq(PaymentContractEntity::getEnabledMark, "1");
         return this.list(queryWrapper);
     }
+    
+    @Override
+    public List<PaymentContractEntity> getDisabledByOwnerId(String ownerId) {
+        QueryWrapper<PaymentContractEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(PaymentContractEntity::getOwnerId, ownerId);
+        queryWrapper.lambda().eq(PaymentContractEntity::getEnabledMark, "0");
+        return this.list(queryWrapper);
+    }
 
     @Override
     public synchronized void create(PaymentContractCrForm form) throws DataException {
@@ -162,7 +170,7 @@ public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMappe
                 }
             }
 
-            if (entity.getContractType().equals("rented")) {
+            if (entity.getContractType().equals(ConstantsUtil.HOUSE_STATE_RENTED)) {
                 if (StringUtils.isEmpty(house.getRentFee())
                     || new BigDecimal(house.getRentFee()).compareTo(BigDecimal.ZERO) <= 0) {
                     throw new DataException("请完善商铺的租金信息");
@@ -176,7 +184,7 @@ public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMappe
                 Date endDate = DateUtils.addMonths(entity.getBeginDate(), form.getPeriod());
                 endDate = DateUtils.addSeconds(endDate, -1);
                 entity.setEndDate(endDate);
-            } else if (entity.getContractType().equals("selled")) {
+            } else if (entity.getContractType().equals(ConstantsUtil.HOUSE_STATE_SELLED)) {
                 house.setState(ConstantsUtil.HOUSE_STATE_SELLED);
                 Date endDate = null;
                 entity.setEndDate(endDate);
@@ -258,6 +266,8 @@ public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMappe
         List<PaymentContractEntity> result = this.list(queryWrapper);
         for (PaymentContractEntity a : result) {
             a.setEnabledMark(0);
+            a.setDeleteTime(new Date());
+            a.setDeleteUserId(userId);
             this.updateById(a);
 
             // 商铺绑定的收费项全部删除

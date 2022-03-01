@@ -2,28 +2,27 @@ package com.zhaoxinms.owner.service.impl;
 
 import java.util.List;
 
-import com.zhaoxinms.common.exception.ServiceException;
-import com.zhaoxinms.common.utils.DateUtils;
-import com.zhaoxinms.common.utils.StringUtils;
-import com.zhaoxinms.event.ContractEvent;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.zhaoxinms.base.util.UserProvider;
-import com.zhaoxinms.owner.mapper.OwnerUserMapper;
+import com.zhaoxinms.common.exception.ServiceException;
+import com.zhaoxinms.common.utils.StringUtils;
+import com.zhaoxinms.event.ContractEvent;
 import com.zhaoxinms.owner.entity.OwnerUser;
+import com.zhaoxinms.owner.entity.pagination.OwnerUserPagination;
+import com.zhaoxinms.owner.mapper.OwnerUserMapper;
 import com.zhaoxinms.owner.service.IOwnerUserService;
 import com.zhaoxinms.payment.entity.PaymentContractEntity;
 import com.zhaoxinms.payment.service.PaymentContractService;
+import com.zhaoxinms.util.ConstantsUtil;
 import com.zhaoxinms.util.ValidateUtil;
-import com.zhaoxinms.owner.entity.pagination.OwnerUserPagination;
 
 /**
  * 业主信息Service业务层处理
@@ -33,10 +32,6 @@ import com.zhaoxinms.owner.entity.pagination.OwnerUserPagination;
  */
 @Service
 public class OwnerUserServiceImpl extends ServiceImpl<OwnerUserMapper, OwnerUser> implements IOwnerUserService {
-    @Autowired
-    private OwnerUserMapper ownerUserMapper;
-    @Autowired
-    private UserProvider userProvider;
     @Autowired
     private PaymentContractService paymentContractService;
 
@@ -55,9 +50,9 @@ public class OwnerUserServiceImpl extends ServiceImpl<OwnerUserMapper, OwnerUser
         OwnerUserPagination pagination = new OwnerUserPagination();
         pagination.setPhonenumber(phoneNo);
         LambdaQueryWrapper<OwnerUser> lqw = buildQueryWrapper(pagination);
-        if(this.list(lqw).size() > 0) {
+        if (this.list(lqw).size() > 0) {
             return this.list(lqw).get(0);
-        }else {
+        } else {
             return null;
         }
     }
@@ -67,9 +62,9 @@ public class OwnerUserServiceImpl extends ServiceImpl<OwnerUserMapper, OwnerUser
         OwnerUserPagination pagination = new OwnerUserPagination();
         pagination.setIdcard(idcard);
         LambdaQueryWrapper<OwnerUser> lqw = buildQueryWrapper(pagination);
-        if(this.list(lqw).size() > 0) {
+        if (this.list(lqw).size() > 0) {
             return this.list(lqw).get(0);
-        }else {
+        } else {
             return null;
         }
     }
@@ -84,6 +79,8 @@ public class OwnerUserServiceImpl extends ServiceImpl<OwnerUserMapper, OwnerUser
     @Override
     public void create(OwnerUser entity) {
         validEntityBeforeSave(entity);
+        entity.setOwnCount(0l);
+        entity.setRentedCount(0l);
         this.save(entity);
     }
 
@@ -140,22 +137,28 @@ public class OwnerUserServiceImpl extends ServiceImpl<OwnerUserMapper, OwnerUser
         }
     }
 
-    // 监听contractEvent,当contract变更时
+    // 监听contractEvent
     @EventListener
     public void contractChange(ContractEvent event) {
-        //查询
+        // 查询
         PaymentContractEntity contract = event.getContract();
         String ownerId = contract.getOwnerId();
-        
+
         OwnerUser ownerUser = this.getById(ownerId);
-        
-        //通过ownerId查询所有名下的商铺
-        int owned = 0;
-        int rented = 0;
+
+        // 通过ownerId查询所有名下的商铺
+        long owned = 0;
+        long rented = 0;
         List<PaymentContractEntity> list = paymentContractService.getByOwnerId(ownerId);
-        for(PaymentContractEntity c:list) {
-            
+        for (PaymentContractEntity c : list) {
+            if (c.getContractType().equals(ConstantsUtil.HOUSE_STATE_RENTED)) {
+                rented++;
+            } else if (c.getContractType().equals(ConstantsUtil.HOUSE_STATE_SELLED)) {
+                owned++;
+            }
         }
-        
+        ownerUser.setOwnCount(owned);
+        ownerUser.setRentedCount(rented);
+        this.update(Long.valueOf(ownerId), ownerUser);
     }
 }

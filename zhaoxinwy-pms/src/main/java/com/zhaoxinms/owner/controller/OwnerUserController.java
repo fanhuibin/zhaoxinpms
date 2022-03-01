@@ -1,8 +1,12 @@
 package com.zhaoxinms.owner.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +35,13 @@ import com.zhaoxinms.owner.entity.vo.OwnerUserVo;
 import com.zhaoxinms.owner.entity.bo.OwnerUserBo;
 import com.zhaoxinms.owner.entity.pagination.OwnerUserPagination;
 import com.zhaoxinms.owner.service.IOwnerUserService;
+import com.zhaoxinms.payment.entity.PaymentBillEntity;
+import com.zhaoxinms.payment.entity.PaymentContractEntity;
+import com.zhaoxinms.payment.model.paymentbill.PaymentBillListVO;
+import com.zhaoxinms.payment.model.paymentcontract.PaymentContractListVO;
+import com.zhaoxinms.payment.service.PaymentBillService;
+import com.zhaoxinms.payment.service.PaymentContractService;
+import com.zhaoxinms.statistics.model.PaymentFeeStatisticsModel;
 import com.zhaoxinms.common.core.page.TableDataInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -45,12 +56,14 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/owner/ownerUser")
 public class OwnerUserController
 {
-
 	@Autowired
     private UserProvider userProvider;
-
     @Autowired
     private IOwnerUserService ownerUserService;
+    @Autowired
+    private PaymentContractService paymentContractService;
+    @Autowired
+    private PaymentBillService paymentBillService;
 
     /**
      * 查询业主信息列表
@@ -75,7 +88,23 @@ public class OwnerUserController
  	public ActionResult<OwnerUserVo> info(@PathVariable("id") Long id) {
         OwnerUser entity = ownerUserService.getInfo(id);
         OwnerUserVo vo = JsonUtil.getJsonToBean(entity, OwnerUserVo.class);
-        return ActionResult.success(vo);
+        
+        //查询业主的商铺和费用信息
+        List<PaymentContractEntity> currentContracts =  paymentContractService.getByOwnerId(String.valueOf(id));
+        List<PaymentContractListVO> listCurrent = JsonUtil.getJsonToList(currentContracts, PaymentContractListVO.class);
+        List<PaymentContractEntity> historyContracts = paymentContractService.getDisabledByOwnerId(String.valueOf(id));
+        List<PaymentContractListVO> listHostory = JsonUtil.getJsonToList(historyContracts, PaymentContractListVO.class);
+       
+        //查询当前商铺下的待缴费用信息
+        List<String> resources = currentContracts.stream().map(PaymentContractEntity::getResourceName).collect(Collectors.toList());
+        List<PaymentBillEntity> bills = paymentBillService.getUnpaiedListByResources(resources);
+        List<PaymentBillListVO> billsVo = JsonUtil.getJsonToList(bills, PaymentBillListVO.class);
+        
+        Map<String,Object> result = new HashMap<String,Object>();
+        result.put("currentContracts", listCurrent);
+        result.put("historyContracts", listHostory);
+        result.put("unpaiedBills", billsVo);
+        return ActionResult.success(result);
     }
 
     /**

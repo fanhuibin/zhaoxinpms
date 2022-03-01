@@ -51,4 +51,6 @@ public interface PaymentBillService extends IService<PaymentBillEntity> {
 
     // 保存付款
     PaymentPayLogEntity paySave(PaymentBillPayForm payForm);
+
+    List<PaymentBillEntity> getUnpaiedListByResources(List<String> resourceNames);
 }

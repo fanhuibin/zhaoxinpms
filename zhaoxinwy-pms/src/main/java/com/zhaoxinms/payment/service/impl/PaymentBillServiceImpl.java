@@ -228,7 +228,16 @@ public class PaymentBillServiceImpl extends ServiceImpl<PaymentBillMapper, Payme
         QueryWrapper<PaymentBillEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getResourceName, resourceName));
         queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getPayState, "0"));
-        queryWrapper.lambda().and(t -> t.like(PaymentBillEntity::getEnabledMark, 1));
+        queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getEnabledMark, 1));
+        return this.list(queryWrapper);
+    }
+    
+    @Override
+    public List<PaymentBillEntity> getUnpaiedListByResources(List<String> resourceNames) {
+        QueryWrapper<PaymentBillEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().and(t -> t.in(PaymentBillEntity::getResourceName, resourceNames));
+        queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getPayState, "0"));
+        queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getEnabledMark, 1));
         return this.list(queryWrapper);
     }
 

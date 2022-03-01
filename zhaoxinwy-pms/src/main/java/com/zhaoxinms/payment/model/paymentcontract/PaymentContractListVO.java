@@ -58,4 +58,8 @@ public class PaymentContractListVO {
     @JsonProperty("userTrade")
     private String userTrade;
 
+    /** 删除时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonProperty("deleteTime")
+    private String deleteTime;
 }

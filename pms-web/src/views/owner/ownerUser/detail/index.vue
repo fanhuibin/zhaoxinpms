@@ -29,7 +29,7 @@
                                                 <div class="pull-right">{{ user.phonenumber }}</div>
                                             </li>
                                             <li class="list-group-item">
-                                                <i class="icon-item el-icon-postcard" style="font-size:20px;margin-right:10px;"/>
+                                                <i class="icon-item el-icon-postcard" style="font-size: 20px; margin-right: 10px" />
                                                 身份证号
                                                 <div class="pull-right">{{ user.idcard }}</div>
                                             </li>
@@ -54,16 +54,81 @@
                                     </div>
                                     <el-tabs v-model="activeTab">
                                         <el-tab-pane label="商铺信息" name="houseInfo">
-                                            <userInfo :user="user" />
+                                            <el-table v-loading="loading" :data="currentContracts">
+                                                <el-table-column prop="block" label="商业区-商铺编号" align="left">
+                                                    <template slot-scope="scope">{{ scope.row.resourceName }}</template>
+                                                </el-table-column>
+                                                <el-table-column label="类型" prop="state" algin="left">
+                                                    <template slot-scope="scope">
+                                                        <el-tag v-if="scope.row.contractType === 'selled'" type="success">拥有</el-tag>
+                                                        <el-tag v-if="scope.row.contractType === 'rented'">在租</el-tag>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column label="开始时间" prop="beginDate" algin="left">
+                                                    <template slot-scope="scope">
+                                                        {{ scope.row.beginDate }}
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column label="结束时间" prop="endDate" algin="left">
+                                                    <template slot-scope="scope">
+                                                        {{ scope.row.endDate }}
+                                                    </template>
+                                                </el-table-column>
+                                            </el-table>
                                         </el-tab-pane>
-                                        <el-tab-pane label="商铺历史信息" name="houseHistory">
-                                            <userInfo :user="user" />
+                                        <el-tab-pane label="历史商铺信息" name="houseHistory">
+                                            <el-table v-loading="loading" :data="historyContracts">
+                                                <el-table-column prop="block" label="商业区-商铺编号" align="left">
+                                                    <template slot-scope="scope">{{ scope.row.resourceName }}</template>
+                                                </el-table-column>
+                                                <el-table-column label="类型" prop="state" algin="left">
+                                                    <template slot-scope="scope">
+                                                        <el-tag v-if="scope.row.contractType === 'selled'" type="success">拥有</el-tag>
+                                                        <el-tag v-if="scope.row.contractType === 'rented'">在租</el-tag>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column label="开始时间" prop="beginDate" algin="left">
+                                                    <template slot-scope="scope">
+                                                        {{ scope.row.beginDate }}
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column label="结束时间" prop="endDate" algin="left">
+                                                    <template slot-scope="scope">
+                                                        {{ scope.row.endDate }}
+                                                    </template>
+                                                </el-table-column>
+                                            </el-table>
                                         </el-tab-pane>
                                         <el-tab-pane label="待缴费信息" name="fee">
-                                            <resetPwd :user="user" />
+                                            <el-table
+                                                v-loading="loading"
+                                                :data="unpaiedBills"
+                                                ref="showTable"
+                                            >
+                                                <el-table-column prop="feeItemName" label="收费项名称" align="left"></el-table-column>
+                                                <el-table-column prop="beginDate" label="起收日期" align="left" />
+                                                <el-table-column prop="endDate" label="到期日期" align="left" />
+                                                <el-table-column prop="deadline" label="缴费限期" align="left" />
+                                                <el-table-column prop="price" label="单价" align="left" />
+                                                <el-table-column label="数量" prop="num" algin="left" />
+                                                <el-table-column label="金额" prop="total" algin="left" />
+                                            </el-table>
                                         </el-tab-pane>
-                                        <el-tab-pane label="缴费历史信息" name="feeHistory">
-                                            <resetPwd :user="user" />
+                                        <el-tab-pane label="历史缴费信息" name="feeHistory">
+                                            <el-table
+                                                v-loading="loading"
+                                                :data="unpaiedBills"
+                                                ref="showTable"
+                                            >
+                                                <el-table-column prop="feeItemName" label="收费项名称" align="left"></el-table-column>
+                                                <el-table-column prop="beginDate" label="起收日期" align="left" />
+                                                <el-table-column prop="endDate" label="到期日期" align="left" />
+                                                <el-table-column prop="deadline" label="缴费限期" align="left" />
+                                                <el-table-column prop="price" label="单价" align="left" />
+                                                <el-table-column label="数量" prop="num" algin="left" />
+                                                <el-table-column label="金额" prop="total" algin="left" />
+                                                <el-table-column label="缴费时间" prop="payTime" algin="left" />
+                                            </el-table>
                                         </el-tab-pane>
                                     </el-tabs>
                                 </el-card>
@@ -78,26 +143,34 @@
 
 <script>
 import userAvatar from './userAvatar';
-import userInfo from './userInfo';
-import resetPwd from './resetPwd';
-import { listOwnerUser, getOwnerUser, delOwnerUser, addOwnerUser, updateOwnerUser, exportOwnerUser } from '@/api/owner/ownerUser';
-
+import { getOwnerUser } from '@/api/owner/ownerUser';
 
 export default {
     name: 'Profile',
-    components: { userAvatar, userInfo, resetPwd },
+    components: { userAvatar },
     data() {
         return {
             user: {},
             activeTab: 'houseInfo',
+            loading: false,
+            currentContracts: [],
+            historyContracts: [],
+            unpaiedBills: [],
+            histroyBills: [],
         };
     },
-    created() {
-        
-    },
+    created() {},
     methods: {
         init(ownerUser) {
             this.user = ownerUser;
+            /** 查询业主信息列表 */
+            this.loading = true;
+            getOwnerUser(this.user.id).then(response => {
+                this.currentContracts = response.data.currentContracts;
+                this.historyContracts = response.data.historyContracts;
+                this.unpaiedBills = response.data.unpaiedBills;
+                this.loading = false;
+            });
         },
     },
 };

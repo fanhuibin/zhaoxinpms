@@ -8,10 +8,6 @@ import com.zhaoxinms.payment.model.paymentcontract.PaymentContractPagination;
 
 import java.util.*;
 
-/**
- *
- * payment_contract 版本： V3.1.0 版权： 作者： CYCBERFORM 日期： 2021-08-23 15:28:33
- */
 public interface PaymentContractService extends IService<PaymentContractEntity> {
 
     List<PaymentContractEntity> getList(PaymentContractPagination paymentContractPagination);
@@ -52,4 +48,6 @@ public interface PaymentContractService extends IService<PaymentContractEntity> 
     List<PaymentContractEntity> getByResourceNameTips(String resourceName);
 
     List<PaymentContractEntity> getByOwnerId(String ownerId);
+
+    List<PaymentContractEntity> getDisabledByOwnerId(String ownerId);
 }
