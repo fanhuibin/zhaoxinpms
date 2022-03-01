@@ -164,7 +164,6 @@ npm run dev
 
 ## 演示与文档
 
-
 > 管理账号：admin / admin123
 >
 > 流程演示：
@@ -179,8 +178,12 @@ npm run dev
 
 文档地址：http://zhaoxinms.com:81/
 
+## 技术交流qq：697878094
+
+<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=uouRkTO8anqhjMPgclF8oy2F5Q50jz_W&jump_from=webapi"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="肇新智慧物业技术交流" title="肇新智慧物业技术交流"></a>
 
 ## 联系作者
+
 :fa-wechat: 优化建议、问题反馈、协作开发、技术支持、咨询合作，请扫码联系作者
 另承接各类软件研发项目，有需要的朋友请联系作者。
 
