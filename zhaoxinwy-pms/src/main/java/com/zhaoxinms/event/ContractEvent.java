@@ -10,6 +10,8 @@ import lombok.Data;
 public class ContractEvent extends ApplicationEvent {
 
     public static final String STATE_CANCEL = "cancel";
+    public static final String STATE_ADD = "add";
+    public static final String STATE_UPDATE = "update";
     private String state;
     private PaymentContractEntity contract;
 

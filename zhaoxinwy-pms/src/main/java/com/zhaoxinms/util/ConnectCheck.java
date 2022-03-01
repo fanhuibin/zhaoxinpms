@@ -6,12 +6,17 @@ import org.springframework.stereotype.Component;
 
 import com.zhaoxinms.common.utils.http.HttpUtils;
 
+/**
+ * 注册到服务器
+ */
 @Component
 public class ConnectCheck {
     
-    @PostConstruct
-    public static void main(String args[]){
-        String s = HttpUtils.sendGet("http://www.baidu.com");
-        System.out.println(s);
-    }
+//    @PostConstruct
+//    public static void getTenantId(){
+//        String hostURL = "";
+//        String s = HttpUtils.sendGet("");
+//    }
+    
+    
 }

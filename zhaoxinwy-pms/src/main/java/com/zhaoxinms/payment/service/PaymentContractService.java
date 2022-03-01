@@ -50,4 +50,6 @@ public interface PaymentContractService extends IService<PaymentContractEntity> 
     PaymentContractEntity getByResourceName(String resourceName);
 
     List<PaymentContractEntity> getByResourceNameTips(String resourceName);
+
+    List<PaymentContractEntity> getByOwnerId(String ownerId);
 }

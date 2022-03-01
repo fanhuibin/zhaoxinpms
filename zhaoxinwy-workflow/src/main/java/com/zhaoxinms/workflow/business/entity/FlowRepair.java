@@ -32,7 +32,7 @@ public class FlowRepair extends BaseEntity {
     @TableId(value = "id")
     private String id;
     /**
-     * $column.columnComment
+     * 流程实例
      */
     private String instanceId;
     /**

@@ -26,7 +26,7 @@ import com.zhaoxinms.common.core.domain.BaseEntity;
 @ApiModel("投诉工单业务对象")
 public class FlowComplaintsPagination extends Pagination {
 
-    @ApiModelProperty(value = "$column.columnComment")
+    @ApiModelProperty(value = "流程id")
     private String instanceId;
 
     @ApiModelProperty(value = "单号", required = true)

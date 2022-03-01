@@ -29,6 +29,10 @@ public class PaymentContractEntity {
     /** 资源名 */
     @TableField("RESOURCE_NAME")
     private String resourceName;
+    
+    /** 业主id */
+    @TableField("OWNER_ID")
+    private String ownerId;
 
     /**  */
     @TableField("RESOURCE_TYPE")

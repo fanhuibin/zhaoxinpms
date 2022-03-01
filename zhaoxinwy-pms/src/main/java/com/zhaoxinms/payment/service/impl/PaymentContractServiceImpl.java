@@ -20,6 +20,7 @@ import com.zhaoxinms.base.util.JsonUtil;
 import com.zhaoxinms.base.util.UserProvider;
 import com.zhaoxinms.baseconfig.entity.ConfigHouseEntity;
 import com.zhaoxinms.baseconfig.service.ConfigHouseService;
+import com.zhaoxinms.common.exception.ServiceException;
 import com.zhaoxinms.event.ContractEvent;
 import com.zhaoxinms.payment.entity.PaymentContractEntity;
 import com.zhaoxinms.payment.entity.PaymentContractFeeEntity;
@@ -35,12 +36,7 @@ import com.zhaoxinms.util.DateUtils;
 import com.zhaoxinms.util.InputCheckUtil;
 import com.zhaoxinms.util.ValidateUtil;
 
-/**
- *
- * payment_contract 版本： V3.1.0 版权： 作者： CYCBERFORM 日期： 2021-08-23 15:28:33
- */ 
 @Service
-
 public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMapper, PaymentContractEntity>
     implements PaymentContractService {
 
@@ -133,17 +129,27 @@ public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMappe
         QueryWrapper<PaymentContractEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().like(PaymentContractEntity::getResourceName, resourceName);
         queryWrapper.lambda().eq(PaymentContractEntity::getEnabledMark, "1");
-        queryWrapper.last("limit 10");
+        queryWrapper.last("limit 20");
+        return this.list(queryWrapper);
+    }
+    
+    @Override
+    public List<PaymentContractEntity> getByOwnerId(String ownerId) {
+        QueryWrapper<PaymentContractEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(PaymentContractEntity::getOwnerId, ownerId);
+        queryWrapper.lambda().eq(PaymentContractEntity::getEnabledMark, "1");
         return this.list(queryWrapper);
     }
 
     @Override
     public synchronized void create(PaymentContractCrForm form) throws DataException {
-
         PaymentContractEntity entity = JsonUtil.getJsonToBean(form, PaymentContractEntity.class);
         if (entity.getResourceType().equals("house")) {
             ConfigHouseEntity house = houseService.getById(entity.getResourceId());
-
+            if(StringUtils.isEmpty(entity.getOwnerId())) {
+                throw new ServiceException("业主信息不能为空");
+            }
+            
             if (!house.getState().equals(ConstantsUtil.HOUSE_STATE_EMPTY)) {
                 throw new DataException("当前商铺已经被占用，不能出租或出售");
             }
@@ -183,6 +189,9 @@ public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMappe
             List<PaymentContractFeeForm> fees = form.getContractFees();
             List<PaymentContractFeeEntity> feeEntitys = JsonUtil.getJsonToList(fees, PaymentContractFeeEntity.class);
             addOrUpdateFees(entity, feeEntitys);
+            
+            // 广播新增
+            applicationEventPublisher.publishEvent(new ContractEvent(this, entity, ContractEvent.STATE_ADD));
         } else {
             throw new DataException("资源类型不支持");
         }
@@ -312,5 +321,7 @@ public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMappe
         }
 
         this.updateById(entity);
+        // 广播修改
+        applicationEventPublisher.publishEvent(new ContractEvent(this, entity, ContractEvent.STATE_UPDATE));
     }
 }

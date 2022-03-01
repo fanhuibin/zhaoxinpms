@@ -31,16 +31,17 @@ public class OwnerUserBo extends BaseEntity {
     private Long id;
 
     /**
-     * 真实姓名
+     * 业主姓名
      */
-    @ApiModelProperty(value = "真实姓名", required = true)
-    @NotBlank(message = "真实姓名不能为空", groups = { AddGroup.class, EditGroup.class })
+    @ApiModelProperty(value = "业主姓名", required = true)
+    @NotBlank(message = "业主姓名不能为空", groups = { AddGroup.class, EditGroup.class })
     private String userName;
 
     /**
-     * $column.columnComment
+     * 身份证号
      */
     @ApiModelProperty(value = "身份证号")
+    @NotBlank(message = "身份证号不能为空", groups = { AddGroup.class, EditGroup.class })
     private String idcard;
 
     /**
@@ -65,12 +66,14 @@ public class OwnerUserBo extends BaseEntity {
      * 手机号码
      */
     @ApiModelProperty(value = "手机号码")
+    @NotBlank(message = "手机号码不能为空", groups = { AddGroup.class, EditGroup.class })
     private String phonenumber;
 
     /**
      * 用户性别（0男 1女 2未知）
      */
     @ApiModelProperty(value = "用户性别（0男 1女 2未知）")
+    @NotBlank(message = "性别不能为空", groups = { AddGroup.class, EditGroup.class })
     private String sex;
 
     /**

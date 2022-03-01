@@ -29,6 +29,9 @@ public class PaymentContractCrForm {
     @NotBlank
     @Length(min = 0, max = 50)
     private String contractType;
+    
+    @JsonProperty("ownerId")
+    private String ownerId;
 
     /** 商业区编码 */
     @JsonProperty("blockCode")

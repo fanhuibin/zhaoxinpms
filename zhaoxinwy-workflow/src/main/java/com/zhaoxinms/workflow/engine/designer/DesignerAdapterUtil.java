@@ -9,17 +9,13 @@
  */
 package com.zhaoxinms.workflow.engine.designer;
 
-import java.security.cert.CollectionCertStoreParameters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.activiti.bpmn.model.EndEvent;
 import org.activiti.bpmn.model.ExclusiveGateway;
 import org.activiti.bpmn.model.SequenceFlow;
-import org.activiti.bpmn.model.ServiceTask;
-import org.activiti.bpmn.model.StartEvent;
 import org.activiti.bpmn.model.UserTask;
 
 import com.alibaba.druid.util.StringUtils;

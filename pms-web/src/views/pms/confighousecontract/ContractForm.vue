@@ -1,6 +1,11 @@
 <template>
-    <el-dialog title="客户资料" :close-on-click-modal="false" :visible.sync="visible" class="Jdialog Jdialog_center" lock-scroll width="800px">
-        <el-row :gutter="15" class="">
+    <el-dialog title="绑定业主" :close-on-click-modal="false" :visible.sync="visible" class="Jdialog Jdialog_center" lock-scroll width="600px">
+        <el-steps :active="stepActive" align-center>
+            <el-step title="步骤 1" description="确认商铺信息"></el-step>
+            <el-step title="步骤 2" description="选择业主"></el-step>
+            <el-step title="步骤 3" description="设置费用"></el-step>
+        </el-steps>
+        <el-row :gutter="15" class="stepRow">
             <el-form
                 ref="elForm"
                 :model="dataForm"
@@ -11,133 +16,150 @@
                 :disabled="!!isDetail"
                 v-loading="loading"
             >
-                <el-col :span="12">
-                    <el-form-item label="商业区" prop="area">
-                        <el-select
-                            v-model="dataForm.blockCode"
-                            placeholder="请选择商铺的商业区"
-                            clearable
-                            :style="{ width: '100%' }"
-                            :multiple="false"
-                            :disabled="true"
-                        >
-                            <el-option v-for="(item, index) in areaOptions" :key="index" :label="item.name" :value="item.code" :disabled="true"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="编号" prop="name">
-                        <el-input
-                            v-model="dataForm.name"
-                            placeholder="请输入编号"
-                            :maxlength="49"
-                            clearable
-                            :style="{ width: '100%' }"
-                            :disabled="true"
-                        ></el-input>
-                    </el-form-item>
-                </el-col>
+                <template>
+                    <el-col :span="24" v-show="stepActive == 0">
+                        <el-form-item label="商业区" prop="area">
+                            <el-select
+                                v-model="dataForm.blockCode"
+                                placeholder="请选择商铺的商业区"
+                                clearable
+                                :style="{ width: '100%' }"
+                                :multiple="false"
+                                :disabled="true"
+                            >
+                                <el-option v-for="(item, index) in areaOptions" :key="index" :label="item.name" :value="item.code" :disabled="true"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24" v-show="stepActive == 0">
+                        <el-form-item label="编号" prop="name">
+                            <el-input
+                                v-model="dataForm.name"
+                                placeholder="请输入编号"
+                                :maxlength="49"
+                                clearable
+                                :style="{ width: '100%' }"
+                                :disabled="true"
+                            ></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24" v-show="stepActive == 0">
+                        <el-form-item label="类别" prop="contractType">
+                            <el-select
+                                v-model="dataForm.contractType"
+                                placeholder="请选择"
+                                clearable
+                                :style="{ width: '100%' }"
+                                :multiple="false"
+                                :disabled="this.dataForm.contractId?true:false"
+                                @input="getConfigFeeSetting"
+                            >
+                                <el-option v-for="(item, index) in contractTypeOptions" :key="index" :label="item.fullName" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24" style="height: 59px" v-show="stepActive == 0">
+                        <el-form-item label="开始时间" prop="beginDate" :style="{ height: '33px' }">
+                            <el-date-picker
+                                v-model="dataForm.beginDate"
+                                placeholder="请选择"
+                                clearable
+                                :style="{ width: '100%' }"
+                                type="date"
+                                format="yyyy-MM-dd"
+                                value-format="timestamp"
+                            ></el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24" v-if="this.dataForm.contractType == 'rented'" style="height: 59px" v-show="stepActive == 0">
+                        <el-form-item label="出租时间" prop="period" :style="{ height: '33px' }">
+                            <el-input v-model="dataForm.period" placeholder="出租时间" clearable :style="{ width: '100%' }">
+                                <template slot="append">月</template>
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
 
-
-                <el-col :span="24">
-                    <el-form-item label="类别" prop="contractType">
-                        <el-select
-                            v-model="dataForm.contractType"
-                            placeholder="请选择"
-                            clearable
-                            :style="{ width: '100%' }"
-                            :multiple="false"
-                            :disabled="this.dataForm.contractId"
-                            @input="getConfigFeeSetting"
-                        >
-                            <el-option v-for="(item, index) in contractTypeOptions" :key="index" :label="item.fullName" :value="item.id"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12" style="height: 59px">
-                    <el-form-item label="客户姓名" prop="userName">
-                        <el-input v-model="dataForm.userName" placeholder="请输入" :maxlength="20" clearable :style="{ width: '100%' }"></el-input>
-                    </el-form-item>
-                </el-col>
-
-                <el-col :span="12" style="height: 59px">
-                    <el-form-item label="身份证" prop="userIdcard">
-                        <el-input v-model="dataForm.userIdcard" placeholder="请输入" :maxlength="18" clearable :style="{ width: '100%' }"></el-input>
-                    </el-form-item>
-                </el-col>
-
-                <el-col :span="12" style="height: 59px">
-                    <el-form-item label="性别" prop="userGender">
-                        <el-select v-model="dataForm.userGender" placeholder="请选择" clearable :style="{ width: '100%' }" :multiple="false">
-                            <el-option
-                                v-for="(item, index) in usersexOptions"
-                                :key="index"
-                                :label="item.fullName"
-                                :value="item.id"
-                                :disabled="item.disabled"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-
-                <el-col :span="12" style="height: 59px">
-                    <el-form-item label="联系方式" prop="userPhone">
-                        <el-input v-model="dataForm.userPhone" placeholder="请输入" :maxlength="13" clearable :style="{ width: '100%' }"></el-input>
-                    </el-form-item>
-                </el-col>
-
-                <el-col :span="12" style="height: 59px">
-                    <el-form-item label="开始时间" prop="beginDate" :style="{ height: '33px' }">
-                        <el-date-picker
-                            v-model="dataForm.beginDate"
-                            placeholder="请选择"
-                            clearable
-                            :style="{ width: '100%' }"
-                            type="date"
-                            format="yyyy-MM-dd"
-                            value-format="timestamp"
-                        ></el-date-picker>
-                    </el-form-item>
-                </el-col>
-
-                <el-col :span="12" v-if="this.dataForm.contractType == 'rented'" style="height: 59px">
-                    <el-form-item label="出租时间" prop="period" :style="{ height: '33px' }">
-                        <el-input v-model="dataForm.period" placeholder="出租时间" clearable :style="{ width: '100%' }">
-                            <template slot="append">月</template>
-                        </el-input>
-                    </el-form-item>
-                </el-col>
-
-                <el-col :span="12" v-if="this.dataForm.contractType == 'rented'" style="height: 59px">
-                    <el-form-item label="租金" prop="rentFee" :style="{ height: '33px' }">
-                        <el-input v-model="dataForm.rentFee" placeholder="租金" clearable :style="{ width: '100%' }">
-                            <template slot="append">元</template>
-                        </el-input>
-                    </el-form-item>
-                </el-col>
-
-                <el-col :span="12" style="height: 59px">
-                    <el-form-item label="从事的行业" prop="userTrade">
-                        <el-select v-model="dataForm.userTrade" placeholder="请选择" clearable :style="{ width: '100%' }" :multiple="false">
-                            <el-option
-                                v-for="(item, index) in usertradeOptions"
-                                :key="index"
-                                :label="item.fullName"
-                                :value="item.id"
-                                :disabled="item.disabled"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-
-                <el-col :span="12" style="height: 59px">
-                    <el-form-item label="详细说明" prop="userTradeDetail">
-                        <el-input v-model="dataForm.userTradeDetail" :maxlength="150" placeholder="请输入" clearable :style="{ width: '100%' }"></el-input>
-                    </el-form-item>
-                </el-col>
+                    <el-col :span="24" v-if="this.dataForm.contractType == 'rented'" style="height: 59px" v-show="stepActive == 0">
+                        <el-form-item label="租金" prop="rentFee" :style="{ height: '33px' }">
+                            <el-input v-model="dataForm.rentFee" placeholder="租金" clearable :style="{ width: '100%' }">
+                                <template slot="append">元</template>
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                </template>
+                <template v-if="stepActive >= 1">
+                    <el-col :span="24" style="height: 59px" v-show="stepActive == 1">
+                        <el-form-item label="客户姓名" prop="userName">
+                            <el-row>
+                                <el-col :span="16">
+                                    <el-input
+                                        v-model="dataForm.userName"
+                                        placeholder="请输入"
+                                        :maxlength="20"
+                                        clearable
+                                        :style="{ width: '100%' }"
+                                        :disabled="true"
+                                    ></el-input>
+                                </el-col>
+                                <el-col :span="8">
+                                    <el-button type="primary" @click="selectOwner">选择业主</el-button>
+                                </el-col>
+                            </el-row>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24" style="height: 59px" v-show="stepActive == 1">
+                        <el-form-item label="身份证" prop="userIdcard">
+                            <el-input
+                                v-model="dataForm.userIdcard"
+                                placeholder="请输入"
+                                :maxlength="18"
+                                clearable
+                                :style="{ width: '100%' }"
+                                :disabled="true"
+                            ></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24" style="height: 59px" v-show="stepActive == 1">
+                        <el-form-item label="性别" prop="userGender">
+                            <el-select v-model="dataForm.userGender" placeholder="请选择性别" :disabled="true">
+                                <el-option v-for="dict in dict.type.sys_user_sex" :key="dict.value" :label="dict.label" :value="dict.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24" style="height: 59px" v-show="stepActive == 1">
+                        <el-form-item label="联系方式" prop="userPhone">
+                            <el-input
+                                v-model="dataForm.userPhone"
+                                placeholder="请输入"
+                                :maxlength="13"
+                                clearable
+                                :style="{ width: '100%' }"
+                                :disabled="true"
+                            ></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24" style="height: 59px" v-show="stepActive == 1">
+                        <el-form-item label="从事的行业" prop="userTrade">
+                            <el-select v-model="dataForm.userTrade" placeholder="请选择" clearable :style="{ width: '100%' }" :multiple="false">
+                                <el-option
+                                    v-for="(item, index) in usertradeOptions"
+                                    :key="index"
+                                    :label="item.fullName"
+                                    :value="item.id"
+                                    :disabled="item.disabled"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24" style="height: 59px" v-show="stepActive == 1">
+                        <el-form-item label="详细说明" prop="userTradeDetail">
+                            <el-input v-model="dataForm.userTradeDetail" :maxlength="150" placeholder="请输入" clearable :style="{ width: '100%' }"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </template>
             </el-form>
         </el-row>
-        <div class="box">
+        <div class="box" v-show="stepActive == 2" style="margin: 0 20px">
             <el-tabs v-model="activeName">
                 <el-tab-pane label="设置收费项目" name="contractFees">
                     <el-table :data="dataForm.contractFees" size="mini">
@@ -184,32 +206,39 @@
             </el-tabs>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="visible = false">取 消</el-button>
-            <el-button type="primary" @click="dataFormSubmit()" v-if="!isDetail">确 定</el-button>
+            <el-button style="margin-top: 12px" @click="prev" v-if="stepActive !== 0">上一步</el-button>
+            <el-button style="margin-top: 12px" @click="next" v-if="stepActive !== 2">下一步</el-button>
+            <el-button type="primary" @click="dataFormSubmit()" v-if="!isDetail && stepActive == 2">确 定</el-button>
         </span>
         <Box v-if="boxVisible" ref="form" @refreshDataList="initData" />
+        <SelectOwnerBox v-if="selectOwnerBoxVisible" ref="selectOwner" @select="ownerSelected" />
     </el-dialog>
 </template>
 <script>
 import request from '@/utils/request';
 import { getDictionaryType, getDictionaryDataSelector } from '@/api/systemData/dictionary';
-
+import SelectOwnerBox from '../../owner/ownerUser/SelectBox.vue';
 import Box from '../configfeeitem/SelectBox';
 export default {
-    components: { Box },
+    components: { Box, SelectOwnerBox },
+    dicts: ['sys_user_sex'],
     props: [],
     data() {
         return {
             setting: {
                 readonly: false,
             },
+            stepActive: 0,
+            ownerType: '1',
             activeName: 'contractFees',
             loading: false,
             visible: false,
             isDetail: false,
             boxVisible: false,
+            selectOwnerBoxVisible: false,
             dataForm: {
                 resourceId: '',
+                ownerId: '',
                 contractFees: [],
                 resourceType: 'house',
                 blockCode: undefined,
@@ -308,7 +337,7 @@ export default {
                     {
                         pattern: /^(([1-9]{1}\d{0,7})|(0{1}))(\.\d{0,2})?$/,
                         message: '小数点前最多8位数字',
-                        trigger: 'blur'
+                        trigger: 'blur',
                     },
                 ],
                 userTrade: [
@@ -341,6 +370,29 @@ export default {
             this.$nextTick(() => {
                 this.$refs.form.init();
             });
+        },
+        selectOwner() {
+            this.selectOwnerBoxVisible = true;
+            this.$nextTick(() => {
+                this.$refs.selectOwner.init();
+            });
+        },
+        ownerSelected(data) {
+            this.dataForm.userName = data.userName;
+            this.dataForm.userPhone = data.phonenumber;
+            this.dataForm.userIdcard = data.idcard;
+            this.dataForm.userGender = data.sex;
+            this.dataForm.ownerId = data.id;
+        },
+        next() {
+            this.$refs['elForm'].validate(valid => {
+                if (valid) {
+                    this.stepActive++;
+                }
+            });
+        },
+        prev() {
+            this.stepActive--;
         },
         handleDel(index, row) {
             this.dataForm.contractFees.splice(index, 1);
@@ -400,6 +452,7 @@ export default {
             });
         },
         init(resourceId, block, name, contractId, rentFee, state, isDetail) {
+            this.stepActive = 0;
             this.visible = true;
             this.isDetail = isDetail || false;
             this.$nextTick(() => {
@@ -411,13 +464,20 @@ export default {
                 this.dataForm.contractType = state;
                 this.dataForm.rentFee = rentFee;
                 this.dataForm.contractFees = [];
+                this.dataForm.userTrade = '';
+                this.dataForm.userPhone = '';
+                this.dataForm.userGender = '';
+                this.dataForm.userName = '';
+                this.dataForm.userIdcard = '';
+                this.dataForm.beginDate = '';
+                this.dataForm.period = '';
+                this.dataForm.userTradeDetail = '';
                 if (this.dataForm.contractId) {
                     this.loading = true;
                     request({
                         url: '/payment/PaymentContract/' + this.dataForm.contractId,
                         method: 'get',
                     }).then(res => {
-                        
                         this.dataForm.userTrade = res.data.userTrade;
                         this.dataForm.userPhone = res.data.userPhone;
                         this.dataForm.userGender = res.data.userGender;
@@ -428,6 +488,7 @@ export default {
                         this.dataForm.period = res.data.period;
                         this.dataForm.userTradeDetail = res.data.userTradeDetail;
                         this.dataForm.contractFees = res.data.contractFees;
+                        this.dataForm.ownerId = res.data.ownerId;
                         this.loading = false;
                     });
                 } else {
@@ -477,3 +538,9 @@ export default {
     },
 };
 </script>
+<style lang="scss" scoped>
+.stepRow {
+    margin-top: 20px;
+    margin-right: 60px !important;
+}
+</style>

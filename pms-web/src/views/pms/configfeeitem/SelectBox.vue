@@ -28,7 +28,8 @@
                 </el-tooltip>
             </div>
         </el-row>
-        <JTable v-loading="listLoading" height="400px" :data="list" hasC @selection-change="handleSelectionChange" :border="false">
+        <el-table v-loading="listLoading" :data="list" hasC @selection-change="handleSelectionChange" :border="false">
+            <el-table-column type="selection" width="55" align="center"/>
             <el-table-column prop="name" label="收费项目名" align="left" />
             <el-table-column prop="price" label="单价" align="left" />
             <el-table-column label="数量" prop="numType" algin="left">
@@ -46,7 +47,7 @@
                     {{ scope.row.period }}
                 </template>
             </el-table-column>
-        </JTable>
+        </el-table>
         <span slot="footer" class="dialog-footer">
             <el-button @click="visible = false">取消</el-button>
             <el-button type="primary" @click="select()">确认</el-button>

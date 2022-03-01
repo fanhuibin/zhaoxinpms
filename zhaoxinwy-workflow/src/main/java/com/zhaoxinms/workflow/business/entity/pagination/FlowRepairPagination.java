@@ -28,8 +28,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @ApiModel("报修工单业务对象")
 public class FlowRepairPagination extends Pagination {
 
-    @ApiModelProperty(value = "$column.columnComment", required = true)
-    @NotBlank(message = "$column.columnComment不能为空", groups = { AddGroup.class, EditGroup.class })
+    @ApiModelProperty(value = "流程实例", required = true)
+    @NotBlank(message = "流程实例不能为空", groups = { AddGroup.class, EditGroup.class })
     private String instanceId;
 
     @ApiModelProperty(value = "报修单号", required = true)

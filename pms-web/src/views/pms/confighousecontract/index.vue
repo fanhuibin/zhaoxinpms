@@ -91,19 +91,19 @@
                         <template slot-scope="scope">
                             <el-button
                                 type="text"
-                                v-if="scope.row.state !== 'empty'"
-                                @click="addOrUpdateHandle(scope.row.resourceId, scope.row.block, scope.row.name, scope.row.contractId, scope.row.rentFee)"
+                                @click="selled(scope.row.resourceId, scope.row.block, scope.row.name, scope.row.contractId, scope.row.rentFee)"
+                                :disabled="scope.row.state !== 'empty'"
                             >
-                                编辑客户信息
+                                绑定业主
                             </el-button>
                             <el-button
                                 type="text"
-                                @click="selled(scope.row.resourceId, scope.row.block, scope.row.name, scope.row.contractId, scope.row.rentFee)"
-                                v-if="scope.row.state === 'empty'"
+                                :disabled="scope.row.state === 'empty'"
+                                @click="addOrUpdateHandle(scope.row.resourceId, scope.row.block, scope.row.name, scope.row.contractId, scope.row.rentFee)"
                             >
-                                添加客户信息
+                                编辑信息
                             </el-button>
-                            <el-button type="text" @click="cancelContract(scope.row.resourceId)" v-if="scope.row.state !== 'empty'">删除客户信息</el-button>
+                            <el-button type="text" @click="cancelContract(scope.row.resourceId)" :disabled="scope.row.state === 'empty'">解除绑定</el-button>
                         </template>
                     </el-table-column>
                 </JTable>

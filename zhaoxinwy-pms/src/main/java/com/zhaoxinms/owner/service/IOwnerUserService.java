@@ -23,4 +23,8 @@ public interface IOwnerUserService extends IService<OwnerUser>
     void create(OwnerUser entity);
 
     boolean update(Long id, OwnerUser entity);
+
+    OwnerUser getByIdcard(String idcard);
+
+    OwnerUser getByPhoneNo(String phoneNo);
 }

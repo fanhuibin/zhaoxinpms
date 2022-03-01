@@ -20,17 +20,20 @@ public class OwnerUserVo {
 
 	private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty("id")
+    private String id;
+	
     /**
-     * 真实姓名
+     * 业主姓名
      */
-	@Excel(name = "真实姓名")
-	@ApiModelProperty("真实姓名")
+	@Excel(name = "业主姓名")
+	@ApiModelProperty("业主姓名")
 	private String userName;
 
     /**
-     * $column.columnComment
+     * 身份证号
      */
-	@Excel(name = "真实姓名")
+	@Excel(name = "身份证号")
 	@ApiModelProperty("身份证号")
 	private String idcard;
 
@@ -76,5 +79,6 @@ public class OwnerUserVo {
 	@ApiModelProperty("备注")
 	private String remark;
 
-
+	@ApiModelProperty("创建时间")
+	private Date createTime;
 }
