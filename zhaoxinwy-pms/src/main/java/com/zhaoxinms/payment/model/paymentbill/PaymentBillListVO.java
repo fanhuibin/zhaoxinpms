@@ -91,6 +91,10 @@ public class PaymentBillListVO {
     /** 应收 */
     @JsonProperty("receivable")
     private String receivable;
+    
+    private Integer refundState;
+    private Integer refundTimes;
+    private String refundAmount;
 
     /** 流水记录 */
     @JsonProperty("payLogId")

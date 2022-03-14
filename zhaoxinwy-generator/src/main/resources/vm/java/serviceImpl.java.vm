@@ -76,7 +76,7 @@ public class ${ClassName}ServiceImpl extends ServiceImpl<${ClassName}Mapper, ${C
     @Override
     public void delete(${ClassName} entity) {
         if (entity != null) {
-        	 this.delete(entity);
+        	 this.removeById(entity.getId());
         }
     }
 

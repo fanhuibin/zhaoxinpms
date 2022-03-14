@@ -98,12 +98,21 @@
                             <el-tag size="small" type="danger" v-if="scope.row.payLogId === ''">未付款</el-tag>
                         </template>
                     </el-table-column>
+                    <el-table-column label="退款状态" align="left">
+                        <template slot-scope="scope">
+                            <el-tag size="small" v-if="scope.row.refundState === 0">未退款</el-tag>
+                            <el-tag size="small" type="danger" v-if="scope.row.refundState === 1">部分退款</el-tag>
+                            <el-tag size="small" type="danger" v-if="scope.row.refundState === 2">全部退款</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="refundAmount" label="退款总金额" align="left" />
                     <el-table-column prop="payLogNo" label="缴费单号" align="left" width="150" />
                     <el-table-column prop="payTime" label="缴费时间" align="left" width="150" />
                     <el-table-column label="操作" fixed="right" width="150">
                         <template slot-scope="scope">
-                            <el-button type="text" @click="addOrUpdateHandle(scope.row.id)" v-if="scope.row.payLogId === ''">编辑</el-button>
-                            <el-button type="text" class="JTable-delBtn" @click="handleDel(scope.row.id)" v-if="scope.row.payLogId === ''">删除</el-button>
+                            <el-button type="text" @click="addOrUpdateHandle(scope.row.id)" :disabled="scope.row.payLogId !== ''">编辑</el-button>
+                            <el-button type="text" class="JTable-delBtn" @click="handleDel(scope.row.id)" :disabled="scope.row.payLogId !== ''">删除</el-button>
+                            <el-button type="text" @click="refundHandle(scope.row.id)" :disabled="scope.row.refundState ==2 || scope.row.payLogId === ''">退款</el-button>
                         </template>
                     </el-table-column>
                 </JTable>
@@ -113,6 +122,7 @@
         <BatchAddForm v-if="batchAddFormVisible" ref="BatchAddForm" @refresh="refresh" />
         <BatchGenerateForm v-if="batchGenerateFormVisible" ref="BatchGenerateForm" @refresh="refresh" />
         <EditForm v-if="formVisible" ref="EditForm" @refresh="refresh" />
+        <RefundForm v-if="refundFormVisible" ref="RefundForm" @refresh="refresh" />
         <MeterGenerateForm v-if="meterGenerateFormVisible" ref="MeterGenerateForm" @refresh="refresh" />
     </div>
 </template>
@@ -121,6 +131,7 @@
 import request from '@/utils/request';
 import { getDictionaryDataSelector } from '@/api/systemData/dictionary';
 import EditForm from './Form';
+import RefundForm from './RefundForm';
 import BatchAddForm from './BatchAddForm';
 import BatchGenerateForm from './BatchGenerateForm';
 import MeterGenerateForm from '../paymentbill/MeterGenerateForm.vue';
@@ -129,7 +140,7 @@ import ImportForm from './ImportForm';
 import HouseInput from '@/components/HouseInput';
 
 export default {
-    components: { EditForm, ExportBox, ImportForm, BatchAddForm, BatchGenerateForm, MeterGenerateForm, HouseInput },
+    components: { EditForm, RefundForm, ExportBox, ImportForm, BatchAddForm, BatchGenerateForm, MeterGenerateForm, HouseInput },
     data() {
         return {
             query: {
@@ -194,6 +205,7 @@ export default {
             meterGenerateFormVisible: false,
             importFormVisible: false,
             exportBoxVisible: false,
+            refundFormVisible: false,
             columnList: [
                 { prop: 'resourceName', label: '资源名' },
                 { prop: 'chargingItemName', label: '收费项名' },
@@ -275,6 +287,12 @@ export default {
                     });
                 })
                 .catch(() => {});
+        },
+        refundHandle(id) {
+            this.refundFormVisible = true;
+            this.$nextTick(() => {
+                this.$refs.RefundForm.init(id, this.feeItemList);
+            });
         },
         addOrUpdateHandle(id, isDetail) {
             this.formVisible = true;

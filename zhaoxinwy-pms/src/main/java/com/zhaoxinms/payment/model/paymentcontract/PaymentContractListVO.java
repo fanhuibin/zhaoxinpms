@@ -18,11 +18,11 @@ public class PaymentContractListVO {
     @JsonProperty("resourceName")
     private String resourceName;
 
-    /** 合同状态 */
+    /** 合同类型 */
     @JsonProperty("contractType")
     private String contractType;
 
-    /** 合同状态 */
+    /** 商铺状态 */
     @JsonProperty("resourceType")
     private String resourceType;
 
@@ -61,5 +61,5 @@ public class PaymentContractListVO {
     /** 删除时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonProperty("deleteTime")
-    private String deleteTime;
+    private Date deleteTime;
 }

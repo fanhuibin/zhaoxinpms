@@ -93,8 +93,8 @@
                     <el-table-column prop="remark" label="备注" align="left" />
                     <el-table-column label="操作" fixed="right" width="150">
                         <template slot-scope="scope">
-                            <el-button v-if="scope.row.state == 'refunded'" type="text" @click="showRefund(scope.row.id, true)">退款详情</el-button>
-                            <el-button v-if="scope.row.state == 'paied'" type="text" @click="refund(scope.row.id)">退款</el-button>
+                            <el-button :disabled="scope.row.state != 'refunded'" type="text" @click="showRefund(scope.row.id, true)">退款详情</el-button>
+                            <el-button :disabled="scope.row.state != 'paied'" type="text" @click="refund(scope.row.id)">退款</el-button>
                             <el-button type="text" @click="handlePrint(scope.row.id)">打印</el-button>
                         </template>
                     </el-table-column>

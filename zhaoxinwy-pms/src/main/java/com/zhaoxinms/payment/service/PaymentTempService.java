@@ -1,3 +1,12 @@
+/**
+ * Copyright 肇新智慧物业管理系统
+ *
+ * Licensed under AGPL开源协议
+ *
+ * gitee：https://gitee.com/fanhuibin1/zhaoxinpms
+ * website：http://pms.zhaoxinms.com  wx： zhaoxinms
+ *
+ */
 package com.zhaoxinms.payment.service;
 
 import java.util.List;
@@ -7,10 +16,6 @@ import com.zhaoxinms.payment.entity.PaymentTempEntity;
 import com.zhaoxinms.payment.model.paymenttemp.PaymentTempPagination;
 import com.zhaoxinms.payment.model.paymenttemp.PaymentTempRefundForm;
 
-/**
- *
- * payment_temp 版本： V3.1.0 版权： 作者： CYCBERFORM 日期： 2021-09-29 17:54:49
- */
 public interface PaymentTempService extends IService<PaymentTempEntity> {
 
     List<PaymentTempEntity> getList(PaymentTempPagination paymentTempPagination);

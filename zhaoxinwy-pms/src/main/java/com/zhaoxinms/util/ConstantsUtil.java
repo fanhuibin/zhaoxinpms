@@ -28,4 +28,11 @@ public class ConstantsUtil {
 
     /** 付费数据类型 */
     public static final String PAY_BILL_TYPE_HOUSE = "house"; // 商铺
+    
+    /**
+     * 退款状态
+     */
+    public static final int PAY_BILL_REFUND_STATE_NONE = 0; //未退款
+    public static final int PAY_BILL_REFUND_STATE_PARTIAL = 1; //部分退款
+    public static final int PAY_BILL_REFUND_STATE_ALL = 2; //全部退款
 }

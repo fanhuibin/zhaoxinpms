@@ -29,9 +29,12 @@ public interface PaymentPayLogService extends IService<PaymentPayLogEntity> {
     // 创建押金的退还记录
     PaymentPayLogEntity createDepositRefundLog(PaymentDepositEntity deposit, String method);
 
-    // 支付bill
+    // 线下支付常规收费项记录
     PaymentPayLogEntity payBill(PaymentBillPayForm payForm, PaymentContractEntity contract);
-
+    
+    // 线下常规收费项退款记录
+    PaymentPayLogEntity refundBill(PaymentBillEntity entity, String payMethod, String amcount, String comment);
+    
     // 创建临时收费支付记录
     PaymentPayLogEntity createTempPayLog(PaymentTempEntity entity, String payType);
 

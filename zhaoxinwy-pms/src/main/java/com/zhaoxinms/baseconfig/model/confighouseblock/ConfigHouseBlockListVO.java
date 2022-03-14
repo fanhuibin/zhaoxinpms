@@ -19,4 +19,7 @@ public class ConfigHouseBlockListVO{
     @JsonProperty("name")
     private String name;
 
+    /** 商业区地址 */
+    @JsonProperty("address")
+    private String address;
 }

@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @TableName("config_house_block")
 public class ConfigHouseBlockEntity  {
     /** 主键 */
-    @TableId("F_ID")
+    @TableId("ID")
     @JsonProperty("id")
     private String id;
 
@@ -26,6 +26,10 @@ public class ConfigHouseBlockEntity  {
     /** 商业区名 */
     @TableField("NAME")
     private String name;
+    
+    /** 商业区地址 */
+    @TableField("ADDRESS")
+    private String address;
 
     /** 备注 */
     @TableField("REMARK")

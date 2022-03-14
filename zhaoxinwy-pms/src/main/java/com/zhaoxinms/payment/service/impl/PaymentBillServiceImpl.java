@@ -1,5 +1,15 @@
+/**
+ * Copyright 肇新智慧物业管理系统
+ *
+ * Licensed under AGPL开源协议
+ *
+ * gitee：https://gitee.com/fanhuibin1/zhaoxinpms
+ * website：http://pms.zhaoxinms.com  wx： zhaoxinms
+ *
+ */
 package com.zhaoxinms.payment.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -7,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -28,6 +39,7 @@ import com.zhaoxinms.payment.mapper.PaymentBillMapper;
 import com.zhaoxinms.payment.model.paymentbill.PaymentBillListVO;
 import com.zhaoxinms.payment.model.paymentbill.PaymentBillPagination;
 import com.zhaoxinms.payment.model.paymentbill.PaymentBillPayForm;
+import com.zhaoxinms.payment.model.paymentbill.PaymentBillRefundForm;
 import com.zhaoxinms.payment.model.paymentpreaccount.PaymentPreAccountPayForm;
 import com.zhaoxinms.payment.service.PaymentBillService;
 import com.zhaoxinms.payment.service.PaymentContractService;
@@ -234,11 +246,28 @@ public class PaymentBillServiceImpl extends ServiceImpl<PaymentBillMapper, Payme
     
     @Override
     public List<PaymentBillEntity> getUnpaiedListByResources(List<String> resourceNames) {
-        QueryWrapper<PaymentBillEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().and(t -> t.in(PaymentBillEntity::getResourceName, resourceNames));
-        queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getPayState, "0"));
-        queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getEnabledMark, 1));
-        return this.list(queryWrapper);
+        if(resourceNames.size() > 0) {
+            QueryWrapper<PaymentBillEntity> queryWrapper = new QueryWrapper<>();
+            queryWrapper.lambda().and(t -> t.in(PaymentBillEntity::getResourceName, resourceNames));
+            queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getPayState, "0"));
+            queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getEnabledMark, 1));
+            return this.list(queryWrapper);
+        }else {
+            return new ArrayList<PaymentBillEntity>();
+        }
+    }
+    
+    @Override
+    public List<PaymentBillEntity> getPaiedListByContracts(List<String> contracts) {
+        if(contracts.size() > 0) {
+            QueryWrapper<PaymentBillEntity> queryWrapper = new QueryWrapper<>();
+            queryWrapper.lambda().and(t -> t.in(PaymentBillEntity::getContractId, contracts));
+            queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getPayState, "1"));
+            queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getEnabledMark, 1));
+            return this.list(queryWrapper);
+        }else {
+            return new ArrayList<PaymentBillEntity>();
+        }
     }
 
     @Override
@@ -466,5 +495,37 @@ public class PaymentBillServiceImpl extends ServiceImpl<PaymentBillMapper, Payme
             String resourceId = contract.getResourceId();
             this.disableByResourceId(resourceId);
         }
+    }
+
+    @Override
+    @Transactional
+    public void refundBill(PaymentBillRefundForm refundForm) {
+        PaymentBillEntity bill = this.getById(refundForm.getBillId());
+        
+        if(bill == null || StringUtils.isEmpty(bill.getId())) {
+            throw new DataException("查询缴费单失败");
+        }
+        
+        if(!ValidateUtil.PositiveFloatOrNum(refundForm.getCurrentRefundAmount())) {
+            throw new DataException("退款金额格式不正确");
+        }
+        if(CalculationUtil.compareTo(refundForm.getCurrentRefundAmount(), "0", 2, 0) == 0) {
+            throw new DataException("退款金额不能为0");
+        }
+        
+        String total = CalculationUtil.add(bill.getRefundAmount(), refundForm.getCurrentRefundAmount());
+        
+        PaymentPayLogEntity payLog = paymentPayLogService.refundBill(bill, refundForm.getPayMethod(), refundForm.getCurrentRefundAmount(), refundForm.getRefundComment());
+        bill.setRefundTimes(bill.getRefundTimes() + 1);
+        bill.setRefundAmount(total);
+        
+        if(CalculationUtil.compareTo(bill.getReceivable(), total, 2, 0) > 0) {
+            bill.setRefundState(ConstantsUtil.PAY_BILL_REFUND_STATE_PARTIAL);
+        }else if(CalculationUtil.compareTo(bill.getReceivable(), total, 2, 0) == 0) {
+            bill.setRefundState(ConstantsUtil.PAY_BILL_REFUND_STATE_ALL);
+        }else {
+            throw new DataException("退款金额不能大于剩余可退款金额");
+        }
+        this.updateById(bill);
     }
 }

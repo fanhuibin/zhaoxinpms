@@ -105,4 +105,7 @@ public class PaymentPayLogEntity {
     @TableField(value = "CREATOR_TIME", fill = FieldFill.INSERT)
     private Date creatorTime;
 
+    /** 业务id */
+    @TableField(value = "business_id")
+    private String businessId;
 }

@@ -120,7 +120,16 @@ public class PaymentBillEntity {
 
     @TableField("PAY_STATE")
     private String payState;
-
+    
+    @TableField("REFUND_STATE")
+    private Integer refundState;
+    
+    @TableField("REFUND_TIMES")
+    private Integer refundTimes;
+    
+    @TableField("REFUND_AMOUNT")
+    private String refundAmount;
+    
     /** 创建用户 */
     @TableField(value = "CREATOR_USER_ID", fill = FieldFill.INSERT)
     private String creatorUserId;

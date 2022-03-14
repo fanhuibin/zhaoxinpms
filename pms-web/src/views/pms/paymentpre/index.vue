@@ -94,10 +94,10 @@
                     <el-table-column prop="operateUser" label="收款人" align="left" />
                     <el-table-column prop="operateTime" label="收款时间" align="left" />
                     <el-table-column prop="payNo" label="单号" align="left" />
-                    <el-table-column label="操作" fixed="right" width="110">
+                    <el-table-column label="操作" fixed="right" width="200">
                         <template slot-scope="scope">
-                            <el-button v-if="scope.row.type == 'refund'" type="text" @click="handleRefundPrint(scope.row.payNo)">打印退还单</el-button>
-                            <el-button v-if="scope.row.type == 'add'" type="text" @click="handlePrint(scope.row.payNo)">打印收款单</el-button>
+                            <el-button :disabled="scope.row.type !== 'add'" type="text" @click="handlePrint(scope.row.payNo)">打印收款单</el-button>
+                            <el-button :disabled="scope.row.type !== 'refund'" type="text" @click="handleRefundPrint(scope.row.payNo)">打印退还单</el-button>
                         </template>
                     </el-table-column>
                 </JTable>

@@ -18,9 +18,9 @@ import org.activiti.bpmn.model.ExclusiveGateway;
 import org.activiti.bpmn.model.SequenceFlow;
 import org.activiti.bpmn.model.UserTask;
 
-import com.alibaba.druid.util.StringUtils;
 import com.zhaoxinms.common.exception.ServiceException;
 import com.zhaoxinms.common.utils.JsonUtil;
+import com.zhaoxinms.common.utils.StringUtils;
 import com.zhaoxinms.workflow.engine.designer.entity.ChildNode;
 import com.zhaoxinms.workflow.engine.designer.entity.ConditionNode;
 import com.zhaoxinms.workflow.engine.designer.entity.FlowDesignerModel;

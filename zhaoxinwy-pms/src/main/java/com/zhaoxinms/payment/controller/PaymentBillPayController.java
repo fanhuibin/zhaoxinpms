@@ -14,6 +14,7 @@ import com.zhaoxinms.common.annotation.Log;
 import com.zhaoxinms.common.enums.BusinessType;
 import com.zhaoxinms.payment.entity.PaymentPayLogEntity;
 import com.zhaoxinms.payment.model.paymentbill.PaymentBillPayForm;
+import com.zhaoxinms.payment.model.paymentbill.PaymentBillRefundForm;
 import com.zhaoxinms.payment.service.PaymentBillService;
 import com.zhaoxinms.payment.service.PaymentPayLogService;
 import com.zhaoxinms.payment.service.PaymentPreAccountService;
@@ -45,7 +46,7 @@ public class PaymentBillPayController {
     }
 
     @PreAuthorize("@ss.hasRole('payee')")
-    @Log(title = "收费数据支付", businessType = BusinessType.UPDATE)
+    @Log(title = "收费数据支付", businessType = BusinessType.PAY)
     @PostMapping("/payBill")
     @Transactional
     public ActionResult pay(@RequestBody PaymentBillPayForm payForm) throws IllegalAccessException {
@@ -53,5 +54,14 @@ public class PaymentBillPayController {
         paymentBillService.payCheck(payForm);
         PaymentPayLogEntity payLog = paymentBillService.paySave(payForm);
         return ActionResult.success(payLog);
+    }
+    
+    @PreAuthorize("@ss.hasRole('manager')")
+    @Log(title = "收费数据支付", businessType = BusinessType.REFUND)
+    @PostMapping("/refundBill")
+    @Transactional
+    public ActionResult refund(@RequestBody PaymentBillRefundForm refundForm) throws IllegalAccessException {
+        paymentBillService.refundBill(refundForm);
+        return ActionResult.success("退款成功");
     }
 }

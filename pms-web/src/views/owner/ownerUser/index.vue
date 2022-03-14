@@ -99,7 +99,7 @@
                 <el-button @click="cancel">取 消</el-button>
             </div>
         </el-dialog>
-        <userDetail v-if="showDetail" ref="userDetail"/>
+        <userDetail v-if="showDetail" ref="userDetail" @close="showDetail=false"/>
     </div>
 </template>
 

@@ -2,7 +2,7 @@
     <transition name="el-zoom-in-center">
         <div class="Jpreview-main flow-form-main nohead">
             <div class="btns">
-                <el-button>返 回</el-button>
+                <el-button @click="goBack()">返 回</el-button>
             </div>
             <el-tabs class="Jel_tabs" style="padding: 0 10px">
                 <el-tab-pane label="业主信息">
@@ -92,9 +92,9 @@
                                                         {{ scope.row.beginDate }}
                                                     </template>
                                                 </el-table-column>
-                                                <el-table-column label="结束时间" prop="endDate" algin="left">
+                                                <el-table-column label="结束时间" prop="deleteTime" algin="left">
                                                     <template slot-scope="scope">
-                                                        {{ scope.row.endDate }}
+                                                        {{ scope.row.deleteTime }}
                                                     </template>
                                                 </el-table-column>
                                             </el-table>
@@ -117,17 +117,15 @@
                                         <el-tab-pane label="历史缴费信息" name="feeHistory">
                                             <el-table
                                                 v-loading="loading"
-                                                :data="unpaiedBills"
+                                                :data="paiedBills"
                                                 ref="showTable"
                                             >
                                                 <el-table-column prop="feeItemName" label="收费项名称" align="left"></el-table-column>
                                                 <el-table-column prop="beginDate" label="起收日期" align="left" />
                                                 <el-table-column prop="endDate" label="到期日期" align="left" />
-                                                <el-table-column prop="deadline" label="缴费限期" align="left" />
-                                                <el-table-column prop="price" label="单价" align="left" />
-                                                <el-table-column label="数量" prop="num" algin="left" />
-                                                <el-table-column label="金额" prop="total" algin="left" />
+                                                <el-table-column prop="receivable" label="实收金额" align="left" />
                                                 <el-table-column label="缴费时间" prop="payTime" algin="left" />
+                                                <el-table-column prop="refundAmount" label="退款金额" align="left" />
                                             </el-table>
                                         </el-tab-pane>
                                     </el-tabs>
@@ -169,8 +167,12 @@ export default {
                 this.currentContracts = response.data.currentContracts;
                 this.historyContracts = response.data.historyContracts;
                 this.unpaiedBills = response.data.unpaiedBills;
+                this.paiedBills = response.data.paiedBills;
                 this.loading = false;
             });
+        },
+        goBack(isRefresh) {
+            this.$emit('close', isRefresh);
         },
     },
 };

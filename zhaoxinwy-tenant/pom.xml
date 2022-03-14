@@ -5,11 +5,9 @@
   <parent>
     <groupId>com.zhaoxinms</groupId>
     <artifactId>pms-parent</artifactId>
-    <version>0.9.0</version>
+    <version>0.9.1</version>
   </parent>
-  <groupId>com.zhaoxinms</groupId>
   <artifactId>zhaoxinwy-tenant</artifactId>
-  <version>0.9.0</version>
   <name>zhaoxinwy-tenant</name>
   <url>http://maven.apache.org</url>
   <properties>

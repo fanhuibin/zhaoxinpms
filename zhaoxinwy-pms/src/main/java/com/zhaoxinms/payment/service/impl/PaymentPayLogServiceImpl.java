@@ -16,6 +16,7 @@ import com.zhaoxinms.base.exception.DataException;
 import com.zhaoxinms.base.service.BillRuleService;
 import com.zhaoxinms.base.util.StringUtil;
 import com.zhaoxinms.base.util.UserProvider;
+import com.zhaoxinms.payment.entity.PaymentBillEntity;
 import com.zhaoxinms.payment.entity.PaymentContractEntity;
 import com.zhaoxinms.payment.entity.PaymentDepositEntity;
 import com.zhaoxinms.payment.entity.PaymentPayLogEntity;
@@ -33,8 +34,10 @@ import com.zhaoxinms.util.InputCheckUtil;
 
 /**
  *
- * payment_pay_log 版本： V3.1.0 版权： 作者： CYCBERFORM 日期： 2021-09-01 09:31:28 金额计算公式： 公式1： 应收金额 = 收费项费用合计+滞纳金合计-优惠金额 公式2：应收金额
- * = 实付金额 + 预付款支付金额 - 找零金额 - 预付款预存金额
+ * payment_pay_log 
+ * 版权： 作者： CYCBERFORM 日期： 2021-09-01 09:31:28 
+ *  金额计算公式： 公式1： 应收金额 = 收费项费用合计+滞纳金合计-优惠金额 
+ *  公式2：应收金额= 实付金额 + 预付款支付金额 - 找零金额 - 预付款预存金额
  */
 @Service
 
@@ -320,6 +323,7 @@ public class PaymentPayLogServiceImpl extends ServiceImpl<PaymentPayLogMapper, P
         PaymentPayLogEntity log = new PaymentPayLogEntity();
         String name = deposit.getFeeItemName();
         log.setCertificate("");
+        log.setResourceName(deposit.getResourceName());
         log.setPayTime(new Date());
         log.setName(name);
         log.setPayMethod(method);
@@ -328,7 +332,6 @@ public class PaymentPayLogServiceImpl extends ServiceImpl<PaymentPayLogMapper, P
         log.setPayerPhone("");
         log.setType(ConstantsUtil.PAY_LOG_TYPE_REFUND);
         log.setFeeType(ConstantsUtil.PAY_LOG_FEE_TYPE_TEMP);
-        log.setPayMethod(method);
         log.setComment("");
         String payNo = billRuleService.getBillNumber("pay_no", false);
         log.setPayNo(payNo);
@@ -340,6 +343,42 @@ public class PaymentPayLogServiceImpl extends ServiceImpl<PaymentPayLogMapper, P
         log.setPayMoney("-" + deposit.getAmt());
         log.setPrePayMoney("0");
         log.setPreSaveMoney("0");
+        if (!validateRule1(log)) {
+            throw new DataException("创建收费数据失败，收费数据应该满足： 应收金额 = 收费项费用合计+滞纳金合计-优惠金额");
+        }
+        if (!validateRule2(log)) {
+            throw new DataException("创建收费数据失败，收费数据应该满足： 应收金额 = 实付金额 + 预付款支付金额 - 找零金额 - 预付款预存金额");
+        }
+        this.save(log);
+        return log;
+    }
+
+    @Override
+    public PaymentPayLogEntity refundBill(PaymentBillEntity entity, String payMethod, String amcount, String comment) {
+        PaymentPayLogEntity log = new PaymentPayLogEntity();
+        String name = entity.getFeeItemName();
+        log.setCertificate("");
+        log.setResourceName(entity.getResourceName());
+        log.setPayTime(new Date());
+        log.setName(name);
+        log.setPayMethod(payMethod);
+        log.setPayerName(entity.getFeeUser());
+        log.setPayerIdcard("");
+        log.setPayerPhone("");
+        log.setType(ConstantsUtil.PAY_LOG_TYPE_REFUND);
+        log.setFeeType(ConstantsUtil.PAY_LOG_FEE_TYPE_HOUSE);
+        log.setComment("");
+        String payNo = billRuleService.getBillNumber("pay_no", false);
+        log.setPayNo(payNo);
+        log.setItemTotalMoney("-" + amcount);
+        log.setReceivableMoney("-" + amcount);
+        log.setLateFeeMoney("0");
+        log.setDiscountMoney("0");
+        log.setChangeMoney("0");
+        log.setPayMoney("-" + amcount);
+        log.setPrePayMoney("0");
+        log.setPreSaveMoney("0");
+        log.setBusinessId(entity.getId());
         if (!validateRule1(log)) {
             throw new DataException("创建收费数据失败，收费数据应该满足： 应收金额 = 收费项费用合计+滞纳金合计-优惠金额");
         }

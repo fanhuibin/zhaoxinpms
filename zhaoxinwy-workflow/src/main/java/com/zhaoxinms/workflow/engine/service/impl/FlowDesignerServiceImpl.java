@@ -1,20 +1,17 @@
 package com.zhaoxinms.workflow.engine.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.druid.util.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zhaoxinms.base.exception.DataException;
-import com.zhaoxinms.base.util.JsonUtil;
-import com.zhaoxinms.base.util.RandomUtil;
 import com.zhaoxinms.base.util.StringUtil;
 import com.zhaoxinms.base.util.UserProvider;
+import com.zhaoxinms.common.utils.StringUtils;
 import com.zhaoxinms.workflow.engine.entity.FlowDesignerEntity;
 import com.zhaoxinms.workflow.engine.mapper.FlowDesignerMapper;
 import com.zhaoxinms.workflow.engine.model.flowDesigner.PaginationFlowDesigner;

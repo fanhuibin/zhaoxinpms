@@ -24,6 +24,12 @@ public class ConfigHouseBlockCrForm  {
     @NotBlank
     @Length(min = 0, max = 100)
     private String name;
+    
+    /** 商业区地址 */
+    @JsonProperty("address")
+    @NotBlank
+    @Length(min = 0, max = 200)
+    private String address;
 
     /** 备注 */
     @JsonProperty("remark")

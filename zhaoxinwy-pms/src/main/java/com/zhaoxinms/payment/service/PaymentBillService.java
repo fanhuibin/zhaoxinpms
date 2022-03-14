@@ -1,25 +1,23 @@
+/**
+ * Copyright 肇新智慧物业管理系统
+ *
+ * Licensed under AGPL开源协议
+ *
+ * gitee：https://gitee.com/fanhuibin1/zhaoxinpms
+ * website：http://pms.zhaoxinms.com  wx： zhaoxinms
+ *
+ */
 package com.zhaoxinms.payment.service;
 
-import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zhaoxinms.baseconfig.entity.ConfigFeeItemEntity;
 import com.zhaoxinms.payment.entity.PaymentBillEntity;
-import com.zhaoxinms.payment.entity.PaymentContractEntity;
 import com.zhaoxinms.payment.entity.PaymentPayLogEntity;
-import com.zhaoxinms.payment.model.paymentbill.PaymentBillBatchForm;
-import com.zhaoxinms.payment.model.paymentbill.PaymentBillGenerateForm;
 import com.zhaoxinms.payment.model.paymentbill.PaymentBillPagination;
 import com.zhaoxinms.payment.model.paymentbill.PaymentBillPayForm;
+import com.zhaoxinms.payment.model.paymentbill.PaymentBillRefundForm;
 
-/**
- *
- * payment_bill 版本： V3.1.0 版权： 作者： CYCBERFORM 日期： 2021-08-28 17:46:03
- */
 public interface PaymentBillService extends IService<PaymentBillEntity> {
     List<PaymentBillEntity> getList(PaymentBillPagination paymentBillPagination);
 
@@ -48,9 +46,16 @@ public interface PaymentBillService extends IService<PaymentBillEntity> {
 
     // 计算付款金额
     void payCalc(PaymentBillPayForm payForm) throws IllegalAccessException;
+    
+    // 已支付的bill，发起退款
+    void refundBill(PaymentBillRefundForm refundForm);
 
     // 保存付款
     PaymentPayLogEntity paySave(PaymentBillPayForm payForm);
 
+    //通过resourceNames查询未付款记录
     List<PaymentBillEntity> getUnpaiedListByResources(List<String> resourceNames);
+
+    //通过contract信息查询付款记录
+    List<PaymentBillEntity> getPaiedListByContracts(List<String> contracts);
 }

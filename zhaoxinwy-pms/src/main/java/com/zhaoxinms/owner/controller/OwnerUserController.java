@@ -100,10 +100,16 @@ public class OwnerUserController
         List<PaymentBillEntity> bills = paymentBillService.getUnpaiedListByResources(resources);
         List<PaymentBillListVO> billsVo = JsonUtil.getJsonToList(bills, PaymentBillListVO.class);
         
+        //查询当前商铺下的历史缴费信息
+        List<String> contracts = currentContracts.stream().map(PaymentContractEntity::getId).collect(Collectors.toList());
+        List<PaymentBillEntity> historyBbills = paymentBillService.getPaiedListByContracts(contracts);
+        List<PaymentBillListVO> historyBillsVo = JsonUtil.getJsonToList(historyBbills, PaymentBillListVO.class);
+        
         Map<String,Object> result = new HashMap<String,Object>();
         result.put("currentContracts", listCurrent);
         result.put("historyContracts", listHostory);
         result.put("unpaiedBills", billsVo);
+        result.put("paiedBills", historyBillsVo);
         return ActionResult.success(result);
     }
 

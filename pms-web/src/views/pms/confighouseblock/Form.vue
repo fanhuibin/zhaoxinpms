@@ -20,13 +20,19 @@
             >
                 <el-col :span="24">
                     <el-form-item label="商业区编号" prop="code">
-                        <el-input v-model="dataForm.code" placeholder="请输入" clearable :style="{ width: '100%' }" :maxlength="17"></el-input>
+                        <el-input v-model="dataForm.code" placeholder="请输入" clearable :style="{ width: '100%' }" show-word-limit :maxlength="17"></el-input>
                     </el-form-item>
                 </el-col>
 
                 <el-col :span="24">
                     <el-form-item label="商业区名" prop="name">
-                        <el-input v-model="dataForm.name" placeholder="请输入" clearable :style="{ width: '100%' }" :maxlength="17"></el-input>
+                        <el-input v-model="dataForm.name" placeholder="请输入" clearable :style="{ width: '100%' }" show-word-limit :maxlength="17"></el-input>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="24">
+                    <el-form-item label="商业区地址" prop="address">
+                        <el-input v-model="dataForm.address" type="textarea" :autosize="{ minRows: 4, maxRows: 4 }" placeholder="请输入" clearable show-word-limit :style="{ width: '100%' }" :maxlength="200"></el-input>
                     </el-form-item>
                 </el-col>
 
@@ -38,8 +44,9 @@
                             :style="{ width: '100%' }"
                             true
                             type="textarea"
+                            show-word-limit
                             :autosize="{ minRows: 4, maxRows: 4 }"
-                            :maxlength="100"
+                            :maxlength="200"
                         ></el-input>
                     </el-form-item>
                 </el-col>
@@ -72,21 +79,28 @@ export default {
                     {
                         required: true,
                         message: '请输入',
-                        trigger: '${html.config.trigger}',
+                        trigger: 'blur',
                     },
                     {
                         pattern: /^\d+$/,
                         message: '请输入正确的数字',
-                        trigger: '${html.config.trigger}',
+                        trigger: 'blur',
                     },
                 ],
                 name: [
                     {
                         required: true,
                         message: '请输入',
-                        trigger: '${html.config.trigger}',
+                        trigger: 'blur',
                     },
                 ],
+                address: [
+                    {
+                        required: true,
+                        message: '请输入地址',
+                        trigger: 'blur',
+                    }
+                ]
             },
         };
     },
