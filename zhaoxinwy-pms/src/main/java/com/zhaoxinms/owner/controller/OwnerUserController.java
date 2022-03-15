@@ -79,13 +79,25 @@ public class OwnerUserController
         vo.setPagination(page);
         return ActionResult.success(vo);
     }
+    
+    /**
+     * 获取业主信息详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('owner:ownerUser:query')")
+    @GetMapping(value = "{id}")
+    public ActionResult<OwnerUserVo> info(@PathVariable("id") Long id) {
+        OwnerUser entity = ownerUserService.getInfo(id);
+        OwnerUserVo vo = JsonUtil.getJsonToBean(entity, OwnerUserVo.class);
+        return ActionResult.success(vo);
+    }
+    
 
     /**
      * 获取业主信息详细信息
      */
     @PreAuthorize("@ss.hasPermi('owner:ownerUser:query')")
-    @GetMapping(value = "/{id}")
- 	public ActionResult<OwnerUserVo> info(@PathVariable("id") Long id) {
+    @GetMapping(value = "detail/{id}")
+ 	public ActionResult<OwnerUserVo> detail(@PathVariable("id") Long id) {
         OwnerUser entity = ownerUserService.getInfo(id);
         OwnerUserVo vo = JsonUtil.getJsonToBean(entity, OwnerUserVo.class);
         

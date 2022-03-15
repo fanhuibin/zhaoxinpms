@@ -73,11 +73,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-api</artifactId>
-				<version>2.15.0</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-to-slf4j</artifactId>
 				<version>2.15.0</version>
 			</dependency>
@@ -313,7 +308,6 @@
 		<module>zhaoxinwy-jmReport</module>
 		<module>zhaoxinwy-workflow</module>
 		<module>zhaoxinwy-tenant</module>
-		<module>zhaoxinwy-owner</module>
 	</modules>
 	<packaging>pom</packaging>
 

@@ -141,7 +141,7 @@
 
 <script>
 import userAvatar from './userAvatar';
-import { getOwnerUser } from '@/api/owner/ownerUser';
+import { getOwnerUserDetail } from '@/api/owner/ownerUser';
 
 export default {
     name: 'Profile',
@@ -163,7 +163,7 @@ export default {
             this.user = ownerUser;
             /** 查询业主信息列表 */
             this.loading = true;
-            getOwnerUser(this.user.id).then(response => {
+            getOwnerUserDetail(this.user.id).then(response => {
                 this.currentContracts = response.data.currentContracts;
                 this.historyContracts = response.data.historyContracts;
                 this.unpaiedBills = response.data.unpaiedBills;

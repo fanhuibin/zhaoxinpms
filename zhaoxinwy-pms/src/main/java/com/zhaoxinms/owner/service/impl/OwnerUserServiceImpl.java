@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zhaoxinms.base.exception.DataException;
 import com.zhaoxinms.common.exception.ServiceException;
 import com.zhaoxinms.common.utils.StringUtils;
 import com.zhaoxinms.event.ContractEvent;
@@ -94,7 +95,8 @@ public class OwnerUserServiceImpl extends ServiceImpl<OwnerUserMapper, OwnerUser
     @Override
     public void delete(OwnerUser entity) {
         if (entity != null) {
-            this.delete(entity);
+            throw new DataException("业主信息暂不支持删除操作");
+            //this.removeById(entity.getId());
         }
     }
 

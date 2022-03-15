@@ -59,7 +59,6 @@
                         <template slot-scope="scope">
                             <el-button size="mini" type="text" @click="handleUpdate(scope.row)" v-hasPermi="['owner:ownerUser:edit']">修改</el-button>
                             <el-button size="mini" type="text" @click="handleShowDetail(scope.row)" v-hasPermi="['owner:ownerUser:edit']">明细</el-button>
-                            <el-button size="mini" type="text" @click="handleDelete(scope.row)" v-hasPermi="['owner:ownerUser:remove']">删除</el-button>
                         </template>
                     </el-table-column>
                 </JTable>

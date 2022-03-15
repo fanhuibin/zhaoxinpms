@@ -17,6 +17,14 @@ export function getOwnerUser(id) {
   })
 }
 
+// 查询业主信息详细（包含商铺和费用信息）
+export function getOwnerUserDetail(id) {
+    return request({
+      url: '/owner/ownerUser/detail/' + id,
+      method: 'get'
+    })
+  }
+
 // 新增业主信息
 export function addOwnerUser(data) {
   return request({
@@ -27,9 +35,9 @@ export function addOwnerUser(data) {
 }
 
 // 修改业主信息
-export function updateOwnerUser(id, data) {
+export function updateOwnerUser(data) {
   return request({
-    url: '/owner/ownerUser'+ id,
+    url: '/owner/ownerUser/'+ data.id,
     method: 'put',
     data: data
   })

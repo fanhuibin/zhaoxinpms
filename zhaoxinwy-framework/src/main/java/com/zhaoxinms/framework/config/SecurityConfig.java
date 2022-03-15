@@ -107,7 +107,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                         "/**/*.css",
                         "/**/*.js",
                         //profile下有很多文件，只开放头像类的文件
-                        "/profile/upload/**"
+                        "/profile/upload/**",
+                        "/profile/avatar/**"
                 ).permitAll()
                 .antMatchers("/swagger-ui.html").anonymous()
                 .antMatchers("/swagger-resources/**").anonymous()
