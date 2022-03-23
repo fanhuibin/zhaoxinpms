@@ -162,7 +162,6 @@ public class BPMNCreator {
         BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
         byte[] convertToXML = bpmnXMLConverter.convertToXML(bpmn);
         String bytes = new String(convertToXML);
-        bytes = bytes.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
         return bytes;
     }
 }

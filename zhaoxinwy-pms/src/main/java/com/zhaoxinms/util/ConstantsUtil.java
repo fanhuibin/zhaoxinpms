@@ -35,4 +35,10 @@ public class ConstantsUtil {
     public static final int PAY_BILL_REFUND_STATE_NONE = 0; //未退款
     public static final int PAY_BILL_REFUND_STATE_PARTIAL = 1; //部分退款
     public static final int PAY_BILL_REFUND_STATE_ALL = 2; //全部退款
+    
+    /** 支付状态 */
+    
+    /** yes or no **/
+    public static final byte NO = 0;
+    public static final byte YES = 1;
 }
