@@ -118,7 +118,6 @@ export default {
                         processData: res[2].formData,
                         formData: res[1].formData,
                     };
-                    console.log(param);
                     this.sendToServer(param);
                 })
                 .catch(err => {

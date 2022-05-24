@@ -29,11 +29,11 @@
                     <el-table-column prop="resourceName" label="编号" align="center" />
                     <el-table-column prop="total" label="收款金额" align="center" />
                     <el-table-column prop="returnTotal" label="退款金额" align="center" />
-                    <el-table-column v-for="(item, index) in payTypeOptions" :key="index" :label="item.fullName" :property="item.id" align="center">
-                        <el-table-column label="收款" align="center" :prop="item.id">
+                    <el-table-column v-for="(item, index) in payTypeOptions" :key="index" :label="item.name" :property="item.code" align="center">
+                        <el-table-column label="收款" align="center" :prop="item.code">
                             <template slot-scope="scope">{{ scope.row.typeMoney[scope.column.property] }}</template>
                         </el-table-column>
-                        <el-table-column label="退款" align="center" :prop="item.id">
+                        <el-table-column label="退款" align="center" :prop="item.code">
                             <template slot-scope="scope">{{ scope.row.typeReturnMoney[scope.column.property] }}</template>
                         </el-table-column>
                     </el-table-column>
@@ -45,8 +45,7 @@
 
 <script>
 import request from '@/utils/request';
-import { getDictionaryDataSelector } from '@/api/systemData/dictionary';
-import { mapGetters, mapState } from 'vuex';
+import { listPaymentMethod } from '@/api/payment/paymentMethod';
 
 export default {
     components: {},
@@ -126,7 +125,7 @@ export default {
             });
         },
         getPayTypeOptions() {
-            getDictionaryDataSelector('e14b3a85a37048c8aa39ca97570fb18c').then(res => {
+            listPaymentMethod().then(res => {
                 this.payTypeOptions = res.data.list;
             });
         },

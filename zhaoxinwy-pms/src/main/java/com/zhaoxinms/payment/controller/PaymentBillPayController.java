@@ -1,8 +1,17 @@
+/**
+ * Copyright 肇新智慧物业管理系统
+ *
+ * Licensed under AGPL开源协议
+ *
+ * gitee：https://gitee.com/fanhuibin1/zhaoxinpms website：http://pms.zhaoxinms.com wx： zhaoxinms
+ *
+ */
 package com.zhaoxinms.payment.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +25,7 @@ import com.zhaoxinms.payment.entity.PaymentPayLogEntity;
 import com.zhaoxinms.payment.model.paymentbill.PaymentBillPayForm;
 import com.zhaoxinms.payment.model.paymentbill.PaymentBillRefundForm;
 import com.zhaoxinms.payment.service.PaymentBillService;
+import com.zhaoxinms.payment.service.PaymentOrderService;
 import com.zhaoxinms.payment.service.PaymentPayLogService;
 import com.zhaoxinms.payment.service.PaymentPreAccountService;
 
@@ -29,19 +39,21 @@ import lombok.extern.slf4j.Slf4j;
 public class PaymentBillPayController {
     @Autowired
     private PaymentBillService paymentBillService;
+    @Autowired
+    private PaymentOrderService paymentOrderService;
 
     @PreAuthorize("@ss.hasRole('payee')")
     @PostMapping("/payCalc")
     public ActionResult calc(@RequestBody PaymentBillPayForm payForm) throws IllegalAccessException {
-        paymentBillService.payCalc(payForm);
+        paymentOrderService.payCalc(payForm);
         return ActionResult.success(payForm);
     }
 
     @PreAuthorize("@ss.hasRole('payee')")
     @PostMapping("/payChceck")
     public ActionResult check(@RequestBody PaymentBillPayForm payForm) throws IllegalAccessException {
-        paymentBillService.payCalc(payForm);
-        paymentBillService.payCheck(payForm);
+        paymentOrderService.payCalc(payForm);
+        paymentOrderService.payCheck(payForm, false);
         return ActionResult.success();
     }
 
@@ -50,18 +62,18 @@ public class PaymentBillPayController {
     @PostMapping("/payBill")
     @Transactional
     public ActionResult pay(@RequestBody PaymentBillPayForm payForm) throws IllegalAccessException {
-        paymentBillService.payCalc(payForm);
-        paymentBillService.payCheck(payForm);
-        PaymentPayLogEntity payLog = paymentBillService.paySave(payForm);
+        paymentOrderService.payCalc(payForm);
+        paymentOrderService.payCheck(payForm, false);
+        PaymentPayLogEntity payLog = paymentOrderService.paySave(payForm);
         return ActionResult.success(payLog);
     }
-    
+
     @PreAuthorize("@ss.hasRole('manager')")
     @Log(title = "收费数据支付", businessType = BusinessType.REFUND)
     @PostMapping("/refundBill")
     @Transactional
     public ActionResult refund(@RequestBody PaymentBillRefundForm refundForm) throws IllegalAccessException {
-        paymentBillService.refundBill(refundForm);
+        paymentOrderService.refundBill(refundForm);
         return ActionResult.success("退款成功");
     }
 }

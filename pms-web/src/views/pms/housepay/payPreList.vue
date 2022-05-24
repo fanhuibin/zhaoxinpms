@@ -49,7 +49,7 @@
 
 <script>
 import request from '@/utils/request';
-import { getDictionaryType, getDictionaryDataSelector } from '@/api/systemData/dictionary';
+import { listPaymentMethod } from '@/api/payment/paymentMethod';
 import CreateForm from './payPreCreate';
 import WithdrawForm from './payPreWithdraw';
 import Print from '../print';
@@ -116,7 +116,7 @@ export default {
             });
         },
         getPayTypeOptions() {
-            getDictionaryDataSelector('e14b3a85a37048c8aa39ca97570fb18c').then(res => {
+            listPaymentMethod({client:1}).then(res => {
                 this.payTypeOptions = res.data.list;
             });
         },

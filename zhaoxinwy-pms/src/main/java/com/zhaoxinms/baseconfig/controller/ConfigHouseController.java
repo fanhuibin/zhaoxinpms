@@ -49,6 +49,10 @@ import com.zhaoxinms.baseconfig.service.ConfigHouseService;
 import com.zhaoxinms.common.annotation.Log;
 import com.zhaoxinms.common.core.domain.entity.SysUser;
 import com.zhaoxinms.common.enums.BusinessType;
+import com.zhaoxinms.payment.entity.PaymentDepositEntity;
+import com.zhaoxinms.payment.entity.PaymentMethod;
+import com.zhaoxinms.payment.entity.pagination.PaymentMethodPagination;
+import com.zhaoxinms.payment.service.IPaymentMethodService;
 import com.zhaoxinms.payment.service.PaymentContractService;
 import com.zhaoxinms.util.ConstantsUtil;
 
@@ -78,9 +82,6 @@ public class ConfigHouseController {
     public ActionResult list(HousePagination housePagination) throws IOException {
         List<ConfigHouseEntity> list = configHouseService.getList(housePagination);
 
-        for (ConfigHouseEntity entity : list) {
-            entity.setState(dynDicUtil.getDicName(entity.getState()));
-        }
         List<HouseListVO> listVO = JsonUtil.getJsonToList(list, HouseListVO.class);
         PageListVO vo = new PageListVO();
         vo.setList(listVO);

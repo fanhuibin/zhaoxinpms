@@ -66,9 +66,6 @@ public class HouseFeeImportImpl implements HouseFeeImportService {
         // 查询所有的商铺
         HousePagination search = new HousePagination();
         List<ConfigHouseEntity> houses = houseService.getTypeList(search, "1");
-        for (ConfigHouseEntity entity : houses) {
-            entity.setState(dynDicUtil.getDicName(entity.getState()));
-        }
 
         // 查询所有的合约信息
         PaymentContractPagination contract = new PaymentContractPagination();

@@ -41,6 +41,10 @@ public class PaymentBillEntity {
     /** 合同 */
     @TableField("CONTRACT_ID")
     private String contractId;
+    
+    /** 订单 */
+    @TableField("ORDER_ID")
+    private String orderId;
 
     /** 收费项id */
     @TableField("FEE_ITEM_ID")

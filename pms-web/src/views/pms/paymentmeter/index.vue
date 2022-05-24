@@ -56,7 +56,6 @@
 
 <script>
 import request from '@/utils/request';
-import { getDictionaryDataSelector } from '@/api/systemData/dictionary';
 import EditForm from './Form';
 import ImportForm from './ImportForm';
 import HouseInput from '@/components/HouseInput';
@@ -90,7 +89,6 @@ export default {
     },
     computed: {},
     created() {
-        console.log("123");
         this.initData();
         this.getFeeItemList();
     },

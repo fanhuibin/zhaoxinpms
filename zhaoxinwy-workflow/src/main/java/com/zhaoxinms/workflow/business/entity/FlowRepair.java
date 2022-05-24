@@ -36,6 +36,10 @@ public class FlowRepair extends BaseEntity {
      */
     private String instanceId;
     /**
+     * 业主id
+     */
+    private String ownerId;
+    /**
      * 报修单号
      */
     private String no;

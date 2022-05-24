@@ -80,7 +80,6 @@
 </template>
 <script>
 import request from '@/utils/request';
-import { getDictionaryDataSelector } from '@/api/systemData/dictionary';
 
 export default {
     components: {},

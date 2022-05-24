@@ -127,8 +127,8 @@
                                                 <el-option
                                                     v-for="(item, index) in payMethod"
                                                     :key="index"
-                                                    :label="item.fullName"
-                                                    :value="item.id"
+                                                    :label="item.name"
+                                                    :value="item.code"
                                                     :disabled="item.disabled"
                                                 ></el-option>
                                             </el-select>
@@ -151,8 +151,7 @@
 </template>
 <script>
 import request from '@/utils/request';
-import { getUsername } from '@/utils/auth';
-import { getDictionaryType, getDictionaryDataSelector } from '@/api/systemData/dictionary';
+import { listPaymentMethod } from '@/api/payment/paymentMethod';
 
 export default {
     components: {},
@@ -254,7 +253,7 @@ export default {
                 .catch(() => {});
         },
         getpayMethod() {
-            getDictionaryDataSelector('e14b3a85a37048c8aa39ca97570fb18c').then(res => {
+            listPaymentMethod({client:1}).then(res => {
                 this.payMethod = res.data.list;
             });
         },

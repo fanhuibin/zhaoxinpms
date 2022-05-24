@@ -3,6 +3,7 @@ package com.zhaoxinms.owner.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import com.zhaoxinms.base.exception.DataException;
 import com.zhaoxinms.common.exception.ServiceException;
 import com.zhaoxinms.common.utils.StringUtils;
 import com.zhaoxinms.event.ContractEvent;
+import com.zhaoxinms.event.OwnerUserEvent;
 import com.zhaoxinms.owner.entity.OwnerUser;
 import com.zhaoxinms.owner.entity.pagination.OwnerUserPagination;
 import com.zhaoxinms.owner.mapper.OwnerUserMapper;
@@ -35,6 +37,8 @@ import com.zhaoxinms.util.ValidateUtil;
 public class OwnerUserServiceImpl extends ServiceImpl<OwnerUserMapper, OwnerUser> implements IOwnerUserService {
     @Autowired
     private PaymentContractService paymentContractService;
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public List<OwnerUser> getList(OwnerUserPagination pagination) {
@@ -88,6 +92,14 @@ public class OwnerUserServiceImpl extends ServiceImpl<OwnerUserMapper, OwnerUser
     @Override
     public boolean update(Long id, OwnerUser entity) {
         entity.setId(id);
+        
+        OwnerUser oldEntity = this.getById(id);
+        //修改手机号发起手机号变更的时间
+        if(!oldEntity.getPhonenumber().equals(entity.getPhonenumber())) {
+            applicationEventPublisher.publishEvent(new OwnerUserEvent(this, oldEntity, OwnerUserEvent.STATE_CHANGE_PHONE));
+            entity.setIsBind(ConstantsUtil.NO);
+        }
+        
         validEntityBeforeSave(entity);
         return this.updateById(entity);
     }
@@ -96,7 +108,6 @@ public class OwnerUserServiceImpl extends ServiceImpl<OwnerUserMapper, OwnerUser
     public void delete(OwnerUser entity) {
         if (entity != null) {
             throw new DataException("业主信息暂不支持删除操作");
-            //this.removeById(entity.getId());
         }
     }
 

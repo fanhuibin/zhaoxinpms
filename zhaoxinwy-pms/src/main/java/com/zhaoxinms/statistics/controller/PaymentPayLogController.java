@@ -15,9 +15,13 @@ import com.zhaoxinms.base.util.JsonUtil;
 import com.zhaoxinms.base.util.UserProvider;
 import com.zhaoxinms.base.vo.PageListVO;
 import com.zhaoxinms.base.vo.PaginationVO;
+import com.zhaoxinms.payment.entity.PaymentDepositEntity;
+import com.zhaoxinms.payment.entity.PaymentMethod;
 import com.zhaoxinms.payment.entity.PaymentPayLogEntity;
+import com.zhaoxinms.payment.entity.pagination.PaymentMethodPagination;
 import com.zhaoxinms.payment.model.paymentpaylog.PaymentPayLogListVO;
 import com.zhaoxinms.payment.model.paymentpaylog.PaymentPayLogPagination;
+import com.zhaoxinms.payment.service.IPaymentMethodService;
 import com.zhaoxinms.payment.service.PaymentPayLogService;
 import com.zhaoxinms.util.ConstantsUtil;
 
@@ -35,15 +39,21 @@ public class PaymentPayLogController {
     private DynDicUtil dynDicUtil;
     @Autowired
     private PaymentPayLogService paymentPayLogService;
+    @Autowired
+    private IPaymentMethodService paymentMethodService;
 
     @PreAuthorize("@ss.hasPermi('statistics:paymentBill:overdue')")
     @GetMapping
     public ActionResult list(PaymentPayLogPagination paymentPayLogPagination) throws IOException {
         List<PaymentPayLogEntity> list = paymentPayLogService.getList(paymentPayLogPagination);
         // 处理id字段转名称，若无需转或者为空可删除
-
+        List<PaymentMethod> methods = paymentMethodService.getList(new PaymentMethodPagination());
         for (PaymentPayLogEntity entity : list) {
-            entity.setPayMethod(dynDicUtil.getDicName(entity.getPayMethod()));
+            for(PaymentMethod method : methods) {
+                if(method.getCode().equals(entity.getPayMethod())) {
+                    entity.setPayMethod(method.getName());
+                }
+            }
             if (entity.getType().equals(ConstantsUtil.PAY_LOG_TYPE_PAY)) {
                 entity.setType("支付");
             } else {

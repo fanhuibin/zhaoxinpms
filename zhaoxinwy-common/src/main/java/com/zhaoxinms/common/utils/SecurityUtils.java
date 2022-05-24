@@ -15,6 +15,16 @@ import com.zhaoxinms.common.exception.ServiceException;
  */
 public class SecurityUtils
 {
+    
+    //用于区分代码执行的环境，移动端的请求跳过获取系统用户的过程
+    //移动端的请求，默认的身份是管理员
+    public static final ThreadLocal<Boolean> isApp = new ThreadLocal<Boolean>();
+    public static void setIsApp() {
+        isApp.set(true);
+    }
+    public static void setIsApp(boolean isAppBoolean) {
+        isApp.set(isAppBoolean);
+    }
     /**
      * 用户ID
      **/
@@ -52,7 +62,11 @@ public class SecurityUtils
     {
         try
         {
-            return getLoginUser().getUsername();
+            if(new Boolean(true).equals(SecurityUtils.isApp.get())) {
+                return "admin";
+            }else {
+                return getLoginUser().getUsername();
+            }
         }
         catch (Exception e)
         {

@@ -79,15 +79,6 @@ public class ConfigHouseContractController {
     @GetMapping("/House/houseContract")
     public ActionResult houseContractList(HouseContractPagination houseContractPagination) throws IOException {
         List<HouseContractListVO> list = configHouseService.getHouseContractList(houseContractPagination);
-        for (HouseContractListVO entity : list) {
-            if (!StringUtils.isEmpty(entity.getUserGender())) {
-                entity.setUserGender(dynDicUtil.getDicName(entity.getUserGender()));
-            }
-            if (!StringUtils.isEmpty(entity.getUserTrade())) {
-                entity.setUserTrade(dynDicUtil.getDicName(entity.getUserTrade()));
-            }
-        }
-
         long count = configHouseService.getHouseContractCount(houseContractPagination);
         houseContractPagination.setTotal(count);
         PageListVO vo = new PageListVO();

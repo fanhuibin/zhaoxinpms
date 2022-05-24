@@ -3,13 +3,13 @@
  *
  * Licensed under AGPL开源协议
  *
- * gitee：https://gitee.com/fanhuibin1/zhaoxinpms
- * website：http://pms.zhaoxinms.com  wx： zhaoxinms
+ * gitee：https://gitee.com/fanhuibin1/zhaoxinpms website：http://pms.zhaoxinms.com wx： zhaoxinms
  *
  */
 package com.zhaoxinms.payment.controller;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -89,6 +89,28 @@ public class PaymentBillController {
     }
 
     /**
+     * 通过资源名查询其下的所有未付款和付款中缴费单
+     *
+     * @param paymentBillPagination
+     * @return
+     */
+    @PreAuthorize("@ss.hasAnyRoles('payee,manager')")
+    @GetMapping("/needPay/{resourceName}")
+    public ActionResult payingbillList(@PathVariable("resourceName") String resourceName) throws IOException {
+        List<PaymentBillEntity> list = paymentBillService.getUnpaiedListByResource(resourceName);
+        List<PaymentBillEntity> payingList = paymentBillService.getPayingListByResource(resourceName);
+        List<PaymentBillListVO> listVO = JsonUtil.getJsonToList(list, PaymentBillListVO.class);
+        List<PaymentBillListVO> payingListVO = JsonUtil.getJsonToList(payingList, PaymentBillListVO.class);
+        for (PaymentBillListVO vo : payingListVO) {
+            listVO.add(vo);
+        }
+
+        PageListVO vo = new PageListVO();
+        vo.setList(listVO);
+        return ActionResult.success(vo);
+    }
+
+    /**
      * 通过资源名查询其下的所有已付款缴费单
      *
      * @param paymentBillPagination
@@ -96,8 +118,7 @@ public class PaymentBillController {
      */
     @PreAuthorize("@ss.hasAnyRoles('payee,manager')")
     @GetMapping("/paied/{resourceName}")
-    public ActionResult paiedBillList(PaymentBillPagination paymentBillPagination,
-        @PathVariable("resourceName") String resourceName) throws IOException {
+    public ActionResult paiedBillList(PaymentBillPagination paymentBillPagination, @PathVariable("resourceName") String resourceName) throws IOException {
         paymentBillPagination.setResourceName(resourceName);
         paymentBillPagination.setPayState("1");
         List<PaymentBillEntity> list = paymentBillService.getList(paymentBillPagination);
@@ -133,8 +154,7 @@ public class PaymentBillController {
     @Log(title = "收费数据更新", businessType = BusinessType.UPDATE)
     @PutMapping("/{id}")
     @Transactional
-    public ActionResult update(@PathVariable("id") String id, @RequestBody @Valid PaymentBillUpForm paymentBillUpForm)
-        throws DataException {
+    public ActionResult update(@PathVariable("id") String id, @RequestBody @Valid PaymentBillUpForm paymentBillUpForm) throws DataException {
         PaymentBillEntity entity = JsonUtil.getJsonToBean(paymentBillUpForm, PaymentBillEntity.class);
         paymentBillService.update(id, entity);
         return ActionResult.success("更新收费数据成功");

@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.zhaoxinms.base.ActionResult;
 import com.zhaoxinms.base.exception.DataException;
-import com.zhaoxinms.base.service.DictionaryDataService;
 import com.zhaoxinms.base.service.FileService;
 import com.zhaoxinms.base.util.ConfigValueUtil;
 import com.zhaoxinms.base.util.DateUtil;
@@ -46,8 +45,6 @@ public class DownloadController {
     private RedisUtil redisUtil;
     @Autowired
     private UserProvider userProvider;
-    @Autowired
-    private DictionaryDataService dictionaryDataService;
     @Autowired
     private FileService fileService;
 

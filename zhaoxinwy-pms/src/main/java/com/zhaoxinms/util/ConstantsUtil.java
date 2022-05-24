@@ -37,8 +37,15 @@ public class ConstantsUtil {
     public static final int PAY_BILL_REFUND_STATE_ALL = 2; //全部退款
     
     /** 支付状态 */
+    public static final int PAY_BILL_PAY_STATE_UNPAIED = 0; //未缴费
+    public static final int PAY_BILL_PAY_STATE_PAYING = 2; //付款中
+    public static final int PAY_BILL_PAY_STATE_PAIED = 1; //已缴费
     
     /** yes or no **/
     public static final byte NO = 0;
     public static final byte YES = 1;
+    
+    /**数据来源**/
+    public static final int CLIENT_WX_PC = 1; //pc管理端
+    public static final int CLIENT_WX_MINIAPP = 2; //业主小程序    
 }

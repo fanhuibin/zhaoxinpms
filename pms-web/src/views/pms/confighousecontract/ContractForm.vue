@@ -140,15 +140,13 @@
                     </el-col>
                     <el-col :span="24" style="height: 59px" v-show="stepActive == 1">
                         <el-form-item label="从事的行业" prop="userTrade">
-                            <el-select v-model="dataForm.userTrade" placeholder="请选择" clearable :style="{ width: '100%' }" :multiple="false">
-                                <el-option
-                                    v-for="(item, index) in usertradeOptions"
-                                    :key="index"
-                                    :label="item.fullName"
-                                    :value="item.id"
-                                    :disabled="item.disabled"
-                                ></el-option>
-                            </el-select>
+                           <el-input
+                                v-model="dataForm.userTrade"
+                                placeholder="请输入"
+                                :maxlength="13"
+                                clearable
+                                :style="{ width: '100%' }"
+                            ></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="24" style="height: 59px" v-show="stepActive == 1">
@@ -216,7 +214,6 @@
 </template>
 <script>
 import request from '@/utils/request';
-import { getDictionaryType, getDictionaryDataSelector } from '@/api/systemData/dictionary';
 import SelectOwnerBox from '../../owner/ownerUser/SelectBox.vue';
 import Box from '../configfeeitem/SelectBox';
 export default {
@@ -360,8 +357,6 @@ export default {
     watch: {},
     created() {
         this.getareaOptions();
-        this.getusersexOptions();
-        this.getusertradeOptions();
     },
     mounted() {},
     methods: {
@@ -418,16 +413,6 @@ export default {
                 method: 'GET',
             }).then(res => {
                 this.areaOptions = res.data;
-            });
-        },
-        getusersexOptions() {
-            getDictionaryDataSelector('963255a34ea64a2584c5d1ba269c1fe6').then(res => {
-                this.usersexOptions = res.data.list;
-            });
-        },
-        getusertradeOptions() {
-            getDictionaryDataSelector('d59a3cf65f9847dbb08be449e3feae16').then(res => {
-                this.usertradeOptions = res.data.list;
             });
         },
         getConfigFeeSetting() {

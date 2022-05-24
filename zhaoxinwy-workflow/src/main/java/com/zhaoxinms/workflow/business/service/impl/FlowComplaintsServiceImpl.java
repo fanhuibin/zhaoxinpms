@@ -23,6 +23,8 @@ import com.zhaoxinms.baseconfig.entity.ConfigHouseEntity;
 import com.zhaoxinms.baseconfig.service.ConfigHouseService;
 import com.zhaoxinms.common.exception.ServiceException;
 import com.zhaoxinms.common.utils.StringUtils;
+import com.zhaoxinms.payment.entity.PaymentContractEntity;
+import com.zhaoxinms.payment.service.PaymentContractService;
 import com.zhaoxinms.workflow.business.entity.FlowComplaints;
 import com.zhaoxinms.workflow.business.entity.FlowRepair;
 import com.zhaoxinms.workflow.business.entity.bo.FlowComplaintsBo;
@@ -51,8 +53,16 @@ public class FlowComplaintsServiceImpl extends ServiceImpl<FlowComplaintsMapper,
     private BillRuleService billRuleService;
     @Autowired
     private IProcessService processService;
+    @Autowired
+    private PaymentContractService paymentContractService;
     
     private final static String FLOW_ID = "complaints";
+    
+    public static final String STATE_APPLY = "apply";
+    public static final String STATE_PROCESSING = "processing";
+    public static final String STATE_COMPLETE = "complete";
+    public static final String STATE_SCORE = "score";
+    public static final String STATE_CANCEL = "cancel";
     
     @Override
     public List<FlowComplaints> getList(FlowComplaintsPagination pagination) {
@@ -83,9 +93,16 @@ public class FlowComplaintsServiceImpl extends ServiceImpl<FlowComplaintsMapper,
            prefix = "商铺（"+entity.getApplyHouse()+")";
         }
         entity.setTitle(prefix + "发起的投诉工单");
-        entity.setState("apply");
+        entity.setState(STATE_APPLY);
         entity.setApplyTime(new Date());
         entity.setReturnState("0");
+        
+        if(StringUtils.isNotEmpty(entity.getApplyHouse())){
+            //通过applyHouse获取当前的业主信息
+            PaymentContractEntity contract = paymentContractService.getByResourceName(entity.getApplyHouse());
+            entity.setOwnerId(contract.getOwnerId());
+        }
+        
         this.save(entity);
 
         // 发起流程
@@ -105,7 +122,7 @@ public class FlowComplaintsServiceImpl extends ServiceImpl<FlowComplaintsMapper,
         FlowComplaints entity = JsonUtil.getJsonToBean(bo, FlowComplaints.class);
         FlowComplaints oldEntity = this.getById(bo.getId());
         Map<String, Object> variables = new HashMap<>();
-        if (entity.getState().equals("apply")) {
+        if (entity.getState().equals(STATE_APPLY)) {
             if (StringUtils.isEmpty(bo.getAssigneeUser())) {
                 throw new DataException("请选择维修人员");
             }
@@ -117,12 +134,12 @@ public class FlowComplaintsServiceImpl extends ServiceImpl<FlowComplaintsMapper,
             this.updateById(entity);
             variables.put("assignee", entity.getAssigneeUser());
             variables.put("comment", "完成工单分配");
-        } else if (entity.getState().equals("complete")) {
+        } else if (entity.getState().equals(STATE_COMPLETE)) {
 
-        } else if (entity.getState().equals("processing")) {
+        } else if (entity.getState().equals(STATE_PROCESSING)) {
             entity.setState("score");
             variables.put("comment", "维修完成");
-        } else if (entity.getState().equals("score")) {
+        } else if (entity.getState().equals(STATE_SCORE)) {
             entity.setReturnState("1");
             entity.setReturnResult(bo.getReturnResult());
             entity.setReturnRemark(bo.getReturnRemark());
@@ -201,11 +218,12 @@ public class FlowComplaintsServiceImpl extends ServiceImpl<FlowComplaintsMapper,
     public void cancel(WorkflowEvent event) {
         if (event.getEventName().equals(WorkflowEvent.EVENT_CANCEL_APPLY)) {
             //1.通过instanceId查询到业务数据
-            FlowComplaints complaints = this.getInfoByInstanceId(event.getProcessInstance().getProcessInstanceId());
-            
-            //2.设置流程的状态为已取消
-            complaints.setState("cancel");
-            this.updateById(complaints);
+            if(event.getProcessInstance().getProcessDefinitionKey().equals(FLOW_ID)){
+                FlowComplaints complaints = this.getInfoByInstanceId(event.getProcessInstance().getProcessInstanceId());
+                //2.设置流程的状态为已取消
+                complaints.setState(STATE_CANCEL);
+                this.updateById(complaints);
+            }
         }
     }
 }

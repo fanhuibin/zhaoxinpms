@@ -56,8 +56,8 @@
                             <el-option
                                 v-for="(item, index) in payTypeOptions"
                                 :key="index"
-                                :label="item.fullName"
-                                :value="item.id"
+                                :label="item.name"
+                                :value="item.code"
                                 :disabled="item.disabled"
                             ></el-option>
                         </el-select>
@@ -93,7 +93,7 @@
 </template>
 <script>
 import request from '@/utils/request';
-import { getDictionaryDataSelector } from '@/api/systemData/dictionary';
+import { listPaymentMethod } from '@/api/payment/paymentMethod';
 import HouseInput from '@/components/HouseInput';
 
 export default {
@@ -215,7 +215,7 @@ export default {
                 });
         },
         getpayTypeOptions() {
-            getDictionaryDataSelector('e14b3a85a37048c8aa39ca97570fb18c').then(res => {
+            listPaymentMethod({client:1}).then(res => {
                 this.payTypeOptions = res.data.list;
             });
         },

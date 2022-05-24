@@ -29,7 +29,6 @@ public class GroupCounterSignListener implements ExecutionListener {
 
     @Override
     public void notify(DelegateExecution execution) {
-        System.out.println("是多少粉丝------------------");
         String eventName = execution.getEventName();
         if ("start".equals(eventName)) {
             List<String> assigneeList = new ArrayList<>();

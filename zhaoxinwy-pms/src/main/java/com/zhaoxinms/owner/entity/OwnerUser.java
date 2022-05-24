@@ -79,5 +79,7 @@ public class OwnerUser extends BaseEntity {
      */
     @TableLogic
     private String delFlag;
-
+    
+    //是否完成了手机绑定
+    private int isBind;
 }

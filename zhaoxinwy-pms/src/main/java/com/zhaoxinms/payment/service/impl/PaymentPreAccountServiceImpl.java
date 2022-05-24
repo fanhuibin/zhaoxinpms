@@ -242,7 +242,7 @@ public class PaymentPreAccountServiceImpl extends ServiceImpl<PaymentPreAccountM
             List<PaymentPreAccountEntity> accounts = this.getAccountsByResourceId(resourceId);
             for (PaymentPreAccountEntity account : accounts) {
                 if (new BigDecimal(account.getAmt()).compareTo(BigDecimal.ZERO) != 0) {
-                    throw new DataException("该用户还有预存款未使用");
+                    throw new DataException("该商铺下还有未使用的预存款，请先执行退款操作");
                 }
             }
         }

@@ -35,8 +35,8 @@
                                 <el-option
                                     v-for="(item, index) in payTypeOptions"
                                     :key="index"
-                                    :label="item.fullName"
-                                    :value="item.id"
+                                    :label="item.name"
+                                    :value="item.code"
                                     :disabled="item.disabled"
                                 ></el-option>
                             </el-select>
@@ -100,7 +100,7 @@ import CreateForm from './payTempCreate';
 import RefundForm from './payTempRefund';
 import Print from '../print';
 import { getUsername } from '@/utils/auth';
-import { getDictionaryType, getDictionaryDataSelector } from '@/api/systemData/dictionary';
+import { listPaymentMethod } from '@/api/payment/paymentMethod';
 
 export default {
     components: { CreateForm, RefundForm, Print },
@@ -180,7 +180,7 @@ export default {
             });
         },
         getPayTypeOptions() {
-            getDictionaryDataSelector('e14b3a85a37048c8aa39ca97570fb18c').then(res => {
+            listPaymentMethod({client:1}).then(res => {
                 this.payTypeOptions = res.data.list;
             });
         },

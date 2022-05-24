@@ -1,3 +1,11 @@
+/**
+ * Copyright 肇新智慧物业管理系统
+ *
+ * Licensed under AGPL开源协议
+ *
+ * gitee：https://gitee.com/fanhuibin1/zhaoxinpms website：http://pms.zhaoxinms.com wx： zhaoxinms
+ *
+ */
 package com.zhaoxinms.payment.controller;
 
 import java.io.IOException;
@@ -77,10 +85,6 @@ public class PaymentContractController {
     public ActionResult list(PaymentContractPagination paymentContractPagination) throws IOException {
         List<PaymentContractEntity> list = paymentContractService.getList(paymentContractPagination);
 
-        for (PaymentContractEntity entity : list) {
-            entity.setUserGender(dynDicUtil.getDicName(entity.getUserGender()));
-            entity.setUserTrade(dynDicUtil.getDicName(entity.getUserTrade()));
-        }
         List<PaymentContractListVO> listVO = JsonUtil.getJsonToList(list, PaymentContractListVO.class);
         PageListVO vo = new PageListVO();
         vo.setList(listVO);
@@ -167,9 +171,6 @@ public class PaymentContractController {
         if (entity == null) {
             throw new DataException("该商铺处于空置状态");
         }
-
-        entity.setUserGender(dynDicUtil.getDicName(entity.getUserGender()));
-        entity.setUserTrade(dynDicUtil.getDicName(entity.getUserTrade()));
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("house", house);

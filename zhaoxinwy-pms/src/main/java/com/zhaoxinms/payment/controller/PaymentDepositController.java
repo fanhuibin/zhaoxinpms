@@ -1,3 +1,11 @@
+/**
+ * Copyright 肇新智慧物业管理系统
+ *
+ * Licensed under AGPL开源协议
+ *
+ * gitee：https://gitee.com/fanhuibin1/zhaoxinpms website：http://pms.zhaoxinms.com wx： zhaoxinms
+ *
+ */
 package com.zhaoxinms.payment.controller;
 
 import java.io.IOException;
@@ -27,11 +35,15 @@ import com.zhaoxinms.common.annotation.Log;
 import com.zhaoxinms.common.core.domain.entity.SysUser;
 import com.zhaoxinms.common.enums.BusinessType;
 import com.zhaoxinms.payment.entity.PaymentDepositEntity;
+import com.zhaoxinms.payment.entity.PaymentMethod;
+import com.zhaoxinms.payment.entity.PaymentPreEntity;
+import com.zhaoxinms.payment.entity.pagination.PaymentMethodPagination;
 import com.zhaoxinms.payment.model.paymentdeposit.PaymentDepositCrForm;
 import com.zhaoxinms.payment.model.paymentdeposit.PaymentDepositInfoVO;
 import com.zhaoxinms.payment.model.paymentdeposit.PaymentDepositListVO;
 import com.zhaoxinms.payment.model.paymentdeposit.PaymentDepositPagination;
 import com.zhaoxinms.payment.model.paymentdeposit.PaymentDepositRefundForm;
+import com.zhaoxinms.payment.service.IPaymentMethodService;
 import com.zhaoxinms.payment.service.PaymentDepositService;
 
 import io.swagger.annotations.Api;
@@ -48,6 +60,8 @@ public class PaymentDepositController {
     private UserProvider userProvider;
     @Autowired
     private PaymentDepositService paymentDepositService;
+    @Autowired
+    private IPaymentMethodService paymentMethodService;
 
     /**
      * 列表
@@ -59,9 +73,15 @@ public class PaymentDepositController {
     @GetMapping
     public ActionResult list(PaymentDepositPagination paymentDepositPagination) throws IOException {
         List<PaymentDepositEntity> list = paymentDepositService.getList(paymentDepositPagination);
+        List<PaymentMethod> methods = paymentMethodService.getList(new PaymentMethodPagination());
         for (PaymentDepositEntity entity : list) {
-            entity.setPayType(dynDicUtil.getDicName(entity.getPayType()));
+            for(PaymentMethod method : methods) {
+                if(method.getCode().equals(entity.getPayType())) {
+                    entity.setPayType(method.getName());
+                }
+            }
         }
+        
         List<PaymentDepositListVO> listVO = JsonUtil.getJsonToList(list, PaymentDepositListVO.class);
         PageListVO vo = new PageListVO();
         vo.setList(listVO);

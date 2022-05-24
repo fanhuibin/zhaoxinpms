@@ -1,3 +1,11 @@
+/**
+ * Copyright 肇新智慧物业管理系统
+ *
+ * Licensed under AGPL开源协议
+ *
+ * gitee：https://gitee.com/fanhuibin1/zhaoxinpms website：http://pms.zhaoxinms.com wx： zhaoxinms
+ *
+ */
 package com.zhaoxinms.payment.controller;
 
 import java.io.IOException;
@@ -26,12 +34,15 @@ import com.zhaoxinms.base.vo.PaginationVO;
 import com.zhaoxinms.common.annotation.Log;
 import com.zhaoxinms.common.core.domain.entity.SysUser;
 import com.zhaoxinms.common.enums.BusinessType;
+import com.zhaoxinms.payment.entity.PaymentMethod;
 import com.zhaoxinms.payment.entity.PaymentTempEntity;
+import com.zhaoxinms.payment.entity.pagination.PaymentMethodPagination;
 import com.zhaoxinms.payment.model.paymenttemp.PaymentTempCrForm;
 import com.zhaoxinms.payment.model.paymenttemp.PaymentTempInfoVO;
 import com.zhaoxinms.payment.model.paymenttemp.PaymentTempListVO;
 import com.zhaoxinms.payment.model.paymenttemp.PaymentTempPagination;
 import com.zhaoxinms.payment.model.paymenttemp.PaymentTempRefundForm;
+import com.zhaoxinms.payment.service.IPaymentMethodService;
 import com.zhaoxinms.payment.service.PaymentTempService;
 
 import io.swagger.annotations.Api;
@@ -48,6 +59,8 @@ public class PaymentTempController {
     private UserProvider userProvider;
     @Autowired
     private PaymentTempService paymentTempService;
+    @Autowired
+    private IPaymentMethodService paymentMethodService;
 
     /**
      * 列表
@@ -59,8 +72,13 @@ public class PaymentTempController {
     @GetMapping
     public ActionResult list(PaymentTempPagination paymentTempPagination) throws IOException {
         List<PaymentTempEntity> list = paymentTempService.getList(paymentTempPagination);
+        List<PaymentMethod> methods = paymentMethodService.getList(new PaymentMethodPagination());
         for (PaymentTempEntity entity : list) {
-            entity.setPayType(dynDicUtil.getDicName(entity.getPayType()));
+            for(PaymentMethod method : methods) {
+                if(method.getCode().equals(entity.getPayType())) {
+                    entity.setPayType(method.getName());
+                }
+            }
         }
         List<PaymentTempListVO> listVO = JsonUtil.getJsonToList(list, PaymentTempListVO.class);
         PageListVO vo = new PageListVO();

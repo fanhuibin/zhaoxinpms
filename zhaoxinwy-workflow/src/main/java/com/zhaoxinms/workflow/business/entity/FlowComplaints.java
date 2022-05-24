@@ -35,6 +35,10 @@ public class FlowComplaints extends BaseEntity {
      */
     private String instanceId;
     /**
+     * 业主id
+     */
+    private String ownerId;
+    /**
      * 单号
      */
     private String no;

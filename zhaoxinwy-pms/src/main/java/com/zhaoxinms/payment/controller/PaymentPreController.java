@@ -1,3 +1,11 @@
+/**
+ * Copyright 肇新智慧物业管理系统
+ *
+ * Licensed under AGPL开源协议
+ *
+ * gitee：https://gitee.com/fanhuibin1/zhaoxinpms website：http://pms.zhaoxinms.com wx： zhaoxinms
+ *
+ */
 package com.zhaoxinms.payment.controller;
 
 import java.io.IOException;
@@ -25,12 +33,16 @@ import com.zhaoxinms.base.vo.PaginationVO;
 import com.zhaoxinms.common.annotation.Log;
 import com.zhaoxinms.common.core.domain.entity.SysUser;
 import com.zhaoxinms.common.enums.BusinessType;
+import com.zhaoxinms.payment.entity.PaymentMethod;
 import com.zhaoxinms.payment.entity.PaymentPreEntity;
+import com.zhaoxinms.payment.entity.PaymentTempEntity;
+import com.zhaoxinms.payment.entity.pagination.PaymentMethodPagination;
 import com.zhaoxinms.payment.model.paymentpre.PaymentPreCrForm;
 import com.zhaoxinms.payment.model.paymentpre.PaymentPreInfoVO;
 import com.zhaoxinms.payment.model.paymentpre.PaymentPreListVO;
 import com.zhaoxinms.payment.model.paymentpre.PaymentPrePagination;
 import com.zhaoxinms.payment.model.paymentpre.PaymentPreRefundForm;
+import com.zhaoxinms.payment.service.IPaymentMethodService;
 import com.zhaoxinms.payment.service.PaymentPreAccountService;
 import com.zhaoxinms.payment.service.PaymentPreService;
 import com.zhaoxinms.util.ConstantsUtil;
@@ -46,11 +58,11 @@ public class PaymentPreController {
     @Autowired
     private UserProvider userProvider;
     @Autowired
-    private DynDicUtil dynDicUtil;
-    @Autowired
     private PaymentPreService paymentPreService;
     @Autowired
     private PaymentPreAccountService paymentPreAccountService;
+    @Autowired
+    private IPaymentMethodService paymentMethodService;
 
     /**
      * 列表
@@ -62,10 +74,15 @@ public class PaymentPreController {
     @GetMapping
     public ActionResult list(PaymentPrePagination paymentPrePagination) throws IOException {
         List<PaymentPreEntity> list = paymentPreService.getList(paymentPrePagination);
-
+        List<PaymentMethod> methods = paymentMethodService.getList(new PaymentMethodPagination());
         for (PaymentPreEntity entity : list) {
-            entity.setPayType(dynDicUtil.getDicName(entity.getPayType()));
+            for(PaymentMethod method : methods) {
+                if(method.getCode().equals(entity.getPayType())) {
+                    entity.setPayType(method.getName());
+                }
+            }
         }
+        
         List<PaymentPreListVO> listVO = JsonUtil.getJsonToList(list, PaymentPreListVO.class);
         PageListVO vo = new PageListVO();
         vo.setList(listVO);

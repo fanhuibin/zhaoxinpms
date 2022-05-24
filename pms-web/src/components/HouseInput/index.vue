@@ -7,6 +7,7 @@
         :trigger-on-focus="false"
         @change="onEditorChange($event)"
         @select="handleSelect"
+        :style="customStyle"
     >
         <i class="el-icon-edit el-input__icon" slot="suffix" @click="handleIconClick"></i>
         <template slot-scope="{ item }">
@@ -52,6 +53,7 @@ export default {
             type: String,
             default: 'house',
         },
+        customStyle: Object,
     },
     data() {
         return {
@@ -59,6 +61,14 @@ export default {
             searchResult: [],
             state: '',
         };
+    },
+    watch: {
+        value: {
+            immediate: true,    // 这句重要
+            handler (val) {
+                this.content = val;
+            }
+        }
     },
     methods: {
         querySearch(queryString, cb) {

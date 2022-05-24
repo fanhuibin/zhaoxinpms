@@ -129,7 +129,6 @@
 
 <script>
 import request from '@/utils/request';
-import { getDictionaryDataSelector } from '@/api/systemData/dictionary';
 import EditForm from './Form';
 import RefundForm from './RefundForm';
 import BatchAddForm from './BatchAddForm';
@@ -353,9 +352,11 @@ export default {
         reset() {
             this.pickerVal = [];
             this.pickerPayVal = [];
-            for (let key in this.query) {
-                this.query[key] = undefined;
-            }
+            this.query = {
+                resource_name: undefined,
+                charging_item_name: undefined,
+                payState: undefined,
+            };
             this.listQuery = {
                 currentPage: 1,
                 pageSize: 20,

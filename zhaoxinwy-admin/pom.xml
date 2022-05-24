@@ -65,12 +65,17 @@
             <artifactId>zhaoxinwy-workflow</artifactId>
         </dependency>
         
-        <!-- 业主模块（未开源） 
+       <!-- 业主模块（未开源）-->
         <dependency>
             <groupId>com.zhaoxinms</groupId>
             <artifactId>zhaoxinwy-owner</artifactId>
         </dependency>
-
+        <dependency> 
+            <groupId>com.zhaoxinms</groupId>
+            <artifactId>zhaoxinwy-pay</artifactId>
+            <version>0.9.1</version>
+        </dependency> 
+ <!--
         <dependency>
             <groupId>com.zhaoxinms</groupId>
             <artifactId>zhaoxinwy-workflowPro</artifactId>

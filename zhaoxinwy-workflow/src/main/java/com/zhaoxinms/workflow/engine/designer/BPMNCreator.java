@@ -127,6 +127,8 @@ public class BPMNCreator {
         ExtensionAttribute a = new ExtensionAttribute();
         a.setName("designerJSON");
         a.setNamespace("http://activiti.org/bpmn");
+        json.replaceAll(">", "&gt;");
+        json.replaceAll("<", "&lt;");
         a.setValue(json);
         
         Process process = new Process();

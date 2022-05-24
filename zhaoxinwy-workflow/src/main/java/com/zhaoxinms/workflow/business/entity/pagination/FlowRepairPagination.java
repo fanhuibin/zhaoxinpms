@@ -27,6 +27,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @EqualsAndHashCode(callSuper = true)
 @ApiModel("报修工单业务对象")
 public class FlowRepairPagination extends Pagination {
+    
+    @ApiModelProperty(value = "业主id", required = true)
+    private String ownerId;
 
     @ApiModelProperty(value = "流程实例", required = true)
     @NotBlank(message = "流程实例不能为空", groups = { AddGroup.class, EditGroup.class })
@@ -107,6 +110,4 @@ public class FlowRepairPagination extends Pagination {
 
     @ApiModelProperty(value = "数据来源")
     private String client;
-
-
 }

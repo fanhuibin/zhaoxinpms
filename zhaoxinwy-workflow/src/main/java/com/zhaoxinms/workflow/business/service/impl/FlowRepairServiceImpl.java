@@ -23,6 +23,8 @@ import com.zhaoxinms.baseconfig.entity.ConfigHouseEntity;
 import com.zhaoxinms.baseconfig.service.ConfigHouseService;
 import com.zhaoxinms.common.exception.ServiceException;
 import com.zhaoxinms.common.utils.StringUtils;
+import com.zhaoxinms.payment.entity.PaymentContractEntity;
+import com.zhaoxinms.payment.service.PaymentContractService;
 import com.zhaoxinms.util.ValidateUtil;
 import com.zhaoxinms.workflow.business.entity.FlowRepair;
 import com.zhaoxinms.workflow.business.entity.bo.FlowRepairBo;
@@ -50,8 +52,16 @@ public class FlowRepairServiceImpl extends ServiceImpl<FlowRepairMapper, FlowRep
     private BillRuleService billRuleService;
     @Autowired
     private ConfigHouseService configHouseService;
+    @Autowired
+    private PaymentContractService paymentContractService;
 
     private final static String FLOW_ID = "repair";
+    public static final String STATE_APPLY = "apply";
+    public static final String STATE_COMPLETE = "complete";
+    public static final String STATE_UNCONFIRMED = "unconfirmed";
+    public static final String STATE_REPAIRING = "repairing";
+    public static final String STATE_SCORE = "score";
+    public static final String STATE_CANCEL = "cancel";
 
     @Override
     public List<FlowRepair> getList(FlowRepairPagination pagination) {
@@ -88,9 +98,16 @@ public class FlowRepairServiceImpl extends ServiceImpl<FlowRepairMapper, FlowRep
            prefix = "商铺（"+entity.getApplyHouse()+")";
         }
         entity.setTitle(prefix + "发起的报修工单");
-        entity.setState("apply");
+        entity.setState(STATE_APPLY);
         entity.setApplyTime(new Date());
         entity.setReturnState("0");
+        
+        if(StringUtils.isNotEmpty(entity.getApplyHouse())){
+            //通过applyHouse获取当前的业主信息
+            PaymentContractEntity contract = paymentContractService.getByResourceName(entity.getApplyHouse());
+            entity.setOwnerId(contract.getOwnerId());
+        }
+        
         this.save(entity);
 
         // 发起流程
@@ -120,7 +137,7 @@ public class FlowRepairServiceImpl extends ServiceImpl<FlowRepairMapper, FlowRep
         FlowRepair entity = JsonUtil.getJsonToBean(bo, FlowRepair.class);
         FlowRepair oldEntity = this.getById(bo.getId());
         Map<String, Object> variables = new HashMap<>();
-        if (entity.getState().equals("apply")) {
+        if (entity.getState().equals(STATE_APPLY)) {
             if (StringUtils.isEmpty(bo.getRepairUser())) {
                 throw new DataException("请选择维修人员");
             }
@@ -132,9 +149,9 @@ public class FlowRepairServiceImpl extends ServiceImpl<FlowRepairMapper, FlowRep
             this.updateById(entity);
             variables.put("repairAssignee", entity.getRepairUser());
             variables.put("comment", "完成工单分配");
-        } else if (entity.getState().equals("complete")) {
+        } else if (entity.getState().equals(STATE_COMPLETE)) {
 
-        } else if (entity.getState().equals("unconfirmed")) {
+        } else if (entity.getState().equals(STATE_UNCONFIRMED)) {
 
             if ("repaired".equals(bo.getRepairState())) {
                 entity.setState("score");
@@ -150,13 +167,13 @@ public class FlowRepairServiceImpl extends ServiceImpl<FlowRepairMapper, FlowRep
                 variables.put("comment", "现场确认完成");
             }
             variables.put("repairState", bo.getRepairState());
-        } else if (entity.getState().equals("repairing")) {
+        } else if (entity.getState().equals(STATE_REPAIRING)) {
             entity.setState("score");
             entity.setRepairMaterialsFee(bo.getRepairMaterialsFee());
             entity.setRepairServiceFee(bo.getRepairServiceFee());
             variables.put("comment", "维修完成");
             variables.put("repairState", bo.getRepairState());
-        } else if (entity.getState().equals("score")) {
+        } else if (entity.getState().equals(STATE_SCORE)) {
             entity.setReturnState("1");
             entity.setReturnResult(bo.getReturnResult());
             entity.setReturnRemark(bo.getReturnRemark());
@@ -206,6 +223,7 @@ public class FlowRepairServiceImpl extends ServiceImpl<FlowRepairMapper, FlowRep
         lqw.eq(pagination.getPriority() != null, FlowRepair::getPriority, pagination.getPriority());
         lqw.eq(StringUtils.isNotBlank(pagination.getState()), FlowRepair::getState, pagination.getState());
         lqw.eq(StringUtils.isNotBlank(pagination.getClient()), FlowRepair::getClient, pagination.getClient());
+        lqw.eq(StringUtils.isNotBlank(pagination.getOwnerId()), FlowRepair::getOwnerId, pagination.getOwnerId());
         return lqw;
     }
 
@@ -223,11 +241,13 @@ public class FlowRepairServiceImpl extends ServiceImpl<FlowRepairMapper, FlowRep
     public void cancel(WorkflowEvent event) {
         if (event.getEventName().equals(WorkflowEvent.EVENT_CANCEL_APPLY)) {
             //1.通过instanceId查询到业务数据
-             FlowRepair repair = this.getInfoByInstanceId(event.getProcessInstance().getProcessInstanceId());
-            
-            //2.设置流程的状态为已取消
-            repair.setState("cancel");
-            this.updateById(repair);
+            if(event.getProcessInstance().getProcessDefinitionKey().equals(FLOW_ID)){
+                 FlowRepair repair = this.getInfoByInstanceId(event.getProcessInstance().getProcessInstanceId());
+                
+                //2.设置流程的状态为已取消
+                repair.setState(STATE_CANCEL);
+                this.updateById(repair);
+            }
         }
     }
 }

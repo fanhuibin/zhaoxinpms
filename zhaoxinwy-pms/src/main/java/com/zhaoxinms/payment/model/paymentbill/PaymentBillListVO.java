@@ -15,6 +15,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PaymentBillListVO {
     /** 主键 */
     private String id;
+    
+    @JsonProperty("orderId")
+    private String orderId;
 
     /** 资源id */
     @JsonProperty("resourceId")
@@ -103,6 +106,10 @@ public class PaymentBillListVO {
     /** 流水单号 */
     @JsonProperty("payLogNo")
     private String payLogNo;
+    
+    /** 支付状态 */
+    @JsonProperty("payState")
+    private String payState;
 
     /** 支付时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

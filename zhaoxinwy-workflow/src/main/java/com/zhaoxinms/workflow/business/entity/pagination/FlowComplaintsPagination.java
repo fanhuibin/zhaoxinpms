@@ -28,6 +28,9 @@ public class FlowComplaintsPagination extends Pagination {
 
     @ApiModelProperty(value = "流程id")
     private String instanceId;
+    
+    @ApiModelProperty(value = "ownerid")
+    private String ownerId;
 
     @ApiModelProperty(value = "单号", required = true)
     @NotBlank(message = "单号不能为空", groups = { AddGroup.class, EditGroup.class })

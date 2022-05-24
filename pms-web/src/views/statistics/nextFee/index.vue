@@ -63,7 +63,6 @@
 
 <script>
 import request from '@/utils/request';
-import { getDictionaryDataSelector } from '@/api/systemData/dictionary';
 import HouseInput from '@/components/HouseInput';
 
 export default {

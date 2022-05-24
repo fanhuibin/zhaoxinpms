@@ -279,8 +279,6 @@ public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMappe
             a.setDeleteUserId(userId);
             this.updateById(a);
 
-            // 商铺绑定的收费项全部删除
-            paymentContractFeeService.deleteByContractId(a.getId());
             // 广播删除事件
             applicationEventPublisher.publishEvent(new ContractEvent(this, a, ContractEvent.STATE_CANCEL));
         }

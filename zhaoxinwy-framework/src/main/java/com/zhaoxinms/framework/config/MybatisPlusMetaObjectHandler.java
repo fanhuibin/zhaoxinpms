@@ -4,9 +4,11 @@ import java.util.Date;
 
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.poi.ss.usermodel.DateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.github.pagehelper.Page;
 import com.sun.jna.platform.win32.Netapi32Util.UserInfo;
 import com.zhaoxinms.common.constant.HttpStatus;
 import com.zhaoxinms.common.core.domain.entity.SysUser;
@@ -14,18 +16,27 @@ import com.zhaoxinms.common.core.mybatisplus.BaseEntity;
 import com.zhaoxinms.common.exception.ServiceException;
 import com.zhaoxinms.common.utils.SecurityUtils;
 import com.zhaoxinms.common.utils.StringUtils;
+import com.zhaoxinms.common.utils.spring.SpringUtils;
+import com.zhaoxinms.system.service.ISysUserService;
 
 @Component
 public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
-
+    
     @Override
     public void insertFill(MetaObject metaObject) {
-        insertFillOld(metaObject);
-        insertFillNew(metaObject);
+        SysUser user;
+        if(new Boolean(true).equals(SecurityUtils.isApp.get())) {
+            ISysUserService sysUserService = SpringUtils.getBean(ISysUserService.class);
+            user = sysUserService.selectUserById(1l);
+        }else {
+            user = SecurityUtils.getLoginUser().getUser();
+        }
+        
+        insertFillOld(metaObject, user);
+        insertFillNew(metaObject, user);
     }
     
-    private void insertFillOld(MetaObject metaObject) {
-        SysUser user = SecurityUtils.getLoginUser().getUser();
+    private void insertFillOld(MetaObject metaObject, SysUser user) {
         Object enabledMark = this.getFieldValByName("enabledMark", metaObject);
         Object creatorUserId = this.getFieldValByName("creatorUserId", metaObject);
         Object creatorTime = this.getFieldValByName("creatorTime", metaObject);
@@ -44,7 +55,7 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
         }
     }
     
-    private void insertFillNew(MetaObject metaObject) {
+    private void insertFillNew(MetaObject metaObject, SysUser user) {
         try {
             if (metaObject != null && metaObject.getOriginalObject() instanceof BaseEntity) {
                 BaseEntity baseEntity = (BaseEntity) metaObject.getOriginalObject();
@@ -57,7 +68,6 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
                 if (baseEntity.getUpdateTime() == null) {
                     baseEntity.setUpdateTime(current);
                 }
-                SysUser user = SecurityUtils.getLoginUser().getUser();
                 // 当前已登录 且 创建人为空 则填充
                 if (StringUtils.isNotBlank(user.getUserName())
                         && StringUtils.isBlank(baseEntity.getCreateBy())) {
@@ -76,18 +86,25 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        oldUpdate(metaObject);
-        newUpdate(metaObject);
+        SysUser user;
+        if(new Boolean(true).equals(SecurityUtils.isApp.get())) {
+            ISysUserService sysUserService = SpringUtils.getBean(ISysUserService.class);
+            user = sysUserService.selectUserById(1l);
+        }else {
+            user = SecurityUtils.getLoginUser().getUser();
+        }
+        
+        oldUpdate(metaObject, user);
+        newUpdate(metaObject, user);
     }
 
-    private void newUpdate(MetaObject metaObject) {
+    private void newUpdate(MetaObject metaObject, SysUser user) {
         try {
             if (metaObject != null && metaObject.getOriginalObject() instanceof BaseEntity) {
                 BaseEntity baseEntity = (BaseEntity) metaObject.getOriginalObject();
                 Date current = new Date();
                 // 更新时间填充(不管为不为空)
                 baseEntity.setUpdateTime(current);
-                SysUser user = SecurityUtils.getLoginUser().getUser();
                 // 当前已登录 更新人填充(不管为不为空)
                 if (StringUtils.isNotBlank(user.getUserName())) {
                     baseEntity.setUpdateBy(user.getUserName());
@@ -98,12 +115,9 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
         }
     }
 
-    private void oldUpdate(MetaObject metaObject) {
-        SysUser user = SecurityUtils.getLoginUser().getUser();
+    private void oldUpdate(MetaObject metaObject, SysUser user) {
         this.setFieldValByName("lastModifyTime", new Date(), metaObject);
         this.setFieldValByName("lastModifyUserId", ""+user.getUserId(), metaObject);
         this.setFieldValByName("lastModifyUser", ""+user.getUserId(), metaObject);
     }
-
-
 }
