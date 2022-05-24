@@ -53,6 +53,10 @@
     <div class="el-login-footer">
       <span>Copyright © 2018-2021 zhaoxinms.com All Rights Reserved.</span>
     </div>
+    <div style="position:absolute;top:30px;right:30px;width:150px;height:200px;text-align:center;background-color:white;">
+        <img src="../assets/images/mini_program.jpg" width="150"/>
+        <div style="margin-top:10px;">体验业主小程序</div>
+    </div>
   </div>
 </template>
 
