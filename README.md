@@ -180,6 +180,13 @@ npm run dev
 
 文档地址：http://zhaoxinms.com:81/
 
+## 其他部署方案
+> OSRC（开源运行时社区osrc.com） 是基于云原生技术，让开源爱好者以运行时形态分享开源作品的社区服务。OSRC(开源运行时社区)致力于推动开源项目向更成熟方向发展，开源项目可以在OSRC社区中在线运行起来，运行起来的项目可以提供更鲜活的体验，从而为投身于开源的小伙伴提供助力。
+
+>  下面链接是本系统在osrc平台的部署过程说明 
+
+ https://osrc.com/user/articles/wiki_774272359688097792
+
 ## 技术交流qq：697878094
 
 <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=uouRkTO8anqhjMPgclF8oy2F5Q50jz_W&jump_from=webapi"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="肇新智慧物业技术交流" title="肇新智慧物业技术交流"></a>
