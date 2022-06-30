@@ -179,7 +179,7 @@ export default {
     }
 
     .houseDiv {
-        width: 220px;
+        width: 210px;
         min-height: 82px;
         font-size: 12px;
         border-radius: 4px;
