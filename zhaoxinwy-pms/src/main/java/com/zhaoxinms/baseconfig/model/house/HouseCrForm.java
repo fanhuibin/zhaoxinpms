@@ -13,11 +13,16 @@ import lombok.Data;
 public class HouseCrForm  {
     /** 商铺编号 */
     @JsonProperty("code")
-    @Excel(name = "商铺编号")
+    @Excel(name = "房间号")
     @Length(min = 0, max = 50)
     @NotBlank
     private String code;
 
+    /** 商业区 */
+    @JsonProperty("building")
+    @Excel(name = "楼栋编号")
+    private String building;
+    
     /** 商业区 */
     @JsonProperty("block")
     @Excel(name = "商业区编号")

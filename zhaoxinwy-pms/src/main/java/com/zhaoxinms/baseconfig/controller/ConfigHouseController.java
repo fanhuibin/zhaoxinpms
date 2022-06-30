@@ -11,9 +11,12 @@ package com.zhaoxinms.baseconfig.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -38,17 +41,24 @@ import com.zhaoxinms.base.util.RandomUtil;
 import com.zhaoxinms.base.util.UserProvider;
 import com.zhaoxinms.base.vo.PageListVO;
 import com.zhaoxinms.base.vo.PaginationVO;
+import com.zhaoxinms.baseconfig.entity.ConfigBuilding;
+import com.zhaoxinms.baseconfig.entity.ConfigHouseBlockEntity;
 import com.zhaoxinms.baseconfig.entity.ConfigHouseEntity;
+import com.zhaoxinms.baseconfig.model.confighouseblock.ConfigHouseBlockPagination;
 import com.zhaoxinms.baseconfig.model.house.HouseContractPagination;
 import com.zhaoxinms.baseconfig.model.house.HouseCrForm;
 import com.zhaoxinms.baseconfig.model.house.HouseInfoVO;
 import com.zhaoxinms.baseconfig.model.house.HouseListVO;
 import com.zhaoxinms.baseconfig.model.house.HousePagination;
+import com.zhaoxinms.baseconfig.model.house.HouseStateVO;
 import com.zhaoxinms.baseconfig.model.house.HouseUpForm;
+import com.zhaoxinms.baseconfig.service.ConfigHouseBlockService;
 import com.zhaoxinms.baseconfig.service.ConfigHouseService;
+import com.zhaoxinms.baseconfig.service.IConfigBuildingService;
 import com.zhaoxinms.common.annotation.Log;
 import com.zhaoxinms.common.core.domain.entity.SysUser;
 import com.zhaoxinms.common.enums.BusinessType;
+import com.zhaoxinms.payment.entity.PaymentContractEntity;
 import com.zhaoxinms.payment.entity.PaymentDepositEntity;
 import com.zhaoxinms.payment.entity.PaymentMethod;
 import com.zhaoxinms.payment.entity.pagination.PaymentMethodPagination;
@@ -70,6 +80,10 @@ public class ConfigHouseController {
     private UserProvider userProvider;
     @Autowired
     private ConfigHouseService configHouseService;
+    @Autowired
+    private IConfigBuildingService configBuildingService;
+    @Autowired
+    private ConfigHouseBlockService configHouseBlockService;
 
     /**
      * 列表
@@ -83,6 +97,17 @@ public class ConfigHouseController {
         List<ConfigHouseEntity> list = configHouseService.getList(housePagination);
 
         List<HouseListVO> listVO = JsonUtil.getJsonToList(list, HouseListVO.class);
+        
+        List<ConfigHouseBlockEntity> blockList= configHouseBlockService.getTypeList(new ConfigHouseBlockPagination(),"1");
+        List<ConfigBuilding> buildings = configBuildingService.list();
+        Map<String, ConfigHouseBlockEntity> blockMap = blockList.stream().collect(Collectors.toMap(ConfigHouseBlockEntity::getCode, ConfigHouseBlockEntity -> ConfigHouseBlockEntity));
+        Map<Long, ConfigBuilding> buildingsMap = buildings.stream().collect(Collectors.toMap(ConfigBuilding::getId, ConfigBuilding -> ConfigBuilding));
+        
+        for(HouseListVO vo:listVO) {
+            vo.setBlockName(blockMap.get(vo.getBlock()).getName());
+            vo.setBuildingName(buildingsMap.get(Long.valueOf(vo.getBuilding())).getName());
+        }
+        
         PageListVO vo = new PageListVO();
         vo.setList(listVO);
         PaginationVO page = JsonUtil.getJsonToBean(housePagination, PaginationVO.class);
@@ -215,5 +240,40 @@ public class ConfigHouseController {
             throw new DataException("商铺不存在，删除失败");
         }
         return ActionResult.success("删除成功");
+    }
+    
+    
+    /**
+     * 租控图
+     *
+     * @param id
+     * @return
+     * @throws DataException
+     */
+    @PreAuthorize("@ss.hasRole('manager')")
+    @GetMapping("/rentControl/{buildingId}")
+    @Transactional
+    public ActionResult rentControl(@PathVariable("buildingId") String buildingId) throws DataException {
+        HousePagination  page = new HousePagination();
+        page.setBuilding(buildingId);
+        List<ConfigHouseEntity> houses= configHouseService.getTypeList(page,"1");
+        List<HouseStateVO> stateEntitys = JsonUtil.getJsonToList(houses, HouseStateVO.class);
+        
+        //按照楼层封装数据
+        Map<String, List<HouseStateVO>> resultList = stateEntitys.stream().collect(Collectors.groupingBy(HouseStateVO::getFloor));
+        
+        //获取楼层list，并且按照大小排序
+        List<String> floorList = new ArrayList<String>(resultList.keySet());
+        Collections.sort(floorList, new Comparator<String>() {
+            public int compare(String arg0, String arg1) {
+                return Integer.valueOf(arg0)-Integer.valueOf(arg1);
+            }
+        });
+        
+        Map result = new HashMap();
+        result.put("key", floorList);
+        result.put("list", resultList);
+        
+        return ActionResult.success(result);
     }
 }

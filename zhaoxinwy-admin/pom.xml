@@ -5,7 +5,7 @@
     <parent>
         <artifactId>pms-parent</artifactId>
         <groupId>com.zhaoxinms</groupId>
-        <version>0.9.1</version>
+        <version>0.10.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
@@ -65,7 +65,8 @@
             <artifactId>zhaoxinwy-workflow</artifactId>
         </dependency>
         
-       <!-- 业主模块（未开源）--> <!--
+       <!-- 业主模块（未开源）--> 
+       <!--
         <dependency>
             <groupId>com.zhaoxinms</groupId>
             <artifactId>zhaoxinwy-owner</artifactId>
@@ -73,12 +74,18 @@
         <dependency> 
             <groupId>com.zhaoxinms</groupId>
             <artifactId>zhaoxinwy-pay</artifactId>
-            <version>0.9.1</version>
+            <version>${zhaoxinwy.version}</version>
         </dependency> 
                 
         <dependency>
 			<groupId>com.zhaoxinms</groupId>
 			<artifactId>zhaoxinwy-park</artifactId>
+			<version>${zhaoxinwy.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.zhaoxinms</groupId>
+			<artifactId>workflow-pro</artifactId>
 			<version>${zhaoxinwy.version}</version>
 		</dependency>
 

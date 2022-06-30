@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="绑定业主" :close-on-click-modal="false" :visible.sync="visible" class="Jdialog Jdialog_center" lock-scroll width="600px">
+    <el-dialog title="合同信息" :close-on-click-modal="false" :visible.sync="visible" class="Jdialog Jdialog_center" lock-scroll width="600px">
         <el-steps :active="stepActive" align-center>
             <el-step title="步骤 1" description="确认商铺信息"></el-step>
             <el-step title="步骤 2" description="选择业主"></el-step>
@@ -89,11 +89,11 @@
                 </template>
                 <template v-if="stepActive >= 1">
                     <el-col :span="24" style="height: 59px" v-show="stepActive == 1">
-                        <el-form-item label="客户姓名" prop="userName">
+                        <el-form-item label="客户公司" prop="company">
                             <el-row>
                                 <el-col :span="16">
                                     <el-input
-                                        v-model="dataForm.userName"
+                                        v-model="dataForm.company"
                                         placeholder="请输入"
                                         :maxlength="20"
                                         clearable
@@ -102,7 +102,23 @@
                                     ></el-input>
                                 </el-col>
                                 <el-col :span="8">
-                                    <el-button type="primary" @click="selectOwner">选择业主</el-button>
+                                    <el-button type="primary" @click="selectOwner">选择业主公司</el-button>
+                                </el-col>
+                            </el-row>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24" style="height: 59px" v-show="stepActive == 1">
+                        <el-form-item label="联系人姓名" prop="userName">
+                            <el-row>
+                                <el-col :span="24">
+                                    <el-input
+                                        v-model="dataForm.userName"
+                                        placeholder="请输入"
+                                        :maxlength="20"
+                                        clearable
+                                        :style="{ width: '100%' }"
+                                        :disabled="true"
+                                    ></el-input>
                                 </el-col>
                             </el-row>
                         </el-form-item>
@@ -373,6 +389,7 @@ export default {
             });
         },
         ownerSelected(data) {
+            this.dataForm.company = data.company;
             this.dataForm.userName = data.userName;
             this.dataForm.userPhone = data.phonenumber;
             this.dataForm.userIdcard = data.idcard;
@@ -436,7 +453,7 @@ export default {
                 }
             });
         },
-        init(resourceId, block, name, contractId, rentFee, state, isDetail) {
+        init(company, resourceId, block, name, contractId, rentFee, state, isDetail) {
             this.stepActive = 0;
             this.visible = true;
             this.isDetail = isDetail || false;
@@ -450,6 +467,7 @@ export default {
                 this.dataForm.rentFee = rentFee;
                 this.dataForm.contractFees = [];
                 this.dataForm.userTrade = '';
+                this.dataForm.company = '';
                 this.dataForm.userPhone = '';
                 this.dataForm.userGender = '';
                 this.dataForm.userName = '';
@@ -463,6 +481,7 @@ export default {
                         url: '/payment/PaymentContract/' + this.dataForm.contractId,
                         method: 'get',
                     }).then(res => {
+                        this.dataForm.company = res.data.company;
                         this.dataForm.userTrade = res.data.userTrade;
                         this.dataForm.userPhone = res.data.userPhone;
                         this.dataForm.userGender = res.data.userGender;

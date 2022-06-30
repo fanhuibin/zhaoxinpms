@@ -3,7 +3,7 @@
         popper-class="my-autocomplete"
         v-model="content"
         :fetch-suggestions="querySearch"
-        placeholder="商业区-商铺编号"
+        placeholder="商铺完整编号"
         :trigger-on-focus="false"
         @change="onEditorChange($event)"
         @select="handleSelect"
@@ -13,11 +13,13 @@
         <template slot-scope="{ item }">
             <div v-if="type === 'contract'">
                 <div class="name">编号：{{ item.resourceName }}</div>
-                <span class="addr">业主信息：{{ item.userName }} {{ item.userPhone }}</span>
+                <div class="addr">单位：山西肇新科技有限公司</div>
+                <div class="addr">联系人：{{ item.userName }} {{ item.userPhone }}</div>
             </div>
             <div v-if="type === 'house'">
-                <div class="name">编号：{{ item.block }}-{{ item.code }}</div>
-                <span class="addr">状态：{{ item.stateName }}</span>
+                <div class="name">编号：{{ item.name }}</div>
+                <div class="addr">状态：{{ item.stateName }}</div>
+                <div v-if="item.state != 'empty'" class="addr">单位：山西肇新科技有限公司</div>
             </div>
         </template>
     </el-autocomplete>
@@ -106,7 +108,7 @@ export default {
         },
         handleSelect(item) {
             if(this.type === 'house'){
-                this.content = item.block + '-' + item.code;
+                this.content = item.name;
             }
             if(this.type === 'contract'){
                 this.content = item.resourceName;

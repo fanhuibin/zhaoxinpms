@@ -3,6 +3,11 @@
         <el-row class="Jcommon-search-box" :gutter="16">
             <el-form @submit.native.prevent>
                 <el-col :span="8">
+                    <el-form-item label="公司名" prop="company">
+                        <el-input v-model="queryParams.company" placeholder="公司名" clearable size="small" @keyup.enter.native="handleQuery" />
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
                     <el-form-item label="业主名" prop="userName">
                         <el-input v-model="queryParams.userName" placeholder="请输入业主名" clearable size="small" @keyup.enter.native="handleQuery" />
                     </el-form-item>
@@ -26,6 +31,7 @@
             </div>
         </el-row>
         <el-table v-loading="listLoading" :data="ownerUserList" @selection-change="handleSelectionChange">
+            <el-table-column label="公司名" align="center" prop="company" />
             <el-table-column label="业主姓名" align="center" prop="userName" />
             <el-table-column label="身份证号" align="center" prop="idcard" width="150px" />
             <el-table-column label="手机号码" align="center" prop="phonenumber" />

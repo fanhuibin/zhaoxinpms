@@ -31,6 +31,10 @@ public class OwnerUser extends BaseEntity {
     private String unionId;
     private String openId;
     /**
+     * 单位名
+     */
+    private String company;
+    /**
      * 业主姓名
      */
     private String userName;

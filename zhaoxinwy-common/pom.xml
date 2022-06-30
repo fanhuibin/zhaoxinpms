@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>pms-parent</artifactId>
 		<groupId>com.zhaoxinms</groupId>
-		<version>0.9.1</version>
+		<version>0.10.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>zhaoxinwy-common</artifactId>
@@ -123,7 +123,7 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -132,7 +132,15 @@
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-boot-starter</artifactId>
-			<version>3.4.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
 		</dependency>
 	</dependencies>
 

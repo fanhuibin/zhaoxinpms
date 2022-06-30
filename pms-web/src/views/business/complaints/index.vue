@@ -113,7 +113,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="商户编号" prop="applyHouse" v-if="form.client != 'web_company'">
-                    <el-input v-model="form.applyHouse" placeholder="商业区-商铺编号" clearable :style="{ width: '70%' }"></el-input>
+                    <el-input v-model="form.applyHouse" placeholder="商铺编号" clearable :style="{ width: '70%' }"></el-input>
                     <el-button type="primary" @click="searchHouse()">搜索</el-button>
                 </el-form-item>
                 <el-form-item label="投诉人姓名" prop="applyName" :maxlength="20">

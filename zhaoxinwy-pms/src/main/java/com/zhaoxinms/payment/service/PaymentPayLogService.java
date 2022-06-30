@@ -7,6 +7,7 @@ import com.zhaoxinms.payment.entity.PaymentBillEntity;
 import com.zhaoxinms.payment.entity.PaymentContractEntity;
 import com.zhaoxinms.payment.entity.PaymentDepositEntity;
 import com.zhaoxinms.payment.entity.PaymentPayLogEntity;
+import com.zhaoxinms.payment.entity.PaymentPreEntity;
 import com.zhaoxinms.payment.entity.PaymentTempEntity;
 import com.zhaoxinms.payment.model.paymentbill.PaymentBillPayForm;
 import com.zhaoxinms.payment.model.paymentpaylog.PaymentPayLogPagination;
@@ -22,6 +23,8 @@ public interface PaymentPayLogService extends IService<PaymentPayLogEntity> {
     List<PaymentPayLogEntity> getTypeList(PaymentPayLogPagination paymentPayLogPagination, String dataType);
 
     PaymentPayLogEntity getInfo(String id);
+    
+    PaymentPayLogEntity getByPayNo(String payNo);
 
     // 创建押金的支付记录
     PaymentPayLogEntity createDepositPayLog(PaymentDepositEntity deposit, String method);

@@ -20,7 +20,7 @@
             >
                 <el-col :span="24">
                     <el-form-item label="商铺编号" prop="resourceName">
-                        <el-input v-model="dataForm.resourceName" placeholder="商业区-商铺编号" clearable :style="{ width: '70%' }" disabled="true"></el-input>
+                        <el-input v-model="dataForm.resourceName" placeholder="商铺编号" clearable :style="{ width: '70%' }" disabled="true"></el-input>
                     </el-form-item>
                 </el-col>
 

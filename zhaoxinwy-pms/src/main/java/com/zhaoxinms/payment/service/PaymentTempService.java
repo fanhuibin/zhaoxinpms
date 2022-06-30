@@ -12,6 +12,7 @@ package com.zhaoxinms.payment.service;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zhaoxinms.payment.entity.PaymentBillEntity;
 import com.zhaoxinms.payment.entity.PaymentTempEntity;
 import com.zhaoxinms.payment.model.paymenttemp.PaymentTempPagination;
 import com.zhaoxinms.payment.model.paymenttemp.PaymentTempRefundForm;
@@ -29,4 +30,7 @@ public interface PaymentTempService extends IService<PaymentTempEntity> {
     void create(PaymentTempEntity entity);
 
     boolean refund(String id, PaymentTempRefundForm form);
+    
+    //通过payNo查询付款记录
+    PaymentTempEntity getByPayNo(String payNo);
 }

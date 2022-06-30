@@ -33,4 +33,6 @@ public interface PaymentPreService extends IService<PaymentPreEntity> {
     void refund(PaymentPreRefundForm paymentPreRefundForm);
 
     void minus(PaymentPreEntity entity, String type);
+
+    PaymentPreEntity getByPayNo(String payNo);
 }

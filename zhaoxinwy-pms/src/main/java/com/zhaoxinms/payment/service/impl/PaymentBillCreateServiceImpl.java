@@ -232,7 +232,7 @@ public class PaymentBillCreateServiceImpl extends ServiceImpl<PaymentBillMapper,
             bill.setPrice(price);
             bill.setBeginDate(contractFee.getNextBillDate());
             String billEndDate = DateUtils.getStepEndDate(bill.getBeginDate(), Integer.valueOf(fee.getPeriod()));
-            String newNextBillDate = DateUtils.getStepMonth(beginDate, Integer.valueOf(fee.getPeriod()));
+            String newNextBillDate = DateUtils.getStepMonth(bill.getBeginDate(), Integer.valueOf(fee.getPeriod()));
             bill.setEndDate(DateUtils.parseDate(billEndDate, "yyyy-MM-dd"));
             contractFee.setNextBillDate(DateUtils.parseDate(newNextBillDate, "yyyy-MM-dd"));
             bill.setDeadline(new Date(paymentBillGenerateForm.getDeadline()));
@@ -308,9 +308,7 @@ public class PaymentBillCreateServiceImpl extends ServiceImpl<PaymentBillMapper,
                     bill.setPrice(fee.getPrice());
                     bill.setBeginDate(contractFee.getNextBillDate());
                     String billEndDate = DateUtils.getStepEndDate(bill.getBeginDate(), Integer.valueOf(fee.getPeriod()));
-                    String newNextBillDate = DateUtils.getStepMonth(bill.getBeginDate(), Integer.valueOf(fee.getPeriod()));
                     bill.setEndDate(DateUtils.parseDate(billEndDate, "yyyy-MM-dd"));
-                    contractFee.setNextBillDate(DateUtils.parseDate(newNextBillDate, "yyyy-MM-dd"));
                     bill.setDeadline(new Date(paymentBillGenerateForm.getDeadline()));
                     bill.setLastIndex(meter.getLastIndex());
                     bill.setCurrentIndex(meter.getCurrentIndex());
@@ -334,10 +332,13 @@ public class PaymentBillCreateServiceImpl extends ServiceImpl<PaymentBillMapper,
                 paymentMeterService.updateIndex(meter);
             }
             for (PaymentContractFeeListVO contractFee : usedFee) {
+                int times = contractFee.getTimes() + 1;
+                String newNextBillDate = DateUtils.getStepMonth(contractFee.getBeginDate(), times*Integer.valueOf(fee.getPeriod()));
                 LambdaUpdateWrapper<PaymentContractFeeEntity> update =
                     new LambdaUpdateWrapper<PaymentContractFeeEntity>();
                 update.eq(PaymentContractFeeEntity::getId, contractFee.getId())
-                    .set(PaymentContractFeeEntity::getNextBillDate, contractFee.getNextBillDate());
+                    .set(PaymentContractFeeEntity::getNextBillDate, newNextBillDate)
+                    .set(PaymentContractFeeEntity::getTimes, times);
                 Integer rows = paymentContractFeeService.getBaseMapper().update(null, update);
                 if (rows != 1) {
                     throw new DataException("更新数据出错");

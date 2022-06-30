@@ -39,6 +39,7 @@
                 </div>
 
                 <JTable v-loading="loading" :data="ownerUserList" @selection-change="handleSelectionChange">
+                    <el-table-column label="公司名" align="center" prop="company" />
                     <el-table-column label="业主姓名" align="center" prop="userName" />
                     <el-table-column label="身份证号" align="center" prop="idcard" width="150px" />
                     <el-table-column label="手机号码" align="center" prop="phonenumber" />
@@ -70,6 +71,9 @@
         <!-- 添加或修改业主信息对话框 -->
         <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body class="Jdialog Jdialog_center">
             <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+                <el-form-item label="公司名" prop="company">
+                    <el-input v-model="form.company" placeholder="请输入公司名" :maxlength="50" show-word-limit />
+                </el-form-item>
                 <el-form-item label="业主姓名" prop="userName">
                     <el-input v-model="form.userName" placeholder="请输入业主姓名" :maxlength="30" show-word-limit />
                 </el-form-item>
@@ -145,6 +149,13 @@ export default {
             form: {},
             // 表单校验
             rules: {
+                company: [
+                    {
+                        required: true,
+                        message: '请输入公司名',
+                        trigger: 'blur',
+                    },
+                ],
                 userName: [
                     {
                         required: true,

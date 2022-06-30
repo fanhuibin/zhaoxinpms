@@ -20,6 +20,7 @@ import com.zhaoxinms.payment.entity.PaymentBillEntity;
 import com.zhaoxinms.payment.entity.PaymentContractEntity;
 import com.zhaoxinms.payment.entity.PaymentDepositEntity;
 import com.zhaoxinms.payment.entity.PaymentPayLogEntity;
+import com.zhaoxinms.payment.entity.PaymentPreEntity;
 import com.zhaoxinms.payment.entity.PaymentTempEntity;
 import com.zhaoxinms.payment.mapper.PaymentPayLogMapper;
 import com.zhaoxinms.payment.model.paymentbill.PaymentBillListVO;
@@ -387,5 +388,12 @@ public class PaymentPayLogServiceImpl extends ServiceImpl<PaymentPayLogMapper, P
         }
         this.save(log);
         return log;
+    }
+
+    @Override
+    public PaymentPayLogEntity getByPayNo(String payNo) {
+        QueryWrapper<PaymentPayLogEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(PaymentPayLogEntity::getPayNo, payNo);
+        return this.getOne(queryWrapper);
     }
 }

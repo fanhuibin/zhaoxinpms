@@ -23,6 +23,10 @@ import com.zhaoxinms.common.core.domain.BaseEntity;
 @EqualsAndHashCode(callSuper = true)
 @ApiModel("业主信息业务对象")
 public class OwnerUserPagination extends Pagination {
+    
+    @ApiModelProperty(value = "公司名", required = true)
+    @NotBlank(message = "公司名不能为空", groups = { AddGroup.class })
+    private String company;
 
     @ApiModelProperty(value = "业主姓名", required = true)
     @NotBlank(message = "业主姓名不能为空", groups = { AddGroup.class })

@@ -27,6 +27,7 @@ import com.zhaoxinms.baseconfig.entity.ConfigFeeItemEntity;
 import com.zhaoxinms.baseconfig.service.ConfigFeeItemService;
 import com.zhaoxinms.payment.entity.PaymentDepositEntity;
 import com.zhaoxinms.payment.entity.PaymentPayLogEntity;
+import com.zhaoxinms.payment.entity.PaymentTempEntity;
 import com.zhaoxinms.payment.mapper.PaymentDepositMapper;
 import com.zhaoxinms.payment.model.paymentdeposit.PaymentDepositPagination;
 import com.zhaoxinms.payment.model.paymentdeposit.PaymentDepositRefundForm;
@@ -215,5 +216,19 @@ public class PaymentDepositServiceImpl extends ServiceImpl<PaymentDepositMapper,
         if (entity != null) {
             this.removeById(entity.getId());
         }
+    }
+
+    @Override
+    public PaymentDepositEntity getByPayNo(String payNo) {
+        QueryWrapper<PaymentDepositEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().and(t -> t.eq(PaymentDepositEntity::getPayNo, payNo));
+        return this.getOne(queryWrapper);
+    }
+    
+    @Override
+    public PaymentDepositEntity getByRefundNo(String refundNo) {
+        QueryWrapper<PaymentDepositEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().and(t -> t.eq(PaymentDepositEntity::getRefundNo, refundNo));
+        return this.getOne(queryWrapper);
     }
 }

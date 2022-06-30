@@ -29,6 +29,13 @@ public class OwnerUserBo extends BaseEntity {
      */
     @ApiModelProperty(value = "用户ID")
     private Long id;
+    
+    /**
+     * 业主姓名
+     */
+    @ApiModelProperty(value = "公司名", required = true)
+    @NotBlank(message = "公司名不能为空", groups = { AddGroup.class, EditGroup.class })
+    private String company;
 
     /**
      * 业主姓名

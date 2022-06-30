@@ -17,5 +17,6 @@ public class HousePagination extends Pagination {
     
     /** 商业区编号-商铺编号 */
     private String name;
-
+    
+    private String building;
 }

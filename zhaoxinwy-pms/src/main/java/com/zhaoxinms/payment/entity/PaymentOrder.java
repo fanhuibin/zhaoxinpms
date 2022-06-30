@@ -38,6 +38,14 @@ public class PaymentOrder extends BaseEntity {
     public static final String ERROR_CODE_OK = "ok"; //正常
     
     public static final String WAY_CODE_WX = "miniapp_weixin"; //微信支付,与数据库的要对应
+    
+    public static final int REFUND_STATE_NONE = 0;//未发生实际退款
+    public static final int REFUND_STATE_PART = 1;//部分退款
+    public static final int REFUND_STATE_ALL = 2;//全额退款
+    
+    //订单类型，bill类型，parking类型，其他类型。
+    public static final String TYPE_BILL = "bill";
+    public static final String TYPE_PARK = "park";
 
     /**
      * 支付订单号
@@ -48,6 +56,10 @@ public class PaymentOrder extends BaseEntity {
      * 应用ID
      */
     private String appId;
+    /**
+     * 类型
+     */
+    private String type;
     /**
      * 支付方式代码
      */
@@ -68,6 +80,10 @@ public class PaymentOrder extends BaseEntity {
      * 商品描述信息
      */
     private String body;
+    /**
+     * 订单参数
+     */
+    private String param;
     /**
      * 渠道用户标识,如微信openId,支付宝账号
      */

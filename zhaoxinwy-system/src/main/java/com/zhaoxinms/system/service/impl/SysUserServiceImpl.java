@@ -67,6 +67,13 @@ public class SysUserServiceImpl implements ISysUserService
     {
         return userMapper.selectUserList(user);
     }
+    
+    @Override
+    public List<SysUser> selectAllUserList()
+    {
+        SysUser user = new SysUser();
+        return userMapper.selectUserList(user);
+    }
 
     /**
      * 根据条件分页查询已分配用户角色列表

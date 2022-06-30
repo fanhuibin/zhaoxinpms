@@ -23,6 +23,9 @@ public class PaymentContractFeeListVO {
     /** 资源名 */
     @JsonProperty("resourceName")
     private String resourceName;
+    
+    @JsonProperty("times")
+    private int times;
 
     @JsonProperty("feeItemId")
     private String feeItemId;

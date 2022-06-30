@@ -113,6 +113,7 @@ public class OwnerUserServiceImpl extends ServiceImpl<OwnerUserMapper, OwnerUser
 
     private LambdaQueryWrapper<OwnerUser> buildQueryWrapper(OwnerUserPagination pagination) {
         LambdaQueryWrapper<OwnerUser> lqw = Wrappers.lambdaQuery();
+        lqw.eq(StringUtils.isNotBlank(pagination.getCompany()), OwnerUser::getCompany, pagination.getCompany());
         lqw.eq(StringUtils.isNotBlank(pagination.getUserName()), OwnerUser::getUserName, pagination.getUserName());
         lqw.eq(StringUtils.isNotBlank(pagination.getIdcard()), OwnerUser::getIdcard, pagination.getIdcard());
         lqw.eq(StringUtils.isNotBlank(pagination.getPhonenumber()), OwnerUser::getPhonenumber, pagination.getPhonenumber());

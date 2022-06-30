@@ -51,6 +51,16 @@ public interface ISysDeptService
      * @return 部门信息
      */
     public SysDept selectDeptById(Long deptId);
+    
+    /**
+     * 根据企业微信id查询数据
+     */
+    public SysDept selectDeptByWxId(String wxId);
+    
+    /**
+     * 更新企业微信id
+     */
+    public SysDept updateWxId(SysDept dept);
 
     /**
      * 根据ID查询所有子部门（正常状态）
@@ -114,4 +124,12 @@ public interface ISysDeptService
      * @return 结果
      */
     public int deleteDeptById(Long deptId);
+
+    /**
+     * 查询部门管理数据
+     * 
+     * @param dept 部门信息
+     * @return 部门信息集合
+     */
+    List<SysDept> selectAllDeptList(SysDept dept);
 }

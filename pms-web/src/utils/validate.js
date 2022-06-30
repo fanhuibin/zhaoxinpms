@@ -81,3 +81,16 @@ export function isArray(arg) {
   }
   return Array.isArray(arg)
 }
+
+
+export function isVehicleNumber(vehicleNumber) {
+    var xxreg=/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}(([0-9]{5}[DABCEFGHJK]$)|([DABCEFGHJK][A-HJ-NP-Z0-9][0-9]{4}$))/;  // 2021年新能源车牌不止有DF
+    var creg=/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]{1}$/;
+    if(vehicleNumber.length == 7){
+      return creg.test(vehicleNumber);
+    } else if(vehicleNumber.length == 8){
+      return xxreg.test(vehicleNumber);
+    } else{
+      return false;
+    }
+}

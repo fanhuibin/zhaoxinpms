@@ -24,7 +24,7 @@ public interface PaymentContractService extends IService<PaymentContractEntity> 
     List<PaymentContractEntity> getTypeList(PaymentContractPagination paymentContractPagination, String dataType);
 
     List<PaymentContractEntity> getListByResourceIds(List<String> ids);
-
+    
     PaymentContractEntity getInfo(String id);
 
     /**

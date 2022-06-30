@@ -106,7 +106,8 @@
         </div>
         <EditForm v-if="formVisible" ref="EditForm" @refresh="refresh" />
         <WithdrawForm v-if="withdrawFormVisible" ref="WithdrawForm" @refresh="refresh" />
-        <Print v-if="printVisible" ref="Print" @refresh="refresh" />
+        <PrePrint ref="Print" />
+        <PreRefundPrint ref="RefundPrint" />
     </div>
 </template>
 
@@ -115,12 +116,13 @@ import request from '@/utils/request';
 import { listPaymentMethod } from '@/api/payment/paymentMethod';
 import EditForm from './Form';
 import WithdrawForm from './WithdrawForm';
-import Print from '../print';
 import { getUsername } from '@/utils/auth';
 import HouseInput from '@/components/HouseInput';
+import PrePrint from '@/components/printTemplate/prePrint';
+import PreRefundPrint from '@/components/printTemplate/preRefundPrint';
 
 export default {
-    components: { EditForm, Print, WithdrawForm,HouseInput },
+    components: { EditForm, WithdrawForm, HouseInput,  PreRefundPrint, PrePrint },
     data() {
         return {
             showAll: false,
@@ -147,7 +149,6 @@ export default {
             },
             formVisible: false,
             withdrawFormVisible: false,
-            printVisible: false,
             columnList: [
                 { prop: 'block', label: '商业区' },
                 { prop: 'resourceName', label: '编号' },
@@ -229,17 +230,13 @@ export default {
             });
         },
         handlePrint(payNo) {
-            this.printVisible = true;
-            var url = `${this.define.REPORTURL}/view/609560442559717376?payNo=${payNo}&opUser=${getUsername()}`;
             this.$nextTick(() => {
-                this.$refs.Print.init(url);
+                this.$refs.Print.print(payNo);
             });
         },
         handleRefundPrint(payNo) {
-            this.printVisible = true;
-            var url = `${this.define.REPORTURL}/view/609633772184723456?payNo=${payNo}&opUser=${getUsername()}`;
             this.$nextTick(() => {
-                this.$refs.Print.init(url);
+                this.$refs.RefundPrint.print(payNo);
             });
         },
         search() {

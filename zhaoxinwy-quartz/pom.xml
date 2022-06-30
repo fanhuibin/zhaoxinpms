@@ -5,7 +5,7 @@
     <parent>
         <artifactId>pms-parent</artifactId>
         <groupId>com.zhaoxinms</groupId>
-        <version>0.9.1</version>
+        <version>0.10.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>zhaoxinwy-quartz</artifactId>

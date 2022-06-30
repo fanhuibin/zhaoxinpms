@@ -12,8 +12,8 @@
                 v-loading="loading"
             >
                 <el-col :span="24">
-                    <el-form-item label="编号" prop="resourceName">
-                        <el-input v-model="dataForm.resourceName" placeholder="商业区-商铺编号" clearable :style="{ width: '100%' }" :disabled="true"></el-input>
+                    <el-form-item label="商铺编号" prop="resourceName">
+                        <el-input v-model="dataForm.resourceName" placeholder="商铺编号" clearable :style="{ width: '100%' }" :disabled="true"></el-input>
                     </el-form-item>
                 </el-col>
 
@@ -79,7 +79,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="24">
-                    <el-form-item label="退还时间" prop="refundTime">
+                    <el-form-item label="退款时间" prop="refundTime">
                         <el-date-picker
                             v-model="dataForm.refundTime"
                             placeholder="请选择"
@@ -97,7 +97,7 @@
                             <el-option
                                 v-for="(item, index) in payTypeOptions"
                                 :key="index"
-                                :label="item.fullName"
+                                :label="item.name"
                                 :value="item.id"
                                 :disabled="item.disabled"
                             ></el-option>

@@ -48,6 +48,18 @@ public class SysDeptServiceImpl implements ISysDeptService
     {
         return deptMapper.selectDeptList(dept);
     }
+    
+    /**
+     * 查询部门管理数据
+     * 
+     * @param dept 部门信息
+     * @return 部门信息集合
+     */
+    @Override
+    public List<SysDept> selectAllDeptList(SysDept dept)
+    {
+        return deptMapper.selectDeptList(dept);
+    }
 
     /**
      * 构建前端所需要树结构
@@ -327,5 +339,15 @@ public class SysDeptServiceImpl implements ISysDeptService
     private boolean hasChild(List<SysDept> list, SysDept t)
     {
         return getChildList(list, t).size() > 0;
+    }
+
+    @Override
+    public SysDept selectDeptByWxId(String wxId) {
+        return deptMapper.selectDeptByWxId(wxId);
+    }
+
+    @Override
+    public SysDept updateWxId(SysDept dept) {
+        return deptMapper.updateWxId(dept);
     }
 }

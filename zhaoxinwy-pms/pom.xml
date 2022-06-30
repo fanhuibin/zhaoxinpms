@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.zhaoxinms</groupId>
 		<artifactId>pms-parent</artifactId>
-		<version>0.9.1</version>
+		<version>0.10.1</version>
 	</parent>
 	<artifactId>zhaoxinwy-pms</artifactId>
 	<name>zhaoxinwy-pms</name>

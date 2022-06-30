@@ -55,7 +55,7 @@
                                     <el-tabs v-model="activeTab">
                                         <el-tab-pane label="商铺信息" name="houseInfo">
                                             <el-table v-loading="loading" :data="currentContracts">
-                                                <el-table-column prop="block" label="商业区-商铺编号" align="left">
+                                                <el-table-column prop="block" label="商铺编号" align="left">
                                                     <template slot-scope="scope">{{ scope.row.resourceName }}</template>
                                                 </el-table-column>
                                                 <el-table-column label="类型" prop="state" algin="left">
@@ -78,7 +78,7 @@
                                         </el-tab-pane>
                                         <el-tab-pane label="历史商铺信息" name="houseHistory">
                                             <el-table v-loading="loading" :data="historyContracts">
-                                                <el-table-column prop="block" label="商业区-商铺编号" align="left">
+                                                <el-table-column prop="block" label="商铺编号" align="left">
                                                     <template slot-scope="scope">{{ scope.row.resourceName }}</template>
                                                 </el-table-column>
                                                 <el-table-column label="类型" prop="state" algin="left">

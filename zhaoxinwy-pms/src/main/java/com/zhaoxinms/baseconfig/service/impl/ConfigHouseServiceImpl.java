@@ -23,6 +23,7 @@ import com.zhaoxinms.base.exception.DataException;
 import com.zhaoxinms.base.util.DynDicUtil;
 import com.zhaoxinms.base.util.JsonUtil;
 import com.zhaoxinms.base.util.UserProvider;
+import com.zhaoxinms.baseconfig.entity.ConfigBuilding;
 import com.zhaoxinms.baseconfig.entity.ConfigHouseBlockEntity;
 import com.zhaoxinms.baseconfig.entity.ConfigHouseEntity;
 import com.zhaoxinms.baseconfig.mapper.ConfigHouseMapper;
@@ -33,6 +34,7 @@ import com.zhaoxinms.baseconfig.model.house.HouseCrForm;
 import com.zhaoxinms.baseconfig.model.house.HousePagination;
 import com.zhaoxinms.baseconfig.service.ConfigHouseBlockService;
 import com.zhaoxinms.baseconfig.service.ConfigHouseService;
+import com.zhaoxinms.baseconfig.service.IConfigBuildingService;
 import com.zhaoxinms.event.BlockEvent;
 import com.zhaoxinms.payment.entity.PaymentContractEntity;
 import com.zhaoxinms.util.ConstantsUtil;
@@ -54,6 +56,8 @@ public class ConfigHouseServiceImpl extends ServiceImpl<ConfigHouseMapper, Confi
     private DynDicUtil dynDicUtil;
     @Autowired
     private ConfigHouseBlockService configHouseBlockService;
+    @Autowired
+    private IConfigBuildingService configBuildingService;
 
     @Override
     public List<ConfigHouseEntity> getList(HousePagination housePagination) {
@@ -73,9 +77,11 @@ public class ConfigHouseServiceImpl extends ServiceImpl<ConfigHouseMapper, Confi
         if (InputCheckUtil.isNotEmpty(housePagination.getName())) {
             queryWrapper.lambda().and(t -> t.eq(ConfigHouseEntity::getName, housePagination.getName()));
         }
+        if (InputCheckUtil.isNotEmpty(housePagination.getBuilding())) {
+            queryWrapper.lambda().and(t -> t.eq(ConfigHouseEntity::getBuilding, housePagination.getBuilding()));
+        }
         queryWrapper.lambda().and(t -> t.eq(ConfigHouseEntity::getEnabledMark, 1));
-        queryWrapper.lambda().orderByDesc(ConfigHouseEntity::getCreatorTime);
-        queryWrapper.lambda().orderByDesc(ConfigHouseEntity::getId);
+        queryWrapper.lambda().orderByAsc(ConfigHouseEntity::getId);
         Page<ConfigHouseEntity> page = new Page<>(housePagination.getCurrentPage(), housePagination.getPageSize());
         IPage<ConfigHouseEntity> userIPage = this.page(page, queryWrapper);
         return housePagination.setData(userIPage.getRecords(), userIPage.getTotal());
@@ -98,13 +104,19 @@ public class ConfigHouseServiceImpl extends ServiceImpl<ConfigHouseMapper, Confi
         if (InputCheckUtil.isNotEmpty(housePagination.getName())) {
             queryWrapper.lambda().and(t -> t.eq(ConfigHouseEntity::getName, housePagination.getName()));
         }
+        if (InputCheckUtil.isNotEmpty(housePagination.getBuilding())) {
+            queryWrapper.lambda().and(t -> t.eq(ConfigHouseEntity::getBuilding, housePagination.getBuilding()));
+        }
+        
         queryWrapper.lambda().and(t -> t.eq(ConfigHouseEntity::getEnabledMark, 1));
-        queryWrapper.lambda().orderByDesc(ConfigHouseEntity::getCreatorTime);
+        
         if ("0".equals(dataType)) {
+            queryWrapper.lambda().orderByAsc(ConfigHouseEntity::getId);
             Page<ConfigHouseEntity> page = new Page<>(housePagination.getCurrentPage(), housePagination.getPageSize());
             IPage<ConfigHouseEntity> userIPage = this.page(page, queryWrapper);
             return housePagination.setData(userIPage.getRecords(), userIPage.getTotal());
         } else {
+            queryWrapper.lambda().orderByAsc(ConfigHouseEntity::getId);
             return this.list(queryWrapper);
         }
     }
@@ -143,8 +155,12 @@ public class ConfigHouseServiceImpl extends ServiceImpl<ConfigHouseMapper, Confi
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void create(ConfigHouseEntity entity) throws DataException {
-        if (StringUtils.isEmpty(entity.getBlock()) || StringUtils.isEmpty(entity.getCode())) {
+        if (StringUtils.isEmpty(entity.getBlock()) || StringUtils.isEmpty(entity.getCode()) || StringUtils.isEmpty(entity.getBuilding())) {
             throw new DataException("请求的数据不完整");
+        }
+        
+        if (!ValidateUtil.Z_index(entity.getFloor())) {
+            throw new DataException("楼层格式不正确");
         }
 
         if (!ValidateUtil.PositiveFloatOrNum(entity.getBuildingSquare())) {
@@ -155,19 +171,21 @@ public class ConfigHouseServiceImpl extends ServiceImpl<ConfigHouseMapper, Confi
             throw new DataException("使用面积的格式不正确");
         }
 
-        // 同一个商业区下的商铺不能重复。
+        // 同一个栋楼同一层的房间号不能重复
         QueryWrapper<ConfigHouseEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(ConfigHouseEntity::getBlock, entity.getBlock());
+        queryWrapper.lambda().eq(ConfigHouseEntity::getBuilding, entity.getBuilding());
         queryWrapper.lambda().eq(ConfigHouseEntity::getCode, entity.getCode());
+        queryWrapper.lambda().eq(ConfigHouseEntity::getFloor, entity.getFloor());
         ConfigHouseEntity result = this.getOne(queryWrapper);
         if (result != null && StringUtils.isNotEmpty(result.getCode())) {
-            throw new DataException("该商业区已经存在编号是" + entity.getCode() + "的商铺，创建失败");
+            throw new DataException("已经存在房号是" + entity.getCode() + "的商铺，创建失败");
         }
 
         String userId = "" + userProvider.get().getUserId();
         entity.setCreatorTime(new Date());
         entity.setCreatorUserId(userId);
-        entity.setName(entity.getBlock() + "-" + entity.getCode());
+        ConfigBuilding building = configBuildingService.getById(entity.getBuilding());
+        entity.setName(this.getName(entity.getBlock(), building.getNumber(), entity.getFloor(), entity.getCode()));
         this.save(entity);
     }
 
@@ -176,6 +194,10 @@ public class ConfigHouseServiceImpl extends ServiceImpl<ConfigHouseMapper, Confi
         // 非空置的商铺不能修改
         if (!entity.getState().equals(ConstantsUtil.HOUSE_STATE_EMPTY)) {
             throw new DataException("非空置中的商铺不允许修改");
+        }
+        
+        if (!ValidateUtil.Z_index(entity.getFloor())) {
+            throw new DataException("楼层格式不正确");
         }
 
         if (!ValidateUtil.Posttive_float(entity.getBuildingSquare())) {
@@ -191,27 +213,45 @@ public class ConfigHouseServiceImpl extends ServiceImpl<ConfigHouseMapper, Confi
         if (!oldEntity.getBlock().equals(entity.getBlock())) {
             throw new DataException("商铺的小区不允许修改");
         }
+        
+        // 商铺的楼栋不允许修改
+        if (!oldEntity.getBuilding().equals(entity.getBuilding())) {
+            throw new DataException("商铺的楼栋信息不允许修改");
+        }
 
-        // 商铺的显示名=商业区+编号
-        if (StringUtils.isEmpty(entity.getBlock()) || StringUtils.isEmpty(entity.getCode())) {
+        if (StringUtils.isEmpty(entity.getBlock()) || StringUtils.isEmpty(entity.getCode()) || StringUtils.isEmpty(entity.getBuilding())) {
             throw new DataException("请求的数据不完整");
         }
 
-        // 同一个商业区下的商铺不能重复。
+        // 同一个楼，同一层的商铺号不能重复
         QueryWrapper<ConfigHouseEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(ConfigHouseEntity::getBlock, entity.getBlock());
+        queryWrapper.lambda().eq(ConfigHouseEntity::getBuilding, entity.getBuilding());
         queryWrapper.lambda().eq(ConfigHouseEntity::getCode, entity.getCode());
+        queryWrapper.lambda().eq(ConfigHouseEntity::getFloor, entity.getFloor());
         ConfigHouseEntity result = this.getOne(queryWrapper);
         if (result != null && !result.getId().equals(entity.getId())) {
-            throw new DataException("该商业区已经存在编号是" + entity.getCode() + "的商铺，修改失败");
+            throw new DataException("已经存在房号是" + entity.getCode() + "的商铺，修改失败");
         }
 
         String userId = "" + userProvider.get().getUserId();
         entity.setLastModifyTime(new Date());
         entity.setLastModifyUserId(userId);
         entity.setId(id);
-        entity.setName(entity.getBlock() + "-" + entity.getCode());
+        ConfigBuilding building = configBuildingService.getById(entity.getBuilding());
+        entity.setName(this.getName(entity.getBlock(), building.getNumber(), entity.getFloor(), entity.getCode()));
         return this.updateById(entity);
+    }
+    
+    /**
+     * 生成编码
+     * @param blockCode
+     * @param buildingCode
+     * @param floor
+     * @param houseCode
+     * @return
+     */
+    private String getName(String blockCode, String buildingCode, String floor, String houseCode) {
+        return blockCode+"-"+buildingCode+"-"+floor+"-"+houseCode;
     }
 
     @Override
@@ -235,6 +275,7 @@ public class ConfigHouseServiceImpl extends ServiceImpl<ConfigHouseMapper, Confi
         String userId = "" + userProvider.get().getUserId();
         // 查询所有的商业区信息
         List<ConfigHouseBlockEntity> list = configHouseBlockService.getTypeList(new ConfigHouseBlockPagination(), "1");
+        List<ConfigBuilding> buildings = configBuildingService.list();
         List<ConfigHouseEntity> houseList = this.getTypeList(new HousePagination(), "1");
 
         List<ConfigHouseEntity> importList = new ArrayList<ConfigHouseEntity>();
@@ -242,7 +283,9 @@ public class ConfigHouseServiceImpl extends ServiceImpl<ConfigHouseMapper, Confi
         for (int i = 0; i < importHouseList.size(); i++) {
             ConfigHouseEntity entity = JsonUtil.getJsonToBean(importHouseList.get(i), ConfigHouseEntity.class);
             boolean blockSucc = false;
+            boolean buildingSucc = false;
             boolean houseSucc = true;
+            String buildingCode = "";
 
             // 如果所有的项目都是空，则忽略当前行
             if (StringUtils.isEmpty(entity.getBlock()) && StringUtils.isEmpty(entity.getCode()) && StringUtils.isEmpty(entity.getFloor())
@@ -256,7 +299,7 @@ public class ConfigHouseServiceImpl extends ServiceImpl<ConfigHouseMapper, Confi
             }
             
             if (StringUtils.isEmpty(entity.getBlock()) || StringUtils.isEmpty(entity.getCode()) || StringUtils.isEmpty(entity.getFloor())
-                || StringUtils.isEmpty(entity.getBuildingSquare()) || StringUtils.isEmpty(entity.getUseSquare())) {
+                || StringUtils.isEmpty(entity.getBuildingSquare()) || StringUtils.isEmpty(entity.getUseSquare()) || StringUtils.isEmpty(entity.getBuilding())) {
                 throw new DataException("导入数据失败：第" + (i + 1) + "条数据不完整.");
             }
 
@@ -271,6 +314,31 @@ public class ConfigHouseServiceImpl extends ServiceImpl<ConfigHouseMapper, Confi
             if (!blockSucc) {
                 throw new DataException("导入数据失败：第" + (i + 1) + "条数据商业区编号不存在.");
             }
+            
+            /**
+             * 验证楼栋编号是否正确 
+             */
+            for (ConfigBuilding building : buildings) {
+                if (building.getNumber().equals(entity.getBuilding()) && building.getBlock().equals(entity.getBlock())) {
+                    buildingSucc = true;
+                    buildingCode = entity.getBuilding();
+                    entity.setBuilding(""+building.getId()); //楼栋存储的是id，楼栋编号会有重复的情况
+                    break;
+                }
+            }
+            if (!buildingSucc) {
+                throw new DataException("导入数据失败：第" + (i + 1) + "条数据楼栋编号不存在.");
+            }
+            
+            /**
+             * 验证楼层
+             */
+            if (!ValidateUtil.Z_index(entity.getFloor())) {
+                throw new DataException("导入数据失败：第" + (i + 1) + "条数据楼层格式不正确.");
+            }
+            
+            String name = getName(entity.getBlock(), buildingCode, entity.getFloor(), entity.getCode());
+            entity.setName(name);
 
             /**
              * 验证商铺的编号是否已经存在
@@ -282,10 +350,6 @@ public class ConfigHouseServiceImpl extends ServiceImpl<ConfigHouseMapper, Confi
             }
             if (!houseSucc) {
                 throw new DataException("导入数据失败：第" + (i + 1) + "条数据商铺编号已经存在.");
-            }
-
-            if (!ValidateUtil.Z_index(entity.getFloor())) {
-                throw new DataException("导入数据失败：第" + (i + 1) + "条数据楼层格式不正确.");
             }
 
             if (!ValidateUtil.PositiveFloatOrNum(entity.getBuildingSquare())) {
@@ -303,7 +367,6 @@ public class ConfigHouseServiceImpl extends ServiceImpl<ConfigHouseMapper, Confi
             }
 
             entity.setState(ConstantsUtil.HOUSE_STATE_EMPTY);
-            entity.setName(entity.getBlock() + "-" + entity.getCode());
             entity.setCreatorTime(new Date());
             entity.setCreatorUserId(userId);
             importList.add(entity);

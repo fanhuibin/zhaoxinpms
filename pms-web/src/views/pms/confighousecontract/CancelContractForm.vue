@@ -1,6 +1,6 @@
 <template>
     <el-dialog
-        :title="!dataForm.id ? '删除客户信息' : isDetail ? '详情' : '编辑'"
+        :title="'合同撤销'"
         :close-on-click-modal="false"
         :visible.sync="visible"
         class="Jdialog Jdialog_center"

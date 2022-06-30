@@ -25,6 +25,7 @@ import com.zhaoxinms.base.util.StringUtil;
 import com.zhaoxinms.base.util.UserProvider;
 import com.zhaoxinms.baseconfig.entity.ConfigFeeItemEntity;
 import com.zhaoxinms.baseconfig.service.ConfigFeeItemService;
+import com.zhaoxinms.payment.entity.PaymentBillEntity;
 import com.zhaoxinms.payment.entity.PaymentPayLogEntity;
 import com.zhaoxinms.payment.entity.PaymentTempEntity;
 import com.zhaoxinms.payment.mapper.PaymentTempMapper;
@@ -209,5 +210,12 @@ public class PaymentTempServiceImpl extends ServiceImpl<PaymentTempMapper, Payme
         if (entity != null) {
             this.removeById(entity.getId());
         }
+    }
+
+    @Override
+    public PaymentTempEntity getByPayNo(String payNo) {
+        QueryWrapper<PaymentTempEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().and(t -> t.eq(PaymentTempEntity::getPayNo, payNo));
+        return this.getOne(queryWrapper);
     }
 }

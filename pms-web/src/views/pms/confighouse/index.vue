@@ -5,7 +5,7 @@
                 <el-form @submit.native.prevent>
                     <el-col :span="6">
                         <el-form-item label="编号">
-                            <el-input v-model="query.name" placeholder="格式：商业区-商铺编号" clearable></el-input>
+                            <HouseInput  v-model="query.name" />
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
@@ -43,10 +43,15 @@
                     </div>
                 </div>
                 <JTable v-loading="listLoading" :data="list">
-                    <el-table-column prop="block" label="商业区-商铺编号" align="left">
-                        <template slot-scope="scope">{{ scope.row.block }}-{{ scope.row.code }}</template>
+                    <el-table-column prop="name" label="完整编号" align="left" />
+                    <el-table-column prop="block" label="商业区" align="left">
+                        <template slot-scope="scope">{{ scope.row.blockName }}</template>
+                    </el-table-column>
+                    <el-table-column prop="building" label="楼栋" align="left">
+                        <template slot-scope="scope">{{ scope.row.buildingName }}</template>
                     </el-table-column>
                     <el-table-column prop="floor" label="楼层" align="left" />
+                    <el-table-column prop="code" label="房号" align="left"/>
                     <el-table-column prop="buildingsquare" label="占地面积" align="left" />
                     <el-table-column prop="usesquare" label="使用面积" align="left" />
                     <el-table-column prop="rentFee" label="租金" align="left" />
@@ -74,9 +79,10 @@
 import request from '@/utils/request';
 import EditForm from './Form';
 import ImportForm from './ImportForm';
+import HouseInput from '@/components/HouseInput';
 
 export default {
-    components: { EditForm, ImportForm },
+    components: { EditForm, ImportForm, HouseInput },
     data() {
         return {
             query: {

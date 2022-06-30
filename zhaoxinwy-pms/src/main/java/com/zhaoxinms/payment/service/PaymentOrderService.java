@@ -18,16 +18,10 @@ import com.zhaoxinms.payment.model.paymentbill.PaymentBillRefundForm;
 public interface PaymentOrderService extends IService<PaymentOrder>
 {
 
-    // 保存付款
-    PaymentPayLogEntity paySave(PaymentBillPayForm payForm);
+    // 创建并支付订单
+    void paySave(PaymentOrder paymentOrder);
 
-    // 付款数据验证
-    void payCheck(PaymentBillPayForm payForm, boolean billCanHasOrder);
-
-    // 计算付款金额
-    void payCalc(PaymentBillPayForm payForm) throws IllegalAccessException;
-
-    //单个bill退款
+    // 退款
     void refundBill(PaymentBillRefundForm refundForm);
     
     List<PaymentOrder> getList(PaymentOrderPagination pagination);

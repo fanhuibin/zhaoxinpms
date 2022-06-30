@@ -6,14 +6,14 @@
 
 	<groupId>com.zhaoxinms</groupId>
 	<artifactId>pms-parent</artifactId>
-	<version>0.9.1</version>
+	<version>0.10.1</version>
 
 	<name>肇新智慧物业</name>
 	<url>http://www.zhaoxinms.com</url>
 	<description>肇新智慧物业</description>
 
 	<properties>
-		<zhaoxinwy.version>0.9.1</zhaoxinwy.version>
+		<zhaoxinwy.version>0.10.1</zhaoxinwy.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
@@ -27,6 +27,7 @@
 		<fastjson.version>1.2.79</fastjson.version>
 		<oshi.version>5.8.2</oshi.version>
 		<jna.version>5.9.0</jna.version>
+		<commons.version>2.6</commons.version>
 		<commons.io.version>2.11.0</commons.io.version>
 		<commons.fileupload.version>1.4</commons.fileupload.version>
 		<commons.collections.version>3.2.2</commons.collections.version>
@@ -36,6 +37,7 @@
 		<hutool.version>5.1.0</hutool.version>
 		<weixin-java.version>3.7.0</weixin-java.version>
 		<ttl.version>2.11.4</ttl.version>
+		<zxing.version>3.3.3</zxing.version>
 	</properties>
 
 	<!-- 依赖声明 -->
@@ -233,19 +235,19 @@
 				<artifactId>zhaoxinwy-common</artifactId>
 				<version>${zhaoxinwy.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>com.zhaoxinms</groupId>
 				<artifactId>zhaoxinwy-pms</artifactId>
 				<version>${zhaoxinwy.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>com.zhaoxinms</groupId>
 				<artifactId>zhaoxinwy-workflow</artifactId>
 				<version>${zhaoxinwy.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>com.zhaoxinms</groupId>
 				<artifactId>zhaoxinwy-owner</artifactId>
@@ -294,6 +296,16 @@
 				<artifactId>transmittable-thread-local</artifactId>
 				<version>${ttl.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.google.zxing</groupId>
+				<artifactId>javase</artifactId>
+				<version>${zxing.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.zxing</groupId>
+				<artifactId>core</artifactId>
+				<version>${zxing.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -305,7 +317,6 @@
 		<module>zhaoxinwy-generator</module>
 		<module>zhaoxinwy-common</module>
 		<module>zhaoxinwy-pms</module>
-		<module>zhaoxinwy-jmReport</module>
 		<module>zhaoxinwy-workflow</module>
 		<module>zhaoxinwy-tenant</module>
 	</modules>

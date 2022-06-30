@@ -8,8 +8,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import javax.validation.constraints.*;
 import com.zhaoxinms.base.vo.Pagination;
-import java.util.Date;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.math.BigDecimal;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -49,4 +51,13 @@ public class PaymentOrderPagination extends Pagination {
     
     @ApiModelProperty(value = "用户id")
     private String userId;
+    
+    @ApiModelProperty(value = "类型")
+    private String type;
+    
+    @ApiModelProperty(value = "支付方式")
+    private String wayCode;
+    
+    @ApiModelProperty("付款时间范围")
+    private List<Long> payTimeRange = new ArrayList<Long>();
 }

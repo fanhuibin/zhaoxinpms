@@ -21,6 +21,9 @@ public class SysDept extends BaseEntity
 
     /** 部门ID */
     private Long deptId;
+    
+    /** 企业微信ID */
+    private String wxId;
 
     /** 父部门ID */
     private Long parentId;
@@ -199,5 +202,13 @@ public class SysDept extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .toString();
+    }
+
+    public String getWxId() {
+        return wxId;
+    }
+
+    public void setWxId(String wxId) {
+        this.wxId = wxId;
     }
 }

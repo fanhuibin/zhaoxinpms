@@ -8,6 +8,7 @@
        f.end_date as endDate,
        f.next_bill_date as nextBillDate,
        f.contract_id as contractId,
+       f.times as times,
        p.resource_name as resourceName,
        p.resource_id as resourceId,
        p.user_name as userName,
@@ -26,10 +27,10 @@
 			AND f.fee_item_id = #{feeItemId}
 		</if>
 		<if test="resourceName != null and resourceName != ''">
-			AND p.resource_name = #{resourceName}
+			AND p.resource_name like concat('%', #{resourceName}, '%')
 		</if>
 		AND f.next_bill_date between #{beginDate} and #{endDate}
-		ORDER BY next_bill_date asc
+		ORDER BY p.resource_name,f.next_bill_date asc
     </select>
     
     <select id="getByFee" resultType="com.zhaoxinms.payment.model.paymentcontract.PaymentContractFeeListVO">

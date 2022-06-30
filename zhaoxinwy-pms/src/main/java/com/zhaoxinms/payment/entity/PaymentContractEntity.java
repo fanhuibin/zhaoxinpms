@@ -58,6 +58,10 @@ public class PaymentContractEntity {
     @JsonProperty("endDate")
     private Date endDate;
 
+    /** 公司名 */
+    @TableField("company")
+    private String company;
+    
     /** 租户姓名/业主姓名 */
     @TableField("USER_NAME")
     private String userName;

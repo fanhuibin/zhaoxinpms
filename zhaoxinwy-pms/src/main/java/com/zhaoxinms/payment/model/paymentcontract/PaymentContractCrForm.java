@@ -53,6 +53,12 @@ public class PaymentContractCrForm {
     /** 结束使用时间 */
     @JsonProperty("endDate")
     private Long endDate;
+    
+    /** 公司名 */
+    @JsonProperty("company")
+    @NotBlank
+    @Length(min = 0, max = 50)
+    private String company;
 
     /** 租户姓名/业主姓名 */
     @JsonProperty("userName")

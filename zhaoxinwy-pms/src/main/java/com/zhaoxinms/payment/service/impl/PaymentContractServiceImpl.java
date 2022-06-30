@@ -163,6 +163,10 @@ public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMappe
         PaymentContractEntity entity = JsonUtil.getJsonToBean(form, PaymentContractEntity.class);
         if (entity.getResourceType().equals("house")) {
             ConfigHouseEntity house = houseService.getById(entity.getResourceId());
+            if(StringUtils.isEmpty(entity.getCompany())) {
+                throw new ServiceException("公司名不能为空");
+            }
+            
             if(StringUtils.isEmpty(entity.getOwnerId())) {
                 throw new ServiceException("业主信息不能为空");
             }
@@ -192,12 +196,15 @@ public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMappe
 
                 Date endDate = DateUtils.addMonths(entity.getBeginDate(), form.getPeriod());
                 endDate = DateUtils.addSeconds(endDate, -1);
+                house.setStateEndTime(endDate);
                 entity.setEndDate(endDate);
             } else if (entity.getContractType().equals(ConstantsUtil.HOUSE_STATE_SELLED)) {
                 house.setState(ConstantsUtil.HOUSE_STATE_SELLED);
                 Date endDate = null;
                 entity.setEndDate(endDate);
+                house.setStateEndTime(endDate);
             }
+            house.setStateCompany(entity.getCompany());
             houseService.updateById(house);
 
             // 更新合同表的信息
@@ -266,6 +273,7 @@ public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMappe
             throw new DataException("当前商铺是空置状态，操作失败");
         }
         house.setState(ConstantsUtil.HOUSE_STATE_EMPTY);
+        house.setStateEndTime(new Date());
         houseService.updateById(house);
 
         // 禁用该商铺下的所有的租售合同记录
@@ -286,8 +294,10 @@ public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMappe
 
     @Override
     public List<PaymentContractEntity> getListByResourceIds(List<String> ids) {
-        // TODO Auto-generated method stub
-        return null;
+        QueryWrapper<PaymentContractEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().in(PaymentContractEntity::getResourceId, ids);
+        queryWrapper.lambda().eq(PaymentContractEntity::getEnabledMark, "1");
+        return this.list(queryWrapper);
     }
 
     @Override
@@ -319,11 +329,13 @@ public class PaymentContractServiceImpl extends ServiceImpl<PaymentContractMappe
                 }
                 Date endDate = DateUtils.addMonths(entity.getBeginDate(), form.getPeriod());
                 endDate = DateUtils.addSeconds(endDate, -1);
+                house.setStateEndTime(endDate);
                 entity.setEndDate(endDate);
             } else if (entity.getContractType().equals("selled")) {
                 house.setState(ConstantsUtil.HOUSE_STATE_SELLED);
                 Date endDate = null;
                 entity.setEndDate(endDate);
+                house.setStateEndTime(endDate);
             }
             houseService.updateById(house);
 

@@ -24,6 +24,7 @@ import com.zhaoxinms.common.enums.BusinessType;
 import com.zhaoxinms.payment.entity.PaymentPayLogEntity;
 import com.zhaoxinms.payment.model.paymentbill.PaymentBillPayForm;
 import com.zhaoxinms.payment.model.paymentbill.PaymentBillRefundForm;
+import com.zhaoxinms.payment.service.PaymentBillPayService;
 import com.zhaoxinms.payment.service.PaymentBillService;
 import com.zhaoxinms.payment.service.PaymentOrderService;
 import com.zhaoxinms.payment.service.PaymentPayLogService;
@@ -41,19 +42,21 @@ public class PaymentBillPayController {
     private PaymentBillService paymentBillService;
     @Autowired
     private PaymentOrderService paymentOrderService;
+    @Autowired
+    private PaymentBillPayService paymentBillPayService;
 
     @PreAuthorize("@ss.hasRole('payee')")
     @PostMapping("/payCalc")
     public ActionResult calc(@RequestBody PaymentBillPayForm payForm) throws IllegalAccessException {
-        paymentOrderService.payCalc(payForm);
+        paymentBillPayService.payCalc(payForm);
         return ActionResult.success(payForm);
     }
 
     @PreAuthorize("@ss.hasRole('payee')")
     @PostMapping("/payChceck")
     public ActionResult check(@RequestBody PaymentBillPayForm payForm) throws IllegalAccessException {
-        paymentOrderService.payCalc(payForm);
-        paymentOrderService.payCheck(payForm, false);
+        paymentBillPayService.payCalc(payForm);
+        paymentBillPayService.payCheck(payForm, false);
         return ActionResult.success();
     }
 
@@ -62,9 +65,9 @@ public class PaymentBillPayController {
     @PostMapping("/payBill")
     @Transactional
     public ActionResult pay(@RequestBody PaymentBillPayForm payForm) throws IllegalAccessException {
-        paymentOrderService.payCalc(payForm);
-        paymentOrderService.payCheck(payForm, false);
-        PaymentPayLogEntity payLog = paymentOrderService.paySave(payForm);
+        paymentBillPayService.payCalc(payForm);
+        paymentBillPayService.payCheck(payForm, false);
+        PaymentPayLogEntity payLog = paymentBillPayService.paySave(payForm);
         return ActionResult.success(payLog);
     }
 

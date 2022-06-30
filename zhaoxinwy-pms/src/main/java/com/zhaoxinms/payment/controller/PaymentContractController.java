@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -37,6 +38,7 @@ import com.zhaoxinms.base.vo.PaginationVO;
 import com.zhaoxinms.baseconfig.entity.ConfigFeeItemEntity;
 import com.zhaoxinms.baseconfig.entity.ConfigHouseEntity;
 import com.zhaoxinms.baseconfig.model.configfeeitem.ConfigFeeItemPagination;
+import com.zhaoxinms.baseconfig.model.house.HousePagination;
 import com.zhaoxinms.baseconfig.service.ConfigFeeItemService;
 import com.zhaoxinms.baseconfig.service.ConfigHouseService;
 import com.zhaoxinms.common.annotation.Log;

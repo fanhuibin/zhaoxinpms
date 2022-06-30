@@ -19,28 +19,19 @@
                 v-loading="loading"
             >
                 <el-col :span="24">
-                    <el-form-item label="商业区" prop="block">
-                        <el-select v-model="dataForm.block" placeholder="请选择商铺的商业区" clearable :style="{ width: '100%' }" :multiple="false">
-                            <el-option
-                                v-for="(item, index) in areaOptions"
-                                :key="index"
-                                :label="item.name"
-                                :value="item.code"
-                                :disabled="item.disabled"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-
-                <el-col :span="24">
-                    <el-form-item label="商铺编号" prop="code">
-                        <el-input
-                            v-model="dataForm.code"
-                            placeholder="建议使用楼层号-商铺号的格式"
-                            :maxlength="49"
+                    <el-form-item label="楼栋" prop="block">
+                         <el-cascader
+                            v-model="dataForm.buildingSelect"
+                            :options="buildings"
                             clearable
                             :style="{ width: '100%' }"
-                        ></el-input>
+                            @change="handleChange">
+                        </el-cascader>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="24">
+                    <el-form-item label="房号" prop="code">
+                        <el-input v-model="dataForm.code" placeholder="请输入房号" :maxlength="49" clearable :style="{ width: '100%' }"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="24">
@@ -48,7 +39,6 @@
                         <el-input v-model="dataForm.floor" placeholder="请输入楼层" clearable :style="{ width: '100%' }" :maxlength="7"></el-input>
                     </el-form-item>
                 </el-col>
-
                 <el-col :span="24">
                     <el-form-item label="占地面积" prop="buildingsquare">
                         <el-input v-model="dataForm.buildingsquare" placeholder="建筑面积" clearable :style="{ width: '100%' }" :maxlength="10"></el-input>
@@ -104,6 +94,7 @@
 </template>
 <script>
 import request from '@/utils/request';
+import { selectBuilding } from '@/api/pms/building';
 
 export default {
     components: {},
@@ -113,6 +104,7 @@ export default {
             loading: false,
             visible: false,
             isDetail: false,
+            buildings: [],
             dataForm: {
                 id: '',
                 block: '',
@@ -123,19 +115,20 @@ export default {
                 floor: '',
                 rentFee: '0',
                 remark: undefined,
+                buildingSelect: [],
             },
             rules: {
                 block: [
                     {
                         required: true,
-                        message: '请选择商铺的商业区',
+                        message: '请选择楼栋',
                         trigger: 'blur',
                     },
                 ],
                 code: [
                     {
                         required: true,
-                        message: '请输入商铺编号',
+                        message: '请输入房号',
                         trigger: 'blur',
                     },
                 ],
@@ -160,7 +153,7 @@ export default {
                     {
                         pattern: /^(([1-9]{1}\d{0,7})|(0{1}))(\.\d{0,2})?$/,
                         message: '小数点前最多8位数字',
-                        trigger: 'blur'
+                        trigger: 'blur',
                     },
                 ],
                 buildingsquare: [
@@ -170,9 +163,10 @@ export default {
                         trigger: 'blur',
                     },
                     {
-                        min: 0, max: 99999999,
+                        min: 0,
+                        max: 99999999,
                         message: '建筑面积要大于0小于99999999',
-                        trigger: 'blur'
+                        trigger: 'blur',
                     },
                     {
                         pattern: /^(([1-9]{1}\d{0,7})|(0{1}))(\.\d{0,2})?$/,
@@ -194,7 +188,7 @@ export default {
                     {
                         pattern: /^(([1-9]{1}\d{0,7})|(0{1}))(\.\d{0,2})?$/,
                         message: '小数点前最多8位数字',
-                        trigger: 'blur'
+                        trigger: 'blur',
                     },
                 ],
                 state: [
@@ -212,11 +206,21 @@ export default {
     computed: {},
     watch: {},
     created() {
-        this.getareaOptions();
+        //this.getareaOptions();
+        this.getBuildings();
         this.getstateOptions();
     },
     mounted() {},
     methods: {
+        getBuildings() {
+            selectBuilding().then(res => {
+                this.buildings = res.data;
+            });
+        },
+        handleChange(value) {
+            this.dataForm.block = value[0];
+            this.dataForm.building = value[1];
+        },
         getareaOptions() {
             request({
                 url: `/baseconfig/ConfigHouseBlock/selectList`,
@@ -246,6 +250,7 @@ export default {
                         url: '/baseconfig/House/' + this.dataForm.id,
                         method: 'get',
                     }).then(res => {
+                        res.data.buildingSelect = [res.data.block,res.data.building];
                         this.dataForm = res.data;
                         this.loading = false;
                     });

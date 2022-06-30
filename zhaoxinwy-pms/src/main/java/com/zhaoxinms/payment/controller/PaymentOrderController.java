@@ -96,6 +96,15 @@ public class PaymentOrderController {
             if (vo.getState().equals(PaymentOrder.STATE_SUCCESS)) {
                 vo.setStateName("支付成功");
             }
+            if(vo.getRefundState().equals(PaymentOrder.REFUND_STATE_NONE)) {
+                vo.setRefundStateName("未退款");
+            }
+            if(vo.getRefundState().equals(PaymentOrder.REFUND_STATE_PART)) {
+                vo.setRefundStateName("部分退款");
+            }
+            if(vo.getRefundState().equals(PaymentOrder.REFUND_STATE_ALL)) {
+                vo.setRefundStateName("全额退款");
+            }
         }
 
         PageListVO vo = new PageListVO();

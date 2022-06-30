@@ -198,16 +198,34 @@ public class PaymentBillServiceImpl extends ServiceImpl<PaymentBillMapper, Payme
     @Override
     public void disableByResourceId(String resourceId) {
         throw new DataException("该方式暂不支持");
-//        String userId = "" + userProvider.get().getUserId();
-//        QueryWrapper<PaymentBillEntity> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.lambda().and(t -> t.like(PaymentBillEntity::getEnabledMark, 1));
-//        List<PaymentBillEntity> list = this.list(queryWrapper);
-//
-//        for (PaymentBillEntity entity : list) {
-//            entity.setDeleteTime(new Date());
-//            entity.setDeleteUserId(userId);
-//        }
-//        this.updateBatchById(list);
+        // String userId = "" + userProvider.get().getUserId();
+        // QueryWrapper<PaymentBillEntity> queryWrapper = new QueryWrapper<>();
+        // queryWrapper.lambda().and(t -> t.like(PaymentBillEntity::getEnabledMark, 1));
+        // List<PaymentBillEntity> list = this.list(queryWrapper);
+        //
+        // for (PaymentBillEntity entity : list) {
+        // entity.setDeleteTime(new Date());
+        // entity.setDeleteUserId(userId);
+        // }
+        // this.updateBatchById(list);
+    }
+
+    @Override
+    public List<PaymentBillEntity> getUnpaiedAndPayingListByResourceLike(PaymentBillPagination paymentBillPagination) {
+        QueryWrapper<PaymentBillEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().and(t -> t.in(PaymentBillEntity::getPayState,
+            new String[] {"" + ConstantsUtil.PAY_BILL_PAY_STATE_UNPAIED, "" + ConstantsUtil.PAY_BILL_PAY_STATE_PAYING}));
+        queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getEnabledMark, 1));
+        if (StringUtils.isNotEmpty(paymentBillPagination.getFeeItemId())) {
+
+            queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getFeeItemId, paymentBillPagination.getFeeItemId()));
+
+        }
+        if (StringUtils.isNotEmpty(paymentBillPagination.getResourceName())) {
+            queryWrapper.lambda().and(t -> t.likeRight(PaymentBillEntity::getResourceName, paymentBillPagination.getResourceName()));
+        }
+        queryWrapper.lambda().orderByAsc(PaymentBillEntity::getResourceId);
+        return this.list(queryWrapper);
     }
 
     @Override
@@ -218,7 +236,7 @@ public class PaymentBillServiceImpl extends ServiceImpl<PaymentBillMapper, Payme
         queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getEnabledMark, 1));
         return this.list(queryWrapper);
     }
-    
+
     @Override
     public List<PaymentBillEntity> getPayingListByResource(String resourceName) {
         QueryWrapper<PaymentBillEntity> queryWrapper = new QueryWrapper<>();
@@ -253,7 +271,7 @@ public class PaymentBillServiceImpl extends ServiceImpl<PaymentBillMapper, Payme
             return new ArrayList<PaymentBillEntity>();
         }
     }
-    
+
     @Override
     public List<PaymentBillEntity> getListByOrders(List<String> orders) {
         if (orders.size() > 0) {
@@ -306,12 +324,21 @@ public class PaymentBillServiceImpl extends ServiceImpl<PaymentBillMapper, Payme
             if (unpaiedBills.size() > 0) {
                 throw new DataException("当前商铺下有未缴纳的物业费，不能解绑");
             }
-            
-            List<PaymentBillEntity> payingBills = this.getUnpaiedListByResource(resourceName);
+
+            List<PaymentBillEntity> payingBills = this.getPayingListByResource(resourceName);
             if (payingBills.size() > 0) {
                 throw new DataException("当前商铺下有缴费中的数据，不能解绑");
             }
         }
     }
-    
+
+    @Override
+    public List<PaymentBillEntity> getBillsByLogId(String payLogId) {
+        QueryWrapper<PaymentBillEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getPayLogId, payLogId));
+        queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getPayState, ConstantsUtil.PAY_BILL_PAY_STATE_PAIED));
+        queryWrapper.lambda().and(t -> t.eq(PaymentBillEntity::getEnabledMark, 1));
+        return this.list(queryWrapper);
+    }
+
 }

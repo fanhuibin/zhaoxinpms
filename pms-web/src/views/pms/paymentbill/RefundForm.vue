@@ -18,8 +18,8 @@
                 v-loading="loading"
             >
                 <el-col :span="12" style="height:59px">
-                    <el-form-item label="编号" prop="resourceName">
-                        <el-input :disabled="true" v-model="dataForm.resourceName" placeholder="商业区-商铺编号" clearable></el-input>
+                    <el-form-item label="商铺编号" prop="resourceName">
+                        <el-input :disabled="true" v-model="dataForm.resourceName" placeholder="商铺编号" clearable></el-input>
                     </el-form-item>
                 </el-col>
 

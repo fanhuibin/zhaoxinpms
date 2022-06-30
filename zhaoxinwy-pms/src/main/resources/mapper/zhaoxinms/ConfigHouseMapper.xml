@@ -18,7 +18,8 @@
 		p.user_gender as userGender,
 		p.user_trade as userTrade,
 		p.begin_date as beginDate,
-		p.end_date as endDate
+		p.end_date as endDate,
+		p.company as company
     </sql>
 
     <select id="getHouseContractList" resultType="com.zhaoxinms.baseconfig.model.house.HouseContractListVO">

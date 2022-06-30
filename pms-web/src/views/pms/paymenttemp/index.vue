@@ -95,7 +95,7 @@
                         <template slot-scope="scope">
                             <el-button :disabled="scope.row.state != 'refunded'" type="text" @click="showRefund(scope.row.id, true)">退款详情</el-button>
                             <el-button :disabled="scope.row.state != 'paied'" type="text" @click="refund(scope.row.id)">退款</el-button>
-                            <el-button type="text" @click="handlePrint(scope.row.id)">打印</el-button>
+                            <el-button type="text" @click="handlePrint(scope.row.payNo)">打印</el-button>
                         </template>
                     </el-table-column>
                 </JTable>
@@ -104,7 +104,7 @@
         </div>
         <EditForm v-if="formVisible" ref="EditForm" @refresh="refresh" />
         <RefundForm v-if="refundFormVisible" ref="RefundForm" @refresh="refresh" />
-        <Print v-if="printVisible" ref="Print" @refresh="refresh" />
+        <TempPrint ref="Print" />
     </div>
 </template>
 
@@ -113,12 +113,12 @@ import request from '@/utils/request';
 import { listPaymentMethod } from '@/api/payment/paymentMethod';
 import EditForm from './Form';
 import RefundForm from './RefundForm';
-import Print from '../print';
 import { getUsername } from '@/utils/auth';
 import HouseInput from '@/components/HouseInput';
+import TempPrint from '@/components/printTemplate/tempPrint';
 
 export default {
-    components: { EditForm, RefundForm, Print, HouseInput },
+    components: { EditForm, RefundForm, HouseInput, TempPrint },
     data() {
         return {
             showAll: false,
@@ -145,7 +145,6 @@ export default {
             },
             formVisible: false,
             refundFormVisible: false,
-            printVisible: false,
             columnList: [
                 { prop: 'block', label: '商业区' },
                 { prop: 'resourceName', label: '编号' },
@@ -230,11 +229,9 @@ export default {
                 this.$refs.RefundForm.init(id, this.blockOptions, this.feeItemList, isDetail);
             });
         },
-        handlePrint(id) {
-            this.printVisible = true;
-            var url = `${this.define.REPORTURL}/view/615860623974522880?id=${id}&opUser=${getUsername()}`;
+        handlePrint(payNo) {
             this.$nextTick(() => {
-                this.$refs.Print.init(url);
+                this.$refs.Print.print(payNo);
             });
         },
         search() {

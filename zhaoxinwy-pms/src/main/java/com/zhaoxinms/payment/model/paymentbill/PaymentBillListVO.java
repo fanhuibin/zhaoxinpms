@@ -7,9 +7,12 @@ import java.util.Date;
 
 import javax.validation.constraints.NotBlank;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.zhaoxinms.util.ConstantsUtil;
 
 @Data
 public class PaymentBillListVO {
@@ -110,9 +113,25 @@ public class PaymentBillListVO {
     /** 支付状态 */
     @JsonProperty("payState")
     private String payState;
+    
+    @JsonProperty("payStateName")   
+    private String payStateName;
 
     /** 支付时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @JsonProperty("payTime")
     private Date payTime;
+    
+    public String getPayStateName() {
+        if(StringUtils.isEmpty(this.getPayState())) {
+            return "";
+        }
+        if(this.getPayState().equals(""+ConstantsUtil.PAY_BILL_PAY_STATE_UNPAIED)) {
+            return "待付款";
+        }
+        if(this.getPayState().equals(""+ConstantsUtil.PAY_BILL_PAY_STATE_PAYING)) {
+            return "付款中";
+        }
+        return "";
+    }
 }

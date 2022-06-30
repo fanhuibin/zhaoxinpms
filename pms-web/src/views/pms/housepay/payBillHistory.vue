@@ -38,7 +38,6 @@
 </template>
 <script>
 import request from '@/utils/request';
-
 export default {
     components: {},
     props: [],
@@ -93,7 +92,6 @@ export default {
             });
         },
         print(payId, resourceName) {
-            this.visible = false;
             this.$emit('print', payId, resourceName);
         },
     },

@@ -4,8 +4,8 @@
             <el-row class="Jcommon-search-box" :gutter="16">
                 <el-form @submit.native.prevent>
                     <el-col :span="6">
-                        <el-form-item label="商铺编号">
-                            <el-input v-model="query.name" placeholder="格式：商业区-商铺编号" clearable></el-input>
+                        <el-form-item label="编号">
+                            <HouseInput v-model="query.name" />
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
@@ -48,12 +48,17 @@
                     </div>
                 </div>
                 <JTable v-loading="listLoading" :data="list">
-                    <el-table-column prop="block" label="商业区-商铺编号" align="left">
-                        <template slot-scope="scope">{{ scope.row.block }}-{{ scope.row.code }}</template>
+                    <el-table-column prop="block" label="商铺编号" align="left">
+                        <template slot-scope="scope">{{ scope.row.name }}</template>
                     </el-table-column>
                     <el-table-column label="使用状态" prop="state" algin="left">
                         <template slot-scope="scope">
                             {{ scope.row.state | dynamicText(stateOptions) }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="公司名" prop="company" algin="left">
+                        <template slot-scope="scope">
+                            {{ scope.row.company }}
                         </template>
                     </el-table-column>
                     <el-table-column label="姓名" prop="userName" algin="left">
@@ -91,19 +96,21 @@
                         <template slot-scope="scope">
                             <el-button
                                 type="text"
-                                @click="selled(scope.row.resourceId, scope.row.block, scope.row.name, scope.row.contractId, scope.row.rentFee)"
+                                @click="selled('', scope.row.resourceId, scope.row.block, scope.row.name, scope.row.contractId, scope.row.rentFee)"
                                 :disabled="scope.row.state !== 'empty'"
                             >
-                                绑定业主
+                                发起合同
                             </el-button>
+                            
                             <el-button
                                 type="text"
                                 :disabled="scope.row.state === 'empty'"
-                                @click="addOrUpdateHandle(scope.row.resourceId, scope.row.block, scope.row.name, scope.row.contractId, scope.row.rentFee)"
+                                @click="addOrUpdateHandle(scope.row.company, scope.row.resourceId, scope.row.block, scope.row.name, scope.row.contractId, scope.row.rentFee)"
                             >
-                                编辑信息
+                                编辑合同
                             </el-button>
-                            <el-button type="text" @click="cancelContract(scope.row.resourceId)" :disabled="scope.row.state === 'empty'">解除绑定</el-button>
+                            <el-button type="text" @click="cancelContract(scope.row.resourceId)" :disabled="scope.row.state === 'empty'">撤销合同</el-button>
+                            
                         </template>
                     </el-table-column>
                 </JTable>
@@ -121,9 +128,10 @@ import request from '@/utils/request';
 import Contract from './ContractForm';
 import CancelContractForm from './CancelContractForm';
 import FeeConfig from './FeeConfig';
+import HouseInput from '@/components/HouseInput';
 
 export default {
-    components: { Contract, CancelContractForm, FeeConfig },
+    components: { Contract, CancelContractForm, FeeConfig, HouseInput },
     data() {
         return {
             query: {
@@ -199,10 +207,10 @@ export default {
                 this.$refs.CancelContractForm.init(id);
             });
         },
-        addOrUpdateHandle(resourceId, block, name, contractId, rentFee, isDetail) {
+        addOrUpdateHandle(company, resourceId, block, name, contractId, rentFee, isDetail) {
             this.ContractVisible = true;
             this.$nextTick(() => {
-                this.$refs.ContractForm.init(resourceId, block, name, contractId, rentFee, '', isDetail);
+                this.$refs.ContractForm.init(company, resourceId, block, name, contractId, rentFee, '', isDetail);
             });
         },
         rented(resourceId, block, name, contractId, rentFee, isDetail) {
@@ -211,10 +219,10 @@ export default {
                 this.$refs.ContractForm.init(resourceId, block, name, contractId, rentFee, 'rented', isDetail);
             });
         },
-        selled(resourceId, block, name, contractId, rentFee, isDetail) {
+        selled(company, resourceId, block, name, contractId, rentFee, isDetail) {
             this.ContractVisible = true;
             this.$nextTick(() => {
-                this.$refs.ContractForm.init(resourceId, block, name, contractId, rentFee, 'selled', isDetail);
+                this.$refs.ContractForm.init(company, resourceId, block, name, contractId, rentFee, 'selled', isDetail);
             });
         },
         showRentedConfig() {

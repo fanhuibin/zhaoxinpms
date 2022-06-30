@@ -37,6 +37,10 @@ public class PaymentContractListVO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonProperty("endDate")
     private Date endDate;
+    
+    /** 公司名 */
+    @JsonProperty("company")
+    private String company;
 
     /** 租户姓名/业主姓名 */
     @JsonProperty("userName")

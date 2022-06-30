@@ -37,6 +37,10 @@ public class PaymentContractFeeEntity {
     /** 下次收费时间 */
     @TableField("NEXT_BILL_DATE")
     private Date nextBillDate;
+    
+    /** 收费次数 */
+    @TableField("times")
+    private int times;
 
     /** 有效标志 */
     @TableField(value = "ENABLED_MARK", fill = FieldFill.INSERT)

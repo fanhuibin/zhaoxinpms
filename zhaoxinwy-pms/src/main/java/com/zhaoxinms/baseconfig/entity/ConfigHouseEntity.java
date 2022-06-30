@@ -33,6 +33,10 @@ public class ConfigHouseEntity  {
     @TableField("BLOCK")
     private String block;
     
+    /**楼栋 */
+    @TableField("building")
+    private String building;
+    
     /** 租金 */
     @TableField("RENT_FEE")
     private String rentFee;
@@ -44,6 +48,14 @@ public class ConfigHouseEntity  {
     /** 使用状态 */
     @TableField("STATE")
     private String state;
+    
+    /** 使用的公司 */
+    @TableField("STATE_COMPANY")
+    private String stateCompany;
+    
+    /** 状态结束时间 */
+    @TableField("STATE_END_TIME")
+    private Date stateEndTime;
 
     /** 占地面积 */
     @TableField("BUILDING_SQUARE")

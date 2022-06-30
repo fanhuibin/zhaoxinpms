@@ -22,6 +22,13 @@ public class OwnerUserVo {
 
     @ApiModelProperty("id")
     private String id;
+    
+    /**
+     * 公司名
+     */
+    @Excel(name = "公司名")
+    @ApiModelProperty("公司名")
+    private String company;
 	
     /**
      * 业主姓名

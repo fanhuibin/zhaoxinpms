@@ -17,21 +17,18 @@
         </JTable>
         <PayBillHistory v-if="historyVisible" ref="PayBillHistory" @print="handlePrint" />
         <PayBill v-if="payBillVisible" ref="PayBill" @refresh="handlePrint" />
-        <Print v-if="printVisible" ref="Print" @close="updateParent" />
+        <billPrint ref="Print" />
     </div>
 </template>
 
 <script>
 import request from '@/utils/request';
-
-import Print from '../print';
 import PayBillHistory from './payBillHistory';
 import PayBill from './payBill';
-import { getUsername } from '@/utils/auth';
-import { getPayPrintUrl } from '@/api/print';
+import billPrint from '@/components/printTemplate/billPrint';
 
 export default {
-    components: { Print, PayBillHistory, PayBill },
+    components: { PayBillHistory, PayBill, billPrint },
     data() {
         return {
             listLoading: false,
@@ -41,7 +38,7 @@ export default {
             resourceName: undefined,
             historyVisible: false,
             payBillVisible: false,
-            printVisible: false,
+            printId: '',
         };
     },
     computed: {},
@@ -95,10 +92,10 @@ export default {
             this.multipleSelection = val;
         },
         handlePrint(id, resourceName) {
-            this.printVisible = true;
-            var url = getPayPrintUrl(this.define.REPORTURL, id, resourceName, getUsername());
             this.$nextTick(() => {
-                this.$refs.Print.init(url);
+                //刷新数据
+                this.search();
+                this.$refs.Print.print(id);
             });
         },
     },

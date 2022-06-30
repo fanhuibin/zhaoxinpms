@@ -5,7 +5,7 @@
     <parent>
         <artifactId>pms-parent</artifactId>
         <groupId>com.zhaoxinms</groupId>
-        <version>0.9.1</version>
+        <version>0.10.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>zhaoxinwy-system</artifactId>
@@ -20,7 +20,13 @@
             <groupId>com.zhaoxinms</groupId>
             <artifactId>zhaoxinwy-common</artifactId>
         </dependency>
-
+        <dependency> 
+		    <groupId>com.tencentcloudapi</groupId>
+		    <artifactId>tencentcloud-sdk-java</artifactId>
+		    <!-- go to https://search.maven.org/search?q=tencentcloud-sdk-java and get the latest version. -->
+		    <!-- 请到https://search.maven.org/search?q=tencentcloud-sdk-java查询所有版本，最新版本如下 -->
+		    <version>3.1.442</version>
+		</dependency>
     </dependencies>
 
 </project>

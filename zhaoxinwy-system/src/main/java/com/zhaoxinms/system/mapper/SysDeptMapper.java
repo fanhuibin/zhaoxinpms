@@ -36,6 +36,16 @@ public interface SysDeptMapper
      * @return 部门信息
      */
     public SysDept selectDeptById(Long deptId);
+    
+    /**
+     * 根据企业微信id查询数据
+     */
+    public SysDept selectDeptByWxId(String wxId);
+    
+    /**
+     * 根据更新企业微信id
+     */
+    public SysDept updateWxId(SysDept dept);
 
     /**
      * 根据ID查询所有子部门

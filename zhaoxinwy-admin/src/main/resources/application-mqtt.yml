@@ -1,0 +1,11 @@
+spring :
+    mqtt:
+      client:
+        id: zhaoxin-park-01
+      completionTimeout: 3000
+      default:
+        topic: topic
+      url: tcp://domain:1883
+      username: wuxw
+      password: wuxw2015
+      keepalive: 10

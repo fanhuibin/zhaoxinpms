@@ -9,7 +9,7 @@ ruoyi:
   # 实例演示开关
   demoEnabled: true
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
-  profile: D:\java enviroment\RuoYi-Vue-master\Resources
+  profile: D:\java project\zhaoxinms\zhaoxinpms\Resources
   # 获取ip地址开关
   addressEnabled: false
   # 验证码类型 math 数组计算 char 字符验证
@@ -50,7 +50,7 @@ spring:
     # 国际化资源文件路径
     basename: i18n/messages
   profiles: 
-    active: druid,workflow
+    active: druid,workflow,mqtt
   # 文件上传
   servlet:
      multipart:

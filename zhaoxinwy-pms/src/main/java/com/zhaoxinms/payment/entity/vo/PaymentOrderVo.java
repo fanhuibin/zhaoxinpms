@@ -61,6 +61,8 @@ public class PaymentOrderVo {
     @Excel(name = "退款状态: 0-未发生实际退款, 1-部分退款, 2-全额退款")
     @ApiModelProperty("退款状态: 0-未发生实际退款, 1-部分退款, 2-全额退款")
     private Integer refundState;
+    
+    private String refundStateName;
 
     /**
      * 退款次数

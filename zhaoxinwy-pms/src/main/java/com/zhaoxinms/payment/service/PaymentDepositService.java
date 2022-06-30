@@ -11,6 +11,7 @@ package com.zhaoxinms.payment.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhaoxinms.payment.entity.PaymentDepositEntity;
+import com.zhaoxinms.payment.entity.PaymentTempEntity;
 import com.zhaoxinms.payment.model.paymentdeposit.PaymentDepositCrForm;
 import com.zhaoxinms.payment.model.paymentdeposit.PaymentDepositPagination;
 import com.zhaoxinms.payment.model.paymentdeposit.PaymentDepositRefundForm;
@@ -34,4 +35,10 @@ public interface PaymentDepositService extends IService<PaymentDepositEntity> {
     void create(PaymentDepositEntity entity);
 
     boolean refund(String id, PaymentDepositRefundForm form);
+    
+    //通过payNo查询付款记录
+    PaymentDepositEntity getByPayNo(String payNo);
+    
+    //通过refundNo查询退款记录
+    PaymentDepositEntity getByRefundNo(String refundNo);
 }

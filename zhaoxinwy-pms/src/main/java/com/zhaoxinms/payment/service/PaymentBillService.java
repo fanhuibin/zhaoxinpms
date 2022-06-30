@@ -41,6 +41,9 @@ public interface PaymentBillService extends IService<PaymentBillEntity> {
     // 更新折扣和滞纳金
     void updateFee(PaymentBillEntity entity) throws IllegalAccessException;
 
+    //通过payLogId查询付款记录
+    List<PaymentBillEntity> getBillsByLogId(String payLogId);
+    
     //通过resourceNames查询未付款记录
     List<PaymentBillEntity> getUnpaiedListByResources(List<String> resourceNames);
 
@@ -52,4 +55,7 @@ public interface PaymentBillService extends IService<PaymentBillEntity> {
 
     //通过resourceNames查询在线缴费中的数据
     List<PaymentBillEntity> getPayingListByResource(String resourceName);
+
+    //分页查询未付款或者付款中的bill
+    List<PaymentBillEntity> getUnpaiedAndPayingListByResourceLike(PaymentBillPagination paymentBillPagination);
 }

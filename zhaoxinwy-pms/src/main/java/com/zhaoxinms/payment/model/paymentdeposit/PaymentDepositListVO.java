@@ -63,6 +63,11 @@ public class PaymentDepositListVO {
     private Date refundTime;
 
     /** 状态 */
-    @TableField("STATE")
     private String state;
+    
+    /** 支付流水号 */
+    private String payNo;
+    
+    /** 退款流水号 */
+    private String refundNo;
 }

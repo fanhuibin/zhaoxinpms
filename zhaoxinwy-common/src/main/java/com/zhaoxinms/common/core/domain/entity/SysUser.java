@@ -54,6 +54,9 @@ public class SysUser extends BaseEntity
 
     /** 用户头像 */
     private String avatar;
+    
+    /** 企业微信二维码 */
+    private String qrcode;
 
     /** 密码 */
     private String password;
@@ -337,5 +340,13 @@ public class SysUser extends BaseEntity
             .append("remark", getRemark())
             .append("dept", getDept())
             .toString();
+    }
+
+    public String getQrcode() {
+        return qrcode;
+    }
+
+    public void setQrcode(String qrcode) {
+        this.qrcode = qrcode;
     }
 }

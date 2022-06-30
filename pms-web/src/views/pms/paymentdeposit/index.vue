@@ -95,7 +95,7 @@
                     <el-table-column prop="remark" label="备注" align="left" />
                     <el-table-column label="操作" fixed="right" width="110">
                         <template slot-scope="scope">
-                            <el-button :disabled="scope.row.state != 'paied'" type="text" @click="refund(scope.row.id)">退还</el-button>
+                            <el-button :disabled="scope.row.state != 'paied'" type="text" @click="refund(scope.row.id)">退款</el-button>
                             <el-dropdown>
                                 <span class="el-dropdown-link">
                                     <el-button type="text" size="mini">
@@ -104,9 +104,9 @@
                                     </el-button>
                                 </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item @click.native="handlePrint(scope.row.id)">打印收款单</el-dropdown-item>
-                                    <el-dropdown-item v-if="scope.row.state == 'refunded'" @click.native="handleRefundPrint(scope.row.id)">
-                                        打印退还单
+                                    <el-dropdown-item @click.native="handlePrint(scope.row.payNo)">打印收款单</el-dropdown-item>
+                                    <el-dropdown-item v-if="scope.row.state == 'refunded'" @click.native="handleRefundPrint(scope.row.refundNo)">
+                                        打印退款单
                                     </el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
@@ -119,7 +119,8 @@
         <EditForm v-if="formVisible" ref="EditForm" @refresh="refresh" />
         <RefundForm v-if="refundFormVisible" ref="RefundForm" @refresh="refresh" />
         <ExportBox v-if="exportBoxVisible" ref="ExportBox" @download="download" />
-        <Print v-if="printVisible" ref="Print" @refresh="refresh" />
+        <DepositPrint ref="DepositPrint" />
+        <DepositRefundPrint ref="DepositRefundPrint" />
     </div>
 </template>
 
@@ -129,12 +130,13 @@ import { listPaymentMethod } from '@/api/payment/paymentMethod';
 import EditForm from './Form';
 import RefundForm from './RefundForm';
 import ExportBox from './ExportBox';
-import Print from '../print';
 import { getUsername } from '@/utils/auth';
 import HouseInput from '@/components/HouseInput';
+import DepositPrint from '@/components/printTemplate/depositPrint';
+import DepositRefundPrint from '@/components/printTemplate/depositRefundPrint';
 
 export default {
-    components: { EditForm, ExportBox, RefundForm, Print, HouseInput },
+    components: { EditForm, ExportBox, RefundForm, HouseInput, DepositPrint, DepositRefundPrint },
     data() {
         return {
             showAll: false,
@@ -241,18 +243,14 @@ export default {
                 this.$refs.RefundForm.init(id, this.blockOptions, this.feeItemList, isDetail);
             });
         },
-        handlePrint(id) {
-            this.printVisible = true;
-            var url = `${this.define.REPORTURL}/view/606409482584907776?id=${id}&opUser=${getUsername()}`;
+        handlePrint(payNo) {
             this.$nextTick(() => {
-                this.$refs.Print.init(url);
+                this.$refs.DepositPrint.print(payNo);
             });
         },
-        handleRefundPrint(id) {
-            this.printVisible = true;
-            var url = `${this.define.REPORTURL}/view/606621855862153216?id=${id}&opUser=${getUsername()}`;
+        handleRefundPrint(refundNo) {
             this.$nextTick(() => {
-                this.$refs.Print.init(url);
+                this.$refs.DepositRefundPrint.print(refundNo);
             });
         },
         search() {

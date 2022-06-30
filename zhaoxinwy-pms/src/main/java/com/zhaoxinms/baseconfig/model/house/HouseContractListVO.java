@@ -64,6 +64,10 @@ public class HouseContractListVO  {
     @JsonProperty("remark")
     private String remark;
     
+    /** 公司名 */
+    @JsonProperty("company")
+    private String company;
+    
     /** 租户姓名/业主姓名 */
     @JsonProperty("userName")
     private String userName;

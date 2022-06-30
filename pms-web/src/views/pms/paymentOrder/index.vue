@@ -4,36 +4,53 @@
             <el-row class="Jcommon-search-box" :gutter="16">
                 <el-form :model="queryParams" ref="queryForm" v-show="showSearch">
                     <el-col :span="6">
-                        <el-form-item label="支付方式代码" prop="wayCode">
-                            <el-input v-model="queryParams.wayCode" placeholder="请输入支付方式代码" clearable size="small" @keyup.enter.native="handleQuery" />
+                        <el-form-item label="支付方式" prop="wayCode">
+                            <el-select v-model="queryParams.wayCode" placeholder="请选择" clearable>
+                                <el-option
+                                    v-for="(item, index) in payMethodOptions"
+                                    :key="index"
+                                    :label="item.name"
+                                    :value="item.code"
+                                    :disabled="item.disabled"
+                                ></el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
-                    
+
                     <el-col :span="6">
                         <el-form-item label="支付状态" prop="state">
-                            <el-input
-                                v-model="queryParams.state"
-                                placeholder="请输入支付状态: 0-订单生成, 1-支付中, 2-支付成功, 3-支付失败, 4-已撤销, 5-已退款, 6-订单关闭"
-                                clearable
-                                size="small"
-                                @keyup.enter.native="handleQuery"
-                            />
+                            <el-select v-model="queryParams.state" placeholder="请选择" clearable>
+                                <el-option label="待付款" value="0"></el-option>
+                                <el-option label="已付款" value="2"></el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="用户id" prop="userId">
-                            <el-input v-model="queryParams.userId" placeholder="请输入缴费单订单号" clearable size="small" @keyup.enter.native="handleQuery" />
+                        <el-form-item label="用户编号" prop="userId">
+                            <el-input v-model="queryParams.userId" placeholder="请输入用户的编号" clearable size="small" @keyup.enter.native="handleQuery" />
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="退款状态" prop="refundState">
-                            <el-input
-                                v-model="queryParams.refundState"
-                                placeholder="请输入退款状态: 0-未发生实际退款, 1-部分退款, 2-全额退款"
-                                clearable
-                                size="small"
-                                @keyup.enter.native="handleQuery"
-                            />
+                            <el-select v-model="queryParams.refundState" placeholder="请选择" clearable>
+                                <el-option label="未发生退款" value="0"></el-option>
+                                <el-option label="部分退款" value="1"></el-option>
+                                <el-option label="全额退款" value="2"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="支付时间" prop="payTimeRange">
+                            <el-date-picker
+                                v-model="queryParams.payTimeRange"
+                                type="datetimerange"
+                                :picker-options="pickerOptions"
+                                range-separator="至"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期"
+                                value-format="timestamp"
+                                align="right"
+                            ></el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
@@ -46,7 +63,6 @@
             </el-row>
             <div class="Jcommon-layout-main Jflex-main">
                 <div class="Jcommon-head">
-                    
                     <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
                 </div>
 
@@ -54,14 +70,10 @@
                     <el-table-column label="订单号" align="center" prop="id" />
                     <el-table-column label="支付方式" align="center" prop="wayCode" />
                     <el-table-column label="支付金额" align="center" prop="amount" />
-                    <el-table-column
-                        label="支付状态"
-                        align="center"
-                        prop="state"
-                    />
+                    <el-table-column label="支付状态" align="center" prop="stateName" />
                     <el-table-column label="缴费内容" align="center" prop="subject" />
                     <el-table-column label="openId" align="center" prop="openId" />
-                    <el-table-column label="退款状态" align="center" prop="refundState" />
+                    <el-table-column label="退款状态" align="center" prop="refundStateName" />
                     <el-table-column label="退款金额" align="center" prop="refundAmount" />
                     <el-table-column label="支付成功时间" align="center" prop="successTime" width="160">
                         <template slot-scope="scope">
@@ -91,9 +103,8 @@
 
 <script>
 import { listPaymentOrder, getPaymentOrder, delPaymentOrder, addPaymentOrder, updatePaymentOrder, exportPaymentOrder } from '@/api/payment/paymentOrder';
-
+import { listPaymentMethod } from '@/api/payment/paymentMethod';
 export default {
-    name: 'PaymentOrder',
     data() {
         return {
             // 遮罩层
@@ -116,6 +127,7 @@ export default {
             title: '',
             // 是否显示弹出层
             open: false,
+            payMethodOptions: [],
             // 查询参数
             queryParams: {
                 currentPage: 1,
@@ -126,16 +138,46 @@ export default {
                 userId: null,
                 refundState: null,
             },
+            pickerOptions: {
+                shortcuts: [
+                    {
+                        text: '最近一周',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                            picker.$emit('pick', [start, end]);
+                        },
+                    },
+                    {
+                        text: '最近一个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                            picker.$emit('pick', [start, end]);
+                        },
+                    },
+                    {
+                        text: '最近三个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                            picker.$emit('pick', [start, end]);
+                        },
+                    },
+                ],
+            },
             // 表单参数
             form: {},
             // 表单校验
-            rules: {
-               
-            },
+            rules: {},
         };
     },
     created() {
         this.getList();
+        this.getPayMethodOptions();
     },
     methods: {
         /** 查询物业费支付订单列表 */
@@ -145,6 +187,11 @@ export default {
                 this.paymentOrderList = response.data.list;
                 this.total = response.data.pagination.total;
                 this.loading = false;
+            });
+        },
+        getPayMethodOptions() {
+            listPaymentMethod().then(res => {
+                this.payMethodOptions = res.data.list;
             });
         },
         // 取消按钮

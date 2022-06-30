@@ -29,11 +29,13 @@ import com.zhaoxinms.base.util.StringUtil;
 import com.zhaoxinms.base.util.UserProvider;
 import com.zhaoxinms.baseconfig.entity.ConfigFeeItemEntity;
 import com.zhaoxinms.baseconfig.service.ConfigFeeItemService;
+import com.zhaoxinms.payment.entity.PaymentDepositEntity;
 import com.zhaoxinms.payment.entity.PaymentPreAccountEntity;
 import com.zhaoxinms.payment.entity.PaymentPreEntity;
 import com.zhaoxinms.payment.mapper.PaymentPreMapper;
 import com.zhaoxinms.payment.model.paymentpre.PaymentPrePagination;
 import com.zhaoxinms.payment.model.paymentpre.PaymentPreRefundForm;
+import com.zhaoxinms.payment.service.PaymentPayLogService;
 import com.zhaoxinms.payment.service.PaymentPreAccountService;
 import com.zhaoxinms.payment.service.PaymentPreService;
 import com.zhaoxinms.util.CalculationUtil;
@@ -58,6 +60,8 @@ public class PaymentPreServiceImpl extends ServiceImpl<PaymentPreMapper, Payment
     private ConfigFeeItemService configFeeItemService;
     @Autowired
     private BillRuleService billRuleService;
+    @Autowired
+    private PaymentPayLogService paymentPayLogService;
 
     @Override
     public List<PaymentPreEntity> getList(PaymentPrePagination paymentPrePagination) {
@@ -187,6 +191,7 @@ public class PaymentPreServiceImpl extends ServiceImpl<PaymentPreMapper, Payment
         entity.setPayNo(payNo);
         // 账户存入金额
         paymentPreAccountService.recharge(entity.getResourceId(), entity.getFeeItemId(), entity.getAmt());
+        
         this.save(entity);
     }
 
@@ -209,7 +214,6 @@ public class PaymentPreServiceImpl extends ServiceImpl<PaymentPreMapper, Payment
         String payNo = billRuleService.getBillNumber("pay_no", false);
         List<PaymentPreAccountEntity> accounts =
             paymentPreAccountService.getAccountsByResourceId(paymentPreRefundForm.getResourceId());
-        String userId = "" + userProvider.get().getUserId();
         for (Map<String, String> map : paymentPreRefundForm.getRefundItems()) {
             String changeMoney = map.get("changeMoney");
             String amt = map.get("amt");
@@ -272,5 +276,12 @@ public class PaymentPreServiceImpl extends ServiceImpl<PaymentPreMapper, Payment
         // 账户支出
         paymentPreAccountService.charge(entity.getResourceId(), entity.getFeeItemId(),
             "" + Math.abs(Double.valueOf(entity.getAmt())));
+    }
+    
+    @Override
+    public PaymentPreEntity getByPayNo(String payNo) {
+        QueryWrapper<PaymentPreEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().and(t -> t.eq(PaymentPreEntity::getPayNo, payNo));
+        return this.getOne(queryWrapper);
     }
 }
