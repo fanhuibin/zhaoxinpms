@@ -396,7 +396,7 @@ public class ConfigHouseServiceImpl extends ServiceImpl<ConfigHouseMapper, Confi
                     this.delete(house);
                 }
             }catch(DataException e) {
-                throw new DataException("gai");
+                throw new DataException("该商业区已经在使用，删除失败");
             }
         }
     }
