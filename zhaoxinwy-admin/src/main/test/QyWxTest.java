@@ -48,37 +48,55 @@
 ////        QyWxService.syncLocalDepartmentToThirdApp("");
 ////    }
 ////    
-//    @Test
-//    public void syncUser() {
-//        SecurityUtils.setIsApp();
-//        QyWxService.syncLocalUserToThirdApp("");
-//    }
-////    
 ////    @Test
-////    public void sendMessage() {
-////        MiniNoticeMessage message = new MiniNoticeMessage();
-////        message.setTouser("payee");
-////        
-////        //显示的内容
-////        List<ContentItem> items = new ArrayList<ContentItem>();
-////        ContentItem item = new ContentItem();
-////        item.setKey("会议地点");
-////        item.setValue("123123123");
-////        item.setKey("客户姓名");
-////        item.setValue("张老三");
-////        items.add(item);
-////        
-////        MiniprogramNotice notice = new MiniprogramNotice();
-////        notice.setAppid("wx20607bdf9576d8e0");
-////        notice.setTitle("xx发起的维修申请");
-////        notice.setDescription("2022年10月10日");
-////        notice.setPage("pages/index");
-////        notice.setEmphasis_first_item(false);
-////        notice.setContent_item(items);
-////        
-////        
-////        message.setMiniprogram_notice(notice);
-////        
-////        QyWxService.sendMessage(message);
+////    public void syncUser() {
+////        SecurityUtils.setIsApp();
+////        QyWxService.syncLocalUserToThirdApp("");
 ////    }
+////    
+//    @Test
+//    public void sendMessage() {
+//        MiniNoticeMessage message = new MiniNoticeMessage();
+//        message.setTouser("payee");
+//        
+//        //显示的内容
+//        List<ContentItem> items = new ArrayList<ContentItem>();
+//        ContentItem item = new ContentItem();
+//        item.setKey("客户地址");
+//        item.setValue("里兄巷军民小区10号楼9单元201");
+//        ContentItem item2 = new ContentItem();
+//        item2.setKey("客户姓名");
+//        item2.setValue("张老三");
+//        
+//        ContentItem item3 = new ContentItem();
+//        item3.setKey("客户电话");
+//        item3.setValue("13651256236");
+//        
+//        ContentItem item4 = new ContentItem();
+//        item4.setKey("客户电话");
+//        item4.setValue("13651256236");
+//        
+//        ContentItem item5 = new ContentItem();
+//        item4.setKey("工单进度");
+//        item4.setValue("待现场确认");
+//        
+//        items.add(item5);
+//        items.add(item);
+//        items.add(item2);
+//        items.add(item3);
+//        items.add(item4);
+//        
+//        MiniprogramNotice notice = new MiniprogramNotice();
+//        notice.setAppid("wx20607bdf9576d8e0");
+//        notice.setTitle("xx发起的维修申请");
+//        notice.setDescription("2022年10月10日");
+//        notice.setPage("pages/index");
+//        notice.setEmphasis_first_item(false);
+//        notice.setContent_item(items);
+//        
+//        
+//        message.setMiniprogram_notice(notice);
+//        
+//        QyWxService.sendMessage(message);
+//    }
 //}

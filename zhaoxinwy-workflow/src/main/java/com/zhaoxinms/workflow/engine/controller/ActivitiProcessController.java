@@ -25,6 +25,7 @@ import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
+import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
@@ -40,13 +41,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zhaoxinms.base.ActionResult;
 import com.zhaoxinms.common.core.controller.BaseController;
 import com.zhaoxinms.common.core.domain.AjaxResult;
+import com.zhaoxinms.common.core.domain.entity.SysUser;
 import com.zhaoxinms.common.core.page.TableDataInfo;
+import com.zhaoxinms.common.exception.ServiceException;
 import com.zhaoxinms.common.utils.JsonUtil;
 import com.zhaoxinms.common.utils.SecurityUtils;
 import com.zhaoxinms.common.utils.StringUtils;
+import com.zhaoxinms.system.mapper.SysUserMapper;
+import com.zhaoxinms.workflow.engine.cmd.JumpAnyWhereCmd;
 import com.zhaoxinms.workflow.engine.config.ICustomProcessDiagramGenerator;
 import com.zhaoxinms.workflow.engine.config.WorkflowConstants;
 import com.zhaoxinms.workflow.engine.designer.DesignerAdapterUtil;
@@ -56,6 +62,7 @@ import com.zhaoxinms.workflow.engine.designer.entity.FormOperate;
 import com.zhaoxinms.workflow.engine.entity.FlowDesignerEntity;
 import com.zhaoxinms.workflow.engine.entity.HistoricActivity;
 import com.zhaoxinms.workflow.engine.entity.MyApplyVo;
+import com.zhaoxinms.workflow.engine.entity.TaskComment;
 import com.zhaoxinms.workflow.engine.entity.TaskVo;
 import com.zhaoxinms.workflow.engine.event.WorkflowEvent;
 import com.zhaoxinms.workflow.engine.service.FlowDesignerService;
@@ -76,15 +83,15 @@ public class ActivitiProcessController extends BaseController {
     private TaskService taskService;
     private ApplicationEventPublisher applicationEventPublisher;
     private FlowDesignerService flowDesignerService;
+    private SysUserMapper userMapper;
 
     /**
      * 审批历史列表
      */
     @PostMapping("/listHistory")
     @ResponseBody
-    public TableDataInfo listHistory(@RequestBody HistoricActivity historicActivity) {
-        startPage();
-        List<HistoricActivity> list = processService.selectHistoryList(historicActivity);
+    public TableDataInfo listHistory(@RequestBody HistoricActivity historicActivity ) {
+        List<TaskComment> list = processService.selectHistoryByInstanceId(historicActivity.getProcessInstanceId());
         return getDataTable(list);
     }
 
@@ -172,14 +179,65 @@ public class ActivitiProcessController extends BaseController {
         result.put("tasks", currentTasks);// 未来可能扩展并行流程，所以这里是多个task
         return ActionResult.success(result);
     }
+    
+   /**
+    * 任务跳转任意节点
+    * @return
+    */
+    @PostMapping("/jumpTo")
+    @ResponseBody
+    public AjaxResult jumpAnyWhere(@RequestBody JSONObject requestJson) {
+        String processInstanceId = requestJson.getString("processInstanceId");
+        String taskId = requestJson.getString("taskId");
+        String comment = requestJson.getString("comment");
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+        String processDefinitionId = "";
+        if (processInstance == null) {
+            HistoricProcessInstance historicProcessInstance =
+                historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+            processDefinitionId = historicProcessInstance.getProcessDefinitionId();
+        } else {
+            processDefinitionId = processInstance.getProcessDefinitionId();
+        }
+        //查询流程图
+        BpmnModel bpmn = repositoryService.getBpmnModel(processDefinitionId);
+        String json = bpmn.getMainProcess().getAttributeValue("http://activiti.org/bpmn", "designerJSON");
+        FlowDesignerModel model = JsonUtil.getJsonToBean(json, FlowDesignerModel.class);
+
+        //查询当前节点的信息
+        // 查询taskDefKey
+        org.activiti.engine.task.Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+
+        ChildNode currentNode = DesignerAdapterUtil.getChildNode(json, task.getTaskDefinitionKey());
+        if(StringUtils.isEmpty(currentNode.getProperties().getRejectConfig()) || !currentNode.getProperties().getRejectConfig().equals("1") ) {
+            throw new ServiceException("当前节点不支持驳回操作");
+        }
+        if(StringUtils.isEmpty(currentNode.getProperties().getRejectNodeName())) {
+            throw new ServiceException("当前节点的驳回设置不合法");
+        }
+        
+        // 查询要跳转的流程信息
+        ChildNode node = DesignerAdapterUtil.getNodeByName(json, currentNode.getProperties().getRejectNodeName());
+        if(node == null) {
+            throw new ServiceException("当前节点的驳回设置不合法");
+        }
+        
+        processEngine.getManagementService().executeCommand(new JumpAnyWhereCmd(taskId, node.getNodeId(), comment));
+        return success();
+    }
 
     /**
      * 转办
      */
     @PostMapping("/delegate")
     @ResponseBody
-    public AjaxResult delegate(String taskId, String delegateToUser) {
+    public AjaxResult delegate(String taskId, String instanceId, String delegateToUser) {
+        // 添加批注信息
+        Authentication.setAuthenticatedUserId(SecurityUtils.getUsername());
+        SysUser sysUser = userMapper.selectUserByUserName(delegateToUser);
+        taskService.addComment(taskId, instanceId, SecurityUtils.getLoginUser().getUser().getNickName()+"将当前任务转派给【" + sysUser.getNickName()+"】办理" );//comment为批注内容
         processService.delegate(taskId, SecurityUtils.getUsername(), delegateToUser);
+        
         return success();
     }
 

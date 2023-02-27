@@ -9,48 +9,26 @@
 package com.zhaoxinms.payment.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zhaoxinms.base.exception.DataException;
 import com.zhaoxinms.base.service.BillRuleService;
-import com.zhaoxinms.base.util.JsonUtil;
-import com.zhaoxinms.base.util.UserProvider;
 import com.zhaoxinms.baseconfig.entity.ConfigFeeItemEntity;
 import com.zhaoxinms.baseconfig.service.ConfigFeeItemService;
 import com.zhaoxinms.baseconfig.service.ConfigHouseService;
-import com.zhaoxinms.event.OrderEvent;
 import com.zhaoxinms.payment.entity.PaymentBillEntity;
 import com.zhaoxinms.payment.entity.PaymentContractEntity;
 import com.zhaoxinms.payment.entity.PaymentOrder;
 import com.zhaoxinms.payment.entity.PaymentPayLogEntity;
 import com.zhaoxinms.payment.entity.PaymentPreAccountEntity;
 import com.zhaoxinms.payment.entity.PaymentPreEntity;
-import com.zhaoxinms.payment.entity.pagination.PaymentOrderPagination;
-import com.zhaoxinms.payment.mapper.PaymentBillMapper;
-import com.zhaoxinms.payment.mapper.PaymentOrderMapper;
 import com.zhaoxinms.payment.model.paymentbill.PaymentBillListVO;
 import com.zhaoxinms.payment.model.paymentbill.PaymentBillPayForm;
-import com.zhaoxinms.payment.model.paymentbill.PaymentBillRefundForm;
 import com.zhaoxinms.payment.model.paymentpreaccount.PaymentPreAccountPayForm;
 import com.zhaoxinms.payment.service.PaymentBillPayService;
 import com.zhaoxinms.payment.service.PaymentBillService;
@@ -194,10 +172,6 @@ public class PaymentBillPayServiceImpl implements PaymentBillPayService {
             if (bill.getPayState().equals("" + ConstantsUtil.PAY_BILL_PAY_STATE_PAIED)) {
                 throw new DataException(vo.getFeeItemName() + "已经完成缴费，不能重复缴费");
             }
-            if (bill.getPayState().equals("" + ConstantsUtil.PAY_BILL_PAY_STATE_PAYING)) {
-                throw new DataException(vo.getFeeItemName() + "正在缴费中，不能重复缴费");
-            }
-            
             
             if(billCanHasOrder == false) {
                 /**
@@ -205,6 +179,9 @@ public class PaymentBillPayServiceImpl implements PaymentBillPayService {
                  */
                 if(!StringUtils.isBlank(bill.getOrderId())) {
                     throw new DataException(vo.getFeeItemName() + "正在缴费中，请在业主端撤销之后再缴费");
+                }
+                if (bill.getPayState().equals("" + ConstantsUtil.PAY_BILL_PAY_STATE_PAYING)) {
+                    throw new DataException(vo.getFeeItemName() + "正在缴费中，不能重复缴费");
                 }
             }
         }

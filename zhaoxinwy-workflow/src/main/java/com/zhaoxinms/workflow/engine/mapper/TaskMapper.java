@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import com.zhaoxinms.workflow.engine.entity.MyApplyVo;
+import com.zhaoxinms.workflow.engine.entity.TaskComment;
 import com.zhaoxinms.workflow.engine.entity.TaskVo;
 
 @Repository
@@ -149,4 +150,13 @@ public interface TaskMapper {
             "\t1 = 1 <if test='taskId != null'> AND ID_ = #{taskId} </if><if test='taskName != null'> AND NAME_ = #{taskName} </if><if test='instanceId != null'> AND PROC_INST_ID_ = #{instanceId} </if> \n" +
             " </script> ")
     Integer findDoneCount(TaskVo taskVo);
+    
+    @Select("SELECT\r\n" + 
+        "    a.TYPE_ as type, a.USER_ID_ as userId, a.TIME_ as time, a.TASK_ID_ as taskId, a.MESSAGE_ as message, a.FULL_MSG_ as fullMsg,u.NICK_NAME as userName, h.NAME_ as taskName\r\n" + 
+        "FROM\r\n" + 
+        "    ACT_HI_COMMENT a\r\n" + 
+        "LEFT JOIN ACT_HI_TASKINST h ON a.TASK_ID_ = h.ID_\r\n" + 
+        "LEFT JOIN SYS_USER u ON u.USER_NAME = a.USER_ID_ \r\n" + 
+        "WHERE a.PROC_INST_ID_ = #{instanceId} ORDER BY a.TIME_ asc")
+    List<TaskComment> getComments(String instanceId);
 }

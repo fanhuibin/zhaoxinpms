@@ -3,9 +3,12 @@ package com.zhaoxinms.workflow.engine.service;
 import java.util.List;
 import java.util.Map;
 
+import org.activiti.engine.task.Comment;
+
 import com.zhaoxinms.common.core.page.TableDataInfo;
 import com.zhaoxinms.workflow.engine.entity.HistoricActivity;
 import com.zhaoxinms.workflow.engine.entity.MyApplyVo;
+import com.zhaoxinms.workflow.engine.entity.TaskComment;
 import com.zhaoxinms.workflow.engine.entity.TaskVo;
 
 public interface IProcessService {
@@ -21,6 +24,11 @@ public interface IProcessService {
      * 填充流程相关字段
      */
     <T> void richProcessField(T entity) throws Exception;
+    
+    /**
+     * 通过instanceId查询流程记录
+     */
+    List<TaskComment> selectHistoryByInstanceId(String instanceId);
 
     /**
      * 查询审批历史列表

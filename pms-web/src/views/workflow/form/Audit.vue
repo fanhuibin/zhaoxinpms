@@ -2,11 +2,12 @@
     <transition name="el-zoom-in-center">
         <div class="Jpreview-main flow-form-main nohead">
             <div class="btns">
-                <template v-if="setting.isAudit">
+                <template>
                     <el-button type="primary" @click="transfer()">转 办</el-button>
                     <el-button type="primary" @click="approval('audit')">提 交</el-button>
+                    <el-button type="danger" @click="jumpTo()" v-if="setting.showReject">驳 回</el-button>
+                    <el-button type="danger" @click="cancel()" v-if="setting.hasCancel">终 止</el-button>
                 </template>
-                <el-button type="danger" @click="cancel()" v-if="setting.hasCancel">终 止</el-button>
                 <el-button @click="goBack()">返 回</el-button>
             </div>
             <el-tabs class="Jel_tabs" v-model="activeTab" style="padding: 0 10px">
@@ -97,7 +98,9 @@ export default {
     data() {
         return {
             currentView: '',
-            setting: {},
+            setting: {
+                showReject:true ,
+            },
             visible: false,
             treeData: [],
             fullName: '',
@@ -138,7 +141,7 @@ export default {
         init(data) {
             this.activeTab = '0';
             this.currentView = resolve => require([`@/views/business/${data.processDefinitionKey}/audit`], resolve);
-            this.setting = data;
+            this.setting = Object.assign(this.setting, data);
             this.formShow = true;
             this.getInfo(data);
         },
@@ -151,25 +154,25 @@ export default {
                 this.designerImg = res.data.model.processData;
                 const completeTasks = res.data.completeTasks;
                 const tasks = res.data.tasks;
-        
+
                 const loop = (data, taskDefKey, className) => {
-                    if (Array.isArray(data)) data.forEach(d => loop(d,  taskDefKey, className));
+                    if (Array.isArray(data)) data.forEach(d => loop(d, taskDefKey, className));
                     if (data.nodeId === taskDefKey) {
                         data.state = className;
                         return;
                     }
-                    if (data.conditionNodes && Array.isArray(data.conditionNodes)) loop(data.conditionNodes,  taskDefKey, className);
+                    if (data.conditionNodes && Array.isArray(data.conditionNodes)) loop(data.conditionNodes, taskDefKey, className);
                     if (data.childNode) loop(data.childNode, taskDefKey, className);
                 };
-                
+
                 completeTasks.forEach(task => {
-                    loop(this.designerImg, task, "complete");
-                })
+                    loop(this.designerImg, task, 'complete');
+                });
 
                 tasks.forEach(task => {
-                    loop(this.designerImg, task, "active");
+                    loop(this.designerImg, task, 'active');
                 });
-                
+
                 this.previewShow = true;
             });
 
@@ -280,9 +283,25 @@ export default {
         handleUserSelectionChange(selection) {
             this.selectedRow = selection[0];
         },
+        //流程回退
+        jumpTo() {
+            const taskId = this.setting.taskId;
+            const processInstanceId = this.setting.instanceId;
+            const newTaskName = '指派工单';
+            request({
+                url: '/activiti/process/jumpTo',
+                method: 'post',
+                data: {processInstanceId: processInstanceId, taskId: taskId, comment: ' 为什么回退，给个理由,你们可以实现一个弹窗输入' },
+            }).then(response => {
+                this.$emit('close', true);
+                this.showSuccess('操作成功');
+                this.showUserTable = false;
+            });
+        },
         /** 提交按钮 */
         submitForm() {
             const taskId = this.setting.taskId;
+            const instanceId = this.setting.instanceId;
             const selectedRow = this.selectedRow;
             if (!selectedRow) {
                 this.showError('请先选择要转办的用户');
@@ -301,7 +320,7 @@ export default {
                     return request({
                         url: '/activiti/process/delegate',
                         method: 'post',
-                        params: { taskId: taskId, delegateToUser: selectedRow.userName },
+                        params: { taskId: taskId, instanceId: instanceId , delegateToUser: selectedRow.userName },
                     });
                 })
                 .then(() => {
@@ -311,11 +330,11 @@ export default {
                 });
         },
         showError(msg) {
-            this.$message({ showClose: true, message: msg, type: "error" });
+            this.$message({ showClose: true, message: msg, type: 'error' });
         },
         showSuccess(msg) {
-            this.$message({ showClose: true, message: msg, type: "success" });
-        }
+            this.$message({ showClose: true, message: msg, type: 'success' });
+        },
     },
 };
 </script>
@@ -324,7 +343,7 @@ export default {
     display: block;
     margin-bottom: 20px;
 }
-::v-deep .el-select--small{
+::v-deep .el-select--small {
     height: 33.403px;
 }
 </style>

@@ -82,6 +82,27 @@ public class DesignerAdapterUtil {
      * @param taskDefKey
      * @return
      */
+    public static ChildNode getNodeByName(String json, String taskName) {
+        FlowDesignerModel model = JsonUtil.getJsonToBean(json, FlowDesignerModel.class);
+        ProcessData process = model.getProcessData();
+        List<ChildNode> allChildNodes = new ArrayList<ChildNode>();
+        List<ConditionNode> conditions = new ArrayList<ConditionNode>();
+        DesignerAdapterUtil.getChildNode("", process.getChildNode(), allChildNodes, conditions);
+        for (ChildNode node : allChildNodes) {
+            if (node.getProperties().getTitle().equals(taskName)) {
+                return node;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     *通过nodeName查询 taskDefKey
+     * 
+     * @param json
+     * @param taskDefKey
+     * @return
+     */
     public static ChildNode getChildNode(String json, String taskDefKey) {
         FlowDesignerModel model = JsonUtil.getJsonToBean(json, FlowDesignerModel.class);
         ProcessData process = model.getProcessData();

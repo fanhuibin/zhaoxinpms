@@ -66,7 +66,7 @@
         </dependency>
         
        <!-- 以下未开源--> 
-       <!--
+    
         <dependency>
             <groupId>com.zhaoxinms</groupId>
             <artifactId>zhaoxinwy-owner</artifactId>
@@ -82,13 +82,7 @@
 			<artifactId>zhaoxinwy-park</artifactId>
 			<version>${zhaoxinwy.version}</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>com.zhaoxinms</groupId>
-			<artifactId>workflow-pro</artifactId>
-			<version>${zhaoxinwy.version}</version>
-		</dependency>
-
+   <!--
         <dependency>
             <groupId>com.zhaoxinms</groupId>
             <artifactId>zhaoxinwy-workflowPro</artifactId>

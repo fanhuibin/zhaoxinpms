@@ -138,7 +138,7 @@ public class ConfigBuildingController
     
     
     /**
-     * 删除楼栋管理
+     * 选择楼栋管理
      */
     @GetMapping("/select")
     @Transactional

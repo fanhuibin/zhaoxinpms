@@ -19,6 +19,7 @@ import org.activiti.engine.history.HistoricActivityInstanceQuery;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.impl.persistence.entity.TaskEntityImpl;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Comment;
@@ -37,12 +38,15 @@ import com.alibaba.fastjson.JSON;
 import com.zhaoxinms.common.constant.HttpStatus;
 import com.zhaoxinms.common.core.domain.entity.SysUser;
 import com.zhaoxinms.common.core.page.TableDataInfo;
+import com.zhaoxinms.common.exception.ServiceException;
 import com.zhaoxinms.common.utils.SecurityUtils;
 import com.zhaoxinms.common.utils.StringUtils;
 import com.zhaoxinms.system.mapper.SysUserMapper;
+import com.zhaoxinms.system.service.ISysUserService;
 import com.zhaoxinms.util.DateUtils;
 import com.zhaoxinms.workflow.engine.entity.HistoricActivity;
 import com.zhaoxinms.workflow.engine.entity.MyApplyVo;
+import com.zhaoxinms.workflow.engine.entity.TaskComment;
 import com.zhaoxinms.workflow.engine.entity.TaskVo;
 import com.zhaoxinms.workflow.engine.event.WorkflowEvent;
 import com.zhaoxinms.workflow.engine.mapper.TaskMapper;
@@ -63,6 +67,8 @@ public class ProcessServiceImpl implements IProcessService {
     private RuntimeService runtimeService;
     private SysUserMapper userMapper;
     private TaskMapper taskMapper;
+    private ISysUserService userService;
+    
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
 
@@ -106,6 +112,11 @@ public class ProcessServiceImpl implements IProcessService {
         runtimeService.setProcessInstanceName(instance.getId(),name);
         // 更新业务表流程实例id字段
         setInstanceId.invoke(entity, instance.getId());
+        
+        //添加发起记录
+        Authentication.setAuthenticatedUserId(SecurityUtils.getUsername());
+        taskService.addComment(null, instance.getId(), "发起流程");
+        
     }
 
     /** 驼峰转下划线 */
@@ -408,6 +419,22 @@ public class ProcessServiceImpl implements IProcessService {
             }
             activityList.add(activity);
         });
+        
+        // 封装当前节点的comment    
+        Task task = taskService.createTaskQuery().processInstanceId(historicActivity.getProcessInstanceId()).active().singleResult();
+        if (task != null) {
+            HistoricActivity activity = new HistoricActivity();
+            String taskId = task.getId();
+            List<Comment> comment = taskService.getTaskComments(taskId, "comment");
+            if (!CollectionUtils.isEmpty(comment)) {
+                activity.setComment(comment.get(0).getFullMessage());
+            }
+            SysUser sysUser = userMapper.selectUserByUserName(task.getAssignee());
+            if (sysUser != null) {
+                activity.setAssigneeName(sysUser.getNickName());
+            }
+            activityList.add(activity);
+        }
 
         // 以下手动封装发起人节点的数据
         HistoricActivity startActivity = new HistoricActivity();
@@ -512,6 +539,15 @@ public class ProcessServiceImpl implements IProcessService {
         rspData.setTotal(count);
 
         return rspData;
+    }
+
+    @Override
+    public List<TaskComment> selectHistoryByInstanceId(String instanceId) {
+        if( StringUtils.isEmpty(instanceId) ) {
+            throw new ServiceException("流程实例id不能为空");
+        }
+        List<TaskComment> list = taskMapper.getComments(instanceId);
+        return list;
     }
 
 }

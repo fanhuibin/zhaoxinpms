@@ -21,6 +21,8 @@ public class ChildProperties {
     private String optionalMultiUser;
     private String expression;
     private List<FormOperate> formOperates;
+    private String rejectConfig; //是否可以驳回
+    private String rejectNodeName; //驳回配置
     public String getTitle() {
         return title;
     }
@@ -62,5 +64,17 @@ public class ChildProperties {
     }
     public void setFormOperates(List<FormOperate> formOperates) {
         this.formOperates = formOperates;
+    }
+    public String getRejectConfig() {
+        return rejectConfig;
+    }
+    public void setRejectConfig(String rejectConfig) {
+        this.rejectConfig = rejectConfig;
+    }
+    public String getRejectNodeName() {
+        return rejectNodeName;
+    }
+    public void setRejectNodeName(String rejectNodeName) {
+        this.rejectNodeName = rejectNodeName;
     }
 }

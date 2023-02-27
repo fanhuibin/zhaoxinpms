@@ -47,6 +47,7 @@ export default {
                 });
                 return
             }
+            console.log(123);
             this.$emit('chioceFlow', item)
         }
     },

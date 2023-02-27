@@ -9,21 +9,26 @@
  */
 package com.zhaoxinms.workflow.engine.designer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.activiti.bpmn.BpmnAutoLayout;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
+import org.activiti.bpmn.model.ActivitiListener;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.CustomProperty;
 import org.activiti.bpmn.model.EndEvent;
 import org.activiti.bpmn.model.ExclusiveGateway;
 import org.activiti.bpmn.model.ExtensionAttribute;
+import org.activiti.bpmn.model.ExtensionElement;
+import org.activiti.bpmn.model.ImplementationType;
 import org.activiti.bpmn.model.MultiInstanceLoopCharacteristics;
 import org.activiti.bpmn.model.ParallelGateway;
 import org.activiti.bpmn.model.SequenceFlow;
 import org.activiti.bpmn.model.ServiceTask;
 import org.activiti.bpmn.model.StartEvent;
 import org.activiti.bpmn.model.UserTask;
+import org.activiti.engine.delegate.ExecutionListener;
 import org.activiti.bpmn.model.Process;
 
 import com.zhaoxinms.common.utils.JsonUtil;
@@ -119,6 +124,19 @@ public class BPMNCreator {
         endEvent.setId("end");
         return endEvent;
     }
+    
+    private static List<ActivitiListener> getGlobalListener() {
+        ArrayList<ActivitiListener> listeners = new ArrayList<>();
+        ActivitiListener activitiListener = new ActivitiListener();
+        // 事件类型,
+        activitiListener.setEvent(ExecutionListener.EVENTNAME_START);
+        // 监听器类型
+        activitiListener.setImplementationType(ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION);
+        // 设置实现了，这里设置监听器的类型是delegateExpression，这样可以在实现类注入Spring bean.
+        activitiListener.setImplementation("${serviceTaskListener}");
+        listeners.add(activitiListener);
+        return listeners;
+    }
 
     public static String createXML(String json, List<UserTask> userTasks, List<ExclusiveGateway> gateways, List<SequenceFlow> taskFlows) {
         FlowDesignerModel model = JsonUtil.getJsonToBean(json, FlowDesignerModel.class);
@@ -137,13 +155,14 @@ public class BPMNCreator {
         process.setId(model.getBasicSetting().getFlowCode());
         process.setName(model.getBasicSetting().getFlowName());
 
+        //添加监听器
+        process.setExecutionListeners(getGlobalListener());
+        
         // 1.创建节点
         StartEvent start = BPMNCreator.createStartEvent(model.getProcessData().getNodeId());
         EndEvent end = BPMNCreator.createEndEvent();
         process.addFlowElement(start);
         process.addFlowElement(end);
-        
-        
 
         for (UserTask task : userTasks) {
             process.addFlowElement(task);

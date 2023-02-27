@@ -186,26 +186,14 @@ public class BillRuleController {
         return ActionResult.fail("删除失败，数据不存在");
     }
 
-    /**
-     * 获取单据缓存
-     *
-     * @param enCode 参数编码
-     * @return
-     */
-    @ApiOperation("获取单据缓存")
+    @ApiOperation("清除缓存")
     @GetMapping("/useBillNumber/{enCode}")
     public ActionResult useBillNumber(@PathVariable("enCode") String enCode) {
         billRuleService.useBillNumber(enCode);
         return ActionResult.success();
     }
 
-    /**
-     * 获取单据流水号
-     *
-     * @param enCode 参数编码
-     * @return
-     */
-    @ApiOperation("获取单据流水号(工作流调用)")
+    @ApiOperation("获取流水号")
     @GetMapping("/getBillNumber/{enCode}")
     public ActionResult getBillNumber(@PathVariable("enCode") String enCode) throws DataException {
         Object data = billRuleService.getBillNumber(enCode, false);

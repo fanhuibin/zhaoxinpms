@@ -117,6 +117,15 @@
                                         <el-radio v-model="approverForm.optionalMultiUser" label="orSign">或签</el-radio>
                                         <el-radio v-model="approverForm.optionalMultiUser" label="counterSign">会签</el-radio>
                                     </el-form-item>
+                                    <el-form-item label="是否可驳回" prop="counterSign">
+                                        <el-radio v-model="approverForm.rejectConfig" label="0">不可驳回</el-radio>
+                                        <el-radio v-model="approverForm.rejectConfig" label="1">可驳回</el-radio>
+                                        <el-input v-model="approverForm.rejectNodeName" 
+                                            v-if="approverForm.rejectConfig == '1'" 
+                                            placeholder="请输入要回到到的节点名"
+                                            style="width:50%"
+                                        />
+                                    </el-form-item>
                                 </el-form>
                             </div>
                         </div>
@@ -209,6 +218,7 @@ const defaultApproverForm = {
     optionalMultiUser: 'orSign', //会签 counterSign,或签名 orSign
     expression: '',
     rejectConfig: '0', // 驳回设置
+    rejectNodeName: '',
 };
 export default {
     props: [/*当前节点数据*/ 'value', /*整个节点数据*/ 'processData'],
