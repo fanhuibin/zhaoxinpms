@@ -176,14 +176,9 @@ npm run dev
 > 
 > 创建账号并分配角色即可演示功能
 
-演示地址：http://demo1.pms.zhaoxinms.com/
+演示地址：https://zhaoxinms.com/demo.html#wuye
 
 文档地址：http://zhaoxinms.com:81/
-
-
-## 技术交流qq：697878094
-
-<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=uouRkTO8anqhjMPgclF8oy2F5Q50jz_W&jump_from=webapi"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="肇新智慧物业技术交流" title="肇新智慧物业技术交流"></a>
 
 ## 联系作者
 
